@@ -29,6 +29,9 @@ dependencies:
   '@angular/router':
     specifier: ^17.3.0
     version: 17.3.0(@angular/common@17.3.0)(@angular/core@17.3.0)(@angular/platform-browser@17.3.0)(rxjs@7.8.1)
+  '@fontsource-variable/outfit':
+    specifier: ^5.0.12
+    version: 5.0.12
   rxjs:
     specifier: ~7.8.0
     version: 7.8.1
@@ -2101,6 +2104,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@fontsource-variable/outfit@5.0.12:
+    resolution: {integrity: sha512-f14wHgrD8GZnSbF7pK0F+Al3NYSz6oGaFbewvA4lVJRZcoQ6MQFu6BG6PY/elMrnx8WuklL8AncIVqPsrRIf0A==}
+    dev: false
 
   /@isaacs/cliui@8.0.2:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
