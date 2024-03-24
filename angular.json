@@ -114,20 +114,6 @@
             "headless": false
           }
         },
-        "ct": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "task-manager:serve",
-            "watch": true,
-            "headless": false,
-            "testingType": "component"
-          },
-          "configurations": {
-            "development": {
-              "devServerTarget": "task-manager:serve:development"
-            }
-          }
-        },
         "e2e": {
           "builder": "@cypress/schematic:cypress",
           "options": {
