@@ -22,6 +22,8 @@ module.exports = {
         },
         muted: 'var(--muted)',
         border: 'var(--border)',
+        'blue-logo': 'var(--blue-logo)',
+        'purple-logo': 'var(--purple-logo)',
       },
       fontFamily: {
         sans: ['Outfit Variable', ...defaultTheme.fontFamily.sans],

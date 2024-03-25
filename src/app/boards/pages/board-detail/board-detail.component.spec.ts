@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BoardDetailComponent } from './board-detail.component';
 
-import { BoardLayoutComponent } from './board-layout.component';
-
-describe('BoardLayoutComponent', () => {
-  let component: BoardLayoutComponent;
-  let fixture: ComponentFixture<BoardLayoutComponent>;
+describe('BoardDetailComponent', () => {
+  let component: BoardDetailComponent;
+  let fixture: ComponentFixture<BoardDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BoardLayoutComponent]
+      imports: [BoardDetailComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(BoardLayoutComponent);
+
+    fixture = TestBed.createComponent(BoardDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

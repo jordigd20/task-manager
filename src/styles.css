@@ -15,8 +15,11 @@
   --secondary-foreground: #274cb4;
   --muted: #8a8a8a;
   --border: #e4e4e7;
+  --scrollbar: #c9c9c9;
 
-  --gradient: linear-gradient(90deg, #00c6ff 0%, #c854ff 100%);
+  --blue-logo: #00c6ff;
+  --purple-logo: #c854ff;
+
   --red: #a05d54;
   --red-foreground: #5d3532;
   --blue: #c4dbfa;
@@ -38,4 +41,19 @@
   --secondary-foreground: #274cb4;
   --muted: #8a8a8a;
   --border: #27272a;
+  --scrollbar: #545454;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar);
+  border-radius: 5px;
 }

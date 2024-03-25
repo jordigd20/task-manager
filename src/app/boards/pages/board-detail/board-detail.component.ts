@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BoardLayoutComponent } from '../../ui/board-layout/board-layout.component';
 
 @Component({
-  selector: 'board-list',
+  selector: 'board-detail',
   standalone: true,
-  imports: [BoardLayoutComponent],
-  templateUrl: './board-list.component.html',
+  templateUrl: './board-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block w-full h-full bg-background-elevated rounded-lg p-4',
   },
 })
-export class BoardListComponent {}
+export class BoardDetailComponent {}

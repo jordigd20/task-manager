@@ -11,4 +11,8 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./boards/boards.routes').then((m) => m.BOARD_ROUTES),
   },
+  {
+    path: '**',
+    redirectTo: 'boards',
+  }
 ];

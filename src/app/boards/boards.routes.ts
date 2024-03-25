@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import { BoardLayoutComponent } from './pages/board-layout/board-layout.component';
+import { BoardLayoutComponent } from './ui/board-layout/board-layout.component';
 import { BoardListComponent } from './pages/board-list/board-list.component';
+import { BoardDetailComponent } from './pages/board-detail/board-detail.component';
 
 export const BOARD_ROUTES: Routes = [
   {
@@ -10,6 +11,10 @@ export const BOARD_ROUTES: Routes = [
       {
         path: '',
         component: BoardListComponent,
+      },
+      {
+        path: ':id',
+        component: BoardDetailComponent,
       },
     ],
   },
