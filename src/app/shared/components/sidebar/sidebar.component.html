@@ -52,6 +52,7 @@
       [attr.aria-label]="
         isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'
       "
+      (click)="toggleThemeMode()"
     >
       @if (isDarkMode()) {
       <svg
@@ -90,6 +91,7 @@
     <button
       class="inline-flex items-center justify-center gap-2 font-medium p-2 rounded-lg w-full z-10 theme-buttons"
       data-mode="dark"
+      (click)="switchToDarkMode()"
     >
       <svg
         width="24"
@@ -109,6 +111,7 @@
     <button
       class="inline-flex items-center justify-center gap-2 font-medium p-2 rounded-lg w-full z-10 theme-buttons"
       data-mode="light"
+      (click)="switchToLightMode()"
     >
       <svg
         width="24"

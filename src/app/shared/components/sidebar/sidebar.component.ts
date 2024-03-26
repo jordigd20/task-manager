@@ -27,5 +27,17 @@ export class SidebarComponent {
     document.documentElement.classList.contains('dark')
   );
 
+  toggleThemeMode() {
+    this.isDarkMode() ? this.switchToLightMode() : this.switchToDarkMode();
+  }
 
+  switchToDarkMode() {
+    this.isDarkMode.set(true);
+    this.renderer.addClass(document.documentElement, 'dark');
+  }
+
+  switchToLightMode() {
+    this.isDarkMode.set(false);
+    this.renderer.removeClass(document.documentElement, 'dark');
+  }
 }
