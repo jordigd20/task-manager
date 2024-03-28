@@ -4,16 +4,21 @@ import { SidebarComponent } from './sidebar.component';
 import { Renderer2 } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { Icon1Component } from '../icons/icon-1/icon-1.component';
+import Dexie, { PromiseExtended } from 'dexie';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
   let renderer: Renderer2;
+  let spyDbOpen: jest.SpyInstance<PromiseExtended<Dexie>>;
 
   beforeEach(async () => {
+    spyDbOpen = jest
+      .spyOn(Dexie.prototype, 'open')
+      .mockResolvedValueOnce(new Dexie.Promise(() => {}));
+
     await TestBed.configureTestingModule({
-      imports: [SidebarComponent, RouterLink, NgClass, Icon1Component],
+      imports: [SidebarComponent, RouterLink, NgClass],
       providers: [
         {
           provide: ActivatedRoute,

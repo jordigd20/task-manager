@@ -7,12 +7,11 @@ import {
 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Icon1Component } from '../icons/icon-1/icon-1.component';
 
 @Component({
   selector: 'sidebar',
   standalone: true,
-  imports: [RouterLink, NgClass, Icon1Component],
+  imports: [RouterLink, NgClass],
   templateUrl: './sidebar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
