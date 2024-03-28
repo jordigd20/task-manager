@@ -32,6 +32,9 @@ dependencies:
   '@fontsource-variable/outfit':
     specifier: ^5.0.12
     version: 5.0.12
+  dexie:
+    specifier: ^3.2.7
+    version: 3.2.7
   rxjs:
     specifier: ~7.8.0
     version: 7.8.1
@@ -4504,6 +4507,11 @@ packages:
   /detect-node@2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
     dev: true
+
+  /dexie@3.2.7:
+    resolution: {integrity: sha512-2a+BXvVhY5op+smDRLxeBAivE7YcYaneXJ1la3HOkUfX9zKkE/AJ8CNgjiXbtXepFyFmJNGSbmjOwqbT749r/w==}
+    engines: {node: '>=6.0'}
+    dev: false
 
   /didyoumean@1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
