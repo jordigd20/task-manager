@@ -32,6 +32,15 @@ dependencies:
   '@fontsource-variable/outfit':
     specifier: ^5.0.12
     version: 5.0.12
+  '@ngrx/effects':
+    specifier: ^17.1.1
+    version: 17.1.1(@angular/core@17.3.1)(@ngrx/store@17.1.1)(rxjs@7.8.1)
+  '@ngrx/store':
+    specifier: ^17.1.1
+    version: 17.1.1(@angular/core@17.3.1)(rxjs@7.8.1)
+  '@ngrx/store-devtools':
+    specifier: ^17.1.1
+    version: 17.1.1(@ngrx/store@17.1.1)(rxjs@7.8.1)
   dexie:
     specifier: ^3.2.7
     version: 3.2.7
@@ -2618,6 +2627,51 @@ packages:
     dependencies:
       call-bind: 1.0.7
     dev: true
+
+  /@ngrx/effects@17.1.1(@angular/core@17.3.1)(@ngrx/store@17.1.1)(rxjs@7.8.1):
+    resolution: {integrity: sha512-VDNVI70wfEwqoNliffAiMhsPry0CWKkifCLmfzr+SZEEdAaPEBr4FtRrrdcdq/ovmkcgoWukkH2MBljbCyHwtA==}
+    peerDependencies:
+      '@angular/core': ^17.0.0
+      '@ngrx/store': 17.1.1
+      rxjs: ^6.5.3 || ^7.5.0
+    dependencies:
+      '@angular/core': 17.3.1(rxjs@7.8.1)(zone.js@0.14.4)
+      '@ngrx/operators': 17.0.0-beta.0(rxjs@7.8.1)
+      '@ngrx/store': 17.1.1(@angular/core@17.3.1)(rxjs@7.8.1)
+      rxjs: 7.8.1
+      tslib: 2.6.2
+    dev: false
+
+  /@ngrx/operators@17.0.0-beta.0(rxjs@7.8.1):
+    resolution: {integrity: sha512-EbO8AONuQ6zo2v/mPyBOi4y0CTAp1x4Z+bx7ZF+Pd8BL5ma53BTCL1TmzaeK5zPUe0yApudLk9/ZbHXPnVox5A==}
+    peerDependencies:
+      rxjs: ^6.5.3 || ^7.4.0
+    dependencies:
+      rxjs: 7.8.1
+      tslib: 2.6.2
+    dev: false
+
+  /@ngrx/store-devtools@17.1.1(@ngrx/store@17.1.1)(rxjs@7.8.1):
+    resolution: {integrity: sha512-MCzM44wHzc0eY6FSvPQwuXn1HFst8Y4Ckq7jvlPA202nJYwMZQQJReI5KQNHfGiqe0RpZKov0FUmy6sIyOOt2A==}
+    peerDependencies:
+      '@ngrx/store': 17.1.1
+      rxjs: ^6.5.3 || ^7.5.0
+    dependencies:
+      '@ngrx/store': 17.1.1(@angular/core@17.3.1)(rxjs@7.8.1)
+      rxjs: 7.8.1
+      tslib: 2.6.2
+    dev: false
+
+  /@ngrx/store@17.1.1(@angular/core@17.3.1)(rxjs@7.8.1):
+    resolution: {integrity: sha512-MGbKLTcl4uq2Uzx+qbMYNy6xW+JnkpRiznaGFX2/NFflq/zNZsjbxZrvn4/Z6ClVYIjj3uadjM1fupwMYMJxVA==}
+    peerDependencies:
+      '@angular/core': ^17.0.0
+      rxjs: ^6.5.3 || ^7.5.0
+    dependencies:
+      '@angular/core': 17.3.1(rxjs@7.8.1)(zone.js@0.14.4)
+      rxjs: 7.8.1
+      tslib: 2.6.2
+    dev: false
 
   /@ngtools/webpack@17.3.1(@angular/compiler-cli@17.3.1)(typescript@5.4.3)(webpack@5.90.3):
     resolution: {integrity: sha512-6qRYFN6DqogZK0ZFrSlhg1OsIWm3lL3m+/Ixoj6/MLLjDBrTtHqmI93vg6P1EKYTH4fWChL7jtv7iS/LSZubgw==}
