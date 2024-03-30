@@ -9,38 +9,44 @@
   <div
     class="mt-6 text-center lg:text-start max-h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar"
   >
-    <ul class="space-y-2 overflow-x-hidden">
+    <ul class="board-list space-y-2 overflow-x-hidden">
+      @for(board of boards(); track board.id) {
       <li
         class="inline-block lg:block font-medium rounded-full border-2 border-transparent hover:border-accent text-nowrap transition-[border-color]"
       >
         <a
           class="p-2 inline-flex lg:flex items-center gap-2 rounded-full"
-          [routerLink]="['/boards', 1]"
+          [routerLink]="['/boards', board.id]"
         >
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="12" cy="12" r="12" fill="#f8d8b0" />
-            <image
-              href="../../../../assets/icons/books.webp"
+          <div class="relative">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="12" r="12" [style.fill]="board.color" />
+            </svg>
+            <img
+              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              [src]="'../../../../assets/icons/' + board.icon + '.webp'"
               width="12"
               height="12"
-              x="6"
-              y="6"
             />
-          </svg>
+          </div>
 
-          <span class="hidden lg:inline-block"> Default Project </span>
+          <span class="hidden lg:inline-block overflow-hidden text-ellipsis">
+            {{ board.name }}
+          </span>
         </a>
       </li>
+      }
     </ul>
 
     <button
       class="mt-2 p-2 lg:w-full inline-flex lg:flex items-center gap-2 font-medium rounded-full border-2 border-transparent hover:border-accent text-nowrap transition-[border-color]"
+      [disabled]="boardStatus() !== 'success'"
     >
       <svg
         width="24"
@@ -56,9 +62,9 @@
           d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18Z"
         />
       </svg>
-      <span class="sr-only lg:not-sr-only !whitespace-nowrap"
-        >Add new board</span
-      >
+      <span class="sr-only lg:not-sr-only !whitespace-nowrap">
+        Add new board
+      </span>
     </button>
   </div>
 
