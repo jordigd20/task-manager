@@ -1,0 +1,57 @@
+<article
+  class="relative h-full min-h-36 rounded-lg transition-transform duration-[250] hover:scale-[1.02]"
+  [style.backgroundColor]="color"
+>
+  <a [routerLink]="['/boards', 1]" class="block h-full px-4 py-2">
+    <header>
+      <h3 class="text-lg font-medium line-clamp-3 pr-6 text-black">
+        {{ name }}
+      </h3>
+
+      <div>
+        <img
+          class="absolute right-4 top-4"
+          [src]="'../../../../assets/icons/' + icon + '.webp'"
+          [alt]="icon + ' icon'"
+          width="20"
+          height="20"
+        />
+      </div>
+    </header>
+  </a>
+
+  <footer class="absolute bottom-0 right-0 flex items-center gap-1 p-2">
+    <button
+      class="p-1 rounded-lg bg-background-elevated hover:bg-background transition-[background-color,transform] hover:scale-105"
+      aria-label="Edit board"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="currentColor"
+          d="m14.06 9.02l.92.92L5.92 19H5v-.92zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"
+        />
+      </svg>
+    </button>
+    <button
+      class="p-1 rounded-lg bg-background-elevated hover:bg-background transition-[background-color,transform] hover:scale-105"
+      aria-label="Delete board"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="currentColor"
+          d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"
+        />
+      </svg>
+    </button>
+  </footer>
+</article>

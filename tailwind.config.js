@@ -6,7 +6,15 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
+    container: {
+      center: true
+    },
     extend: {
+      screens: {
+        xs: '480px',
+        xxs: '380px',
+        xxxs: '320px',
+      },
       colors: {
         background: {
           DEFAULT: 'var(--background)',
@@ -15,6 +23,10 @@ module.exports = {
         primary: {
           DEFAULT: 'var(--primary)',
           foreground: 'var(--primary-foreground)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
         },
         accent: {
           DEFAULT: 'var(--accent)',
