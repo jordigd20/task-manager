@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, NgZone, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,18 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  title = 'task-manager';
+  store = inject(Store);
+  ngZone = inject(NgZone);
+
+  constructor() {}
+
+  ngOnInit() {
+    // @ts-ignore
+    if (window.Cypress) {
+      // @ts-ignore
+      window.store = this.store;
+      // @ts-ignore
+      window.ngZone = this.ngZone;
+    }
+  }
 }
