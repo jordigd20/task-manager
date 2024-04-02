@@ -1,4 +1,5 @@
 @import '@fontsource-variable/outfit';
+@import '@angular/cdk/overlay-prebuilt.css';
 
 @tailwind base;
 @tailwind components;
