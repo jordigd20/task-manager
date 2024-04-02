@@ -70,6 +70,9 @@ devDependencies:
   '@cypress/schematic':
     specifier: 2.5.1
     version: 2.5.1(@angular/cli@17.3.1)(@angular/core@17.3.1)
+  '@hirez_io/observer-spy':
+    specifier: ^2.2.0
+    version: 2.2.0(rxjs@7.8.1)(typescript@5.4.3)
   '@types/jest':
     specifier: ^29.5.12
     version: 29.5.12
@@ -2355,6 +2358,16 @@ packages:
   /@fontsource-variable/outfit@5.0.12:
     resolution: {integrity: sha512-f14wHgrD8GZnSbF7pK0F+Al3NYSz6oGaFbewvA4lVJRZcoQ6MQFu6BG6PY/elMrnx8WuklL8AncIVqPsrRIf0A==}
     dev: false
+
+  /@hirez_io/observer-spy@2.2.0(rxjs@7.8.1)(typescript@5.4.3):
+    resolution: {integrity: sha512-G9nv87vjRILgB/X1AtKBv1DZX7yXSYAOCXon/f+QULKoXVhVehYUF5Lv0SQ97ebf1sA48Z2CyQ9h2v4Pz6DgaQ==}
+    peerDependencies:
+      rxjs: '>=6.0.0'
+      typescript: '>=2.8.1'
+    dependencies:
+      rxjs: 7.8.1
+      typescript: 5.4.3
+    dev: true
 
   /@isaacs/cliui@8.0.2:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
