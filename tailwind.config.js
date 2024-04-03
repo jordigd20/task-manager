@@ -40,6 +40,30 @@ module.exports = {
       fontFamily: {
         sans: ['Outfit Variable', ...defaultTheme.fontFamily.sans],
       },
+      animation: {
+        'zoom-in': 'zoom-in 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
+        'zoom-out': 'zoom-out 0.2s cubic-bezier(0.32, 0.72, 0, 1)',
+      },
+      keyframes: {
+        'zoom-in': {
+          from: {
+            transform: 'scale(0.95)',
+          },
+          to: {
+            transform: 'scale(1)',
+          }
+        },
+        'zoom-out': {
+          from: {
+            transform: 'scale(1)',
+            opacity: 1,
+          },
+          to: {
+            transform: 'scale(0.95)',
+            opacity: 0,
+          }
+        },
+      }
     },
   },
   plugins: [],
