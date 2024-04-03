@@ -18,3 +18,7 @@ export const boardError = createSelector(
   selectBoardsState,
   (state) => state.error
 );
+export const isBoardFormOpen = createSelector(
+  selectBoardsState,
+  (state) => state.isBoardFormOpen
+);
