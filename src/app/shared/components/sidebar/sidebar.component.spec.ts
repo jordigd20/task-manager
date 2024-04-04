@@ -5,8 +5,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import Dexie, { PromiseExtended } from 'dexie';
 import { Board, Colors, IconType } from '../../../core/models/board.interface';
-import { BoardsSelectors, BoardsState } from '../../../boards/state';
+import { BoardsSelectors } from '../../../boards/state';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { initialState } from '../../../boards/state/boards.reducer';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -25,13 +26,6 @@ describe('SidebarComponent', () => {
       createdAt: new Date(),
     },
   ];
-
-  const initialState: BoardsState = {
-    boards: [],
-    selectedBoard: null,
-    status: 'pending',
-    error: null,
-  };
 
   beforeEach(async () => {
     spyDbOpen = jest

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { BoardLayoutComponent } from '../../ui/board-layout/board-layout.component';
-import { BoardListService } from '../../services/board-list.service';
 import { RouterLink } from '@angular/router';
 import { BoardCardComponent } from '../../ui/board-card/board-card.component';
 import { CommonModule } from '@angular/common';
@@ -10,6 +9,8 @@ import { BoardsActions, BoardsSelectors } from '../../state';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { boardStatus } from '../../state/boards.selectors';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { BoardFormComponent } from '../../ui/board-form/board-form.component';
 
 @Component({
   selector: 'board-list',
@@ -20,6 +21,7 @@ import { boardStatus } from '../../state/boards.selectors';
     RouterLink,
     BoardCardComponent,
     FooterComponent,
+    DialogModule,
   ],
   templateUrl: './board-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,8 +31,9 @@ import { boardStatus } from '../../state/boards.selectors';
   },
 })
 export class BoardListComponent {
-  boardListService = inject(BoardListService);
   store = inject(Store);
+  dialog = inject(Dialog);
+
   boards = toSignal(this.store.select(BoardsSelectors.boards));
   boardStatus = toSignal(this.store.select(boardStatus));
 
@@ -40,5 +43,32 @@ export class BoardListComponent {
 
   loadBoards() {
     this.store.dispatch(BoardsActions.loadBoards());
+  }
+
+  openAddBoardDialog() {
+    this.store.dispatch(BoardsActions.openBoardForm());
+    this.dialog.open(BoardFormComponent, {
+      ariaLabel: 'Add new board',
+      backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
+      data: {
+        confirmHandler: (board: Board) => {
+          this.store.dispatch(BoardsActions.addBoard({ board }));
+        },
+      },
+    });
+  }
+
+  openEditBoardDialog(board: Board) {
+    this.store.dispatch(BoardsActions.openBoardForm());
+    this.dialog.open(BoardFormComponent, {
+      ariaLabel: 'Edit board',
+      backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
+      disableClose: true,
+      data: {
+        board,
+        confirmHandler: (newBoard: Board) =>
+          this.store.dispatch(BoardsActions.updateBoard({ board: newBoard })),
+      },
+    });
   }
 }

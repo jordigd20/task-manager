@@ -1,18 +1,18 @@
 <article
   class="relative h-full min-h-36 rounded-lg transition-transform duration-[250] hover:scale-[1.02]"
-  [style.backgroundColor]="color"
+  [style.backgroundColor]="board.color"
 >
-  <a [routerLink]="['/boards', 1]" class="block h-full px-4 py-2">
+  <a [routerLink]="['/boards', board.id]" class="block h-full px-4 py-2">
     <header>
       <h3 class="text-lg font-medium line-clamp-3 pr-6 text-black">
-        {{ name }}
+        {{ board.name }}
       </h3>
 
       <div>
         <img
           class="absolute right-4 top-4"
-          [src]="'../../../../assets/icons/' + icon + '.webp'"
-          [alt]="icon + ' icon'"
+          [src]="'../../../../assets/icons/' + board.icon + '.webp'"
+          [alt]="board.icon + ' icon'"
           width="20"
           height="20"
         />
@@ -24,6 +24,8 @@
     <button
       class="p-1 rounded-lg bg-background-elevated hover:bg-background transition-[background-color,transform] hover:scale-105"
       aria-label="Edit board"
+      data-testid="edit-board-button"
+      (click)="edit.emit()"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -40,6 +42,7 @@
     <button
       class="p-1 rounded-lg bg-background-elevated hover:bg-background transition-[background-color,transform] hover:scale-105"
       aria-label="Delete board"
+      (click)="delete.emit()"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

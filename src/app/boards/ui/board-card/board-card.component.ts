@@ -6,6 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Board } from '../../../core/models/board.interface';
 
 @Component({
   selector: 'board-card',
@@ -15,9 +16,7 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardCardComponent {
-  @Input({ required: true }) name!: string;
-  @Input({ required: true }) icon!: string;
-  @Input({ required: true }) color!: string;
+  @Input({ required: true }) board!: Board;
 
   @Output() edit = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
