@@ -1,6 +1,6 @@
 <div
   #container
-  class="relative bg-background-elevated p-6 shadow-sm rounded-md animate-zoom-in"
+  class="relative bg-background dark:bg-background-elevated p-6 shadow-sm rounded-md animate-zoom-in"
   (animationend)="onCloseAnimationEnd($event)"
 >
   <h2 class="text-2xl font-semibold">
@@ -22,7 +22,7 @@
       </label>
       <input
         #boardNameInput
-        class="w-full p-2 bg-background-elevated rounded-lg border border-muted placeholder:text-muted focus:outline-none focus:ring focus:ring-accent focus:ring-offset-0 focus:border-transparent transition-all"
+        class="w-full p-2 bg-background dark:bg-background-elevated rounded-lg border border-muted placeholder:text-muted focus:outline-none focus:ring focus:ring-accent focus:ring-offset-0 focus:border-transparent transition-all"
         type="text"
         placeholder="e.g. My new board"
         id="board-name"
