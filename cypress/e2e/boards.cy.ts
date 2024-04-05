@@ -153,4 +153,39 @@ describe('Boards list page', () => {
         );
     });
   });
+
+  describe('Delete board', () => {
+    it('should display a confirmation modal when clicking on the delete board button', () => {
+      cy.visit('/');
+
+      cy.get('[data-testid="delete-board-button"]').first().click();
+      cy.get('[data-testid="confirmation-modal"]').should('be.visible');
+      cy.get('[data-testid="confirmation-modal"] h2').should(
+        'contain.text',
+        'Delete board'
+      );
+    });
+
+    it('should close the confirmation modal when clicking on the close button', () => {
+      cy.visit('/');
+
+      cy.get('[data-testid="delete-board-button"]').first().click();
+      cy.get('[data-testid="confirmation-modal"]').should('be.visible');
+      cy.get('[data-testid="close-dialog-button"]').click();
+      cy.get('[data-testid="confirmation-modal"]').should('not.exist');
+    });
+
+    it('should delete the board when the confirmation modal is submitted', () => {
+      cy.visit('/');
+
+      const lastBoardName = cy.get('.boards-list h3').last().invoke('text');
+
+      cy.get('[data-testid="delete-board-button"]').first().click();
+      cy.get('[data-testid="confirmation-modal"]').should('be.visible');
+      cy.get('[data-testid="confirm-dialog-button"]').click();
+
+      cy.get('.boards-list').should('be.visible');
+      cy.get('.boards-list h3').should('not.contain.text', lastBoardName);
+    });
+  });
 });
