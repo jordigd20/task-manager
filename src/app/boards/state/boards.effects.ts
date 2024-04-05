@@ -59,4 +59,21 @@ export class BoardsEffects {
       )
     )
   );
+
+  deleteBoard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BoardsActions.deleteBoard),
+      switchMap(({ id }) =>
+        from(this.boardListService.deleteBoard(id)).pipe(
+          map((id) => BoardsActions.deleteBoardSuccess({ id })),
+          catchError((error) =>
+            of(BoardsActions.deleteBoardFailure({ error: error.message })).pipe(
+              // TODO: Show error message to the user
+              tap(() => this.store.dispatch(BoardsActions.loadBoards()))
+            )
+          )
+        )
+      )
+    )
+  );
 }

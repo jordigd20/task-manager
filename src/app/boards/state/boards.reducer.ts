@@ -76,5 +76,22 @@ export const boardsReducer = createReducer(
     status: 'failure' as 'failure',
     error,
     isBoardFormOpen: false,
+  })),
+  on(BoardsActions.deleteBoard, (state) => ({
+    ...state,
+    status: 'loading' as 'loading',
+  })),
+  on(BoardsActions.deleteBoardSuccess, (state, { id }) => ({
+    ...state,
+    boards: state.boards.filter((board) => board.id !== id),
+    status: 'success' as 'success',
+    error: null,
+    isBoardFormOpen: false,
+  })),
+  on(BoardsActions.deleteBoardFailure, (state, { error }) => ({
+    ...state,
+    status: 'failure' as 'failure',
+    error,
+    isBoardFormOpen: false,
   }))
 );

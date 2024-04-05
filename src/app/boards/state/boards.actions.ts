@@ -43,3 +43,18 @@ export const updateBoardFailure = createAction(
   '[Boards List] Update Board Failure',
   props<{ error: string }>()
 );
+
+export const deleteBoard = createAction(
+  '[Boards List] Delete Board',
+  props<{ id: number }>()
+);
+
+export const deleteBoardSuccess = createAction(
+  '[Boards List] Delete Board Success',
+  props<{ id: number }>()
+);
+
+export const deleteBoardFailure = createAction(
+  '[Boards List] Delete Board Failure',
+  props<{ error: string }>()
+);

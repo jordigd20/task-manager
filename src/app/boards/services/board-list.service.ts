@@ -26,4 +26,8 @@ export class BoardListService {
 
     return await this.db.boards.where('id').equals(board.id).modify(board);
   }
+
+  async deleteBoard(id: number) {
+    return await this.db.boards.where('id').equals(id).delete();
+  }
 }
