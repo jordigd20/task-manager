@@ -1,0 +1,32 @@
+<div
+  #container
+  class="relative bg-background dark:bg-background-elevated p-6 shadow-sm rounded-md animate-zoom-in"
+  (animationend)="onCloseAnimationEnd($event)"
+>
+  <h2 class="text-2xl font-semibold">{{ data.title }}</h2>
+  <p #message>{{ data.message }}</p>
+
+  <div class="pt-4 flex items-center justify-center gap-2">
+    <button
+      class="border-2 border-muted text-muted py-1.5 px-4 rounded-full hover:bg-border transition-all"
+      type="button"
+      data-testid="close-dialog-button"
+      (click)="closeDialog()"
+    >
+      Cancel
+    </button>
+
+    <button
+      class="py-2 px-5 inline-flex items-center justify-between gap-1 rounded-full transition-all"
+      [ngClass]="
+        data.isDestructive
+          ? 'bg-red-500 text-white hover:bg-red-700 disabled:bg-red-700'
+          : 'bg-accent text-accent-foreground hover:bg-secondary-foreground disabled:bg-secondary-foreground'
+      "
+      data-testid="confirm-dialog-button"
+      (click)="confirm()"
+    >
+      {{ data.confirmText }}
+    </button>
+  </div>
+</div>
