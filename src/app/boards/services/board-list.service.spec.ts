@@ -121,4 +121,37 @@ describe('BoardListService', () => {
       'Board id is required'
     );
   });
+
+  it('should delete a board by an id', async () => {
+    const id = 1;
+
+    mockDbService.boards.where = jest.fn().mockReturnValue({
+      equals: jest.fn().mockReturnValue({
+        delete: jest
+          .fn()
+          .mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve(id))),
+      }),
+    });
+
+    jest.spyOn(mockDbService.boards, 'where');
+
+    const result = await service.deleteBoard(id);
+
+    expect(dbService.boards.where).toHaveBeenCalledWith('id');
+    expect(result).toBe(id);
+  });
+
+  it('should catch an error when deleting a board', async () => {
+    const id = 1;
+
+    mockDbService.boards.where = jest.fn().mockReturnValue({
+      equals: jest.fn().mockReturnValue({
+        delete: jest.fn().mockRejectedValueOnce(new Error('Error deleting')),
+      }),
+    });
+
+    jest.spyOn(mockDbService.boards, 'where');
+
+    await expect(service.deleteBoard(id)).rejects.toThrow('Error deleting');
+  });
 });

@@ -11,6 +11,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { boardStatus } from '../../state/boards.selectors';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { BoardFormComponent } from '../../ui/board-form/board-form.component';
+import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'board-list',
@@ -68,6 +69,23 @@ export class BoardListComponent {
         board,
         confirmHandler: (newBoard: Board) =>
           this.store.dispatch(BoardsActions.updateBoard({ board: newBoard })),
+      },
+    });
+  }
+
+  openDeleteBoardDialog(board: Board) {
+    this.store.dispatch(BoardsActions.openBoardForm());
+    this.dialog.open(ConfirmationModalComponent, {
+      ariaLabel: 'Delete board',
+      backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
+      disableClose: true,
+      data: {
+        title: 'Delete board',
+        message: `Are you sure you want to delete "<b>${board.name}</b>" board?`,
+        confirmText: 'Delete',
+        isDestructive: true,
+        confirmHandler: () =>
+          this.store.dispatch(BoardsActions.deleteBoard({ id: board.id! })),
       },
     });
   }

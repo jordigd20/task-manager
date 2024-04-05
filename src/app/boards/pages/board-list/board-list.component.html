@@ -37,7 +37,11 @@
       class="boards-list mt-4 grid xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
     >
       <ng-container *ngFor="let board of boards(); trackBy: trackByBoardId">
-        <board-card [board]="board" (edit)="openEditBoardDialog(board)" />
+        <board-card
+          [board]="board"
+          (edit)="openEditBoardDialog(board)"
+          (delete)="openDeleteBoardDialog(board)"
+        />
       </ng-container>
     </div>
   </section>

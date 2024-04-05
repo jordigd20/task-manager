@@ -78,8 +78,7 @@ export class BoardFormComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((event: MouseEvent) => {
         if (event.type === 'click' && this.boardStatus() !== 'loading') {
-          this.container.nativeElement.classList.remove('animate-zoom-in');
-          this.container.nativeElement.classList.add('animate-zoom-out');
+          this.closeDialog();
         }
       });
   }
@@ -90,8 +89,7 @@ export class BoardFormComponent {
   }
 
   @HostListener('window:keyup.esc') onKeyUpEsc() {
-    this.container.nativeElement.classList.remove('animate-zoom-in');
-    this.container.nativeElement.classList.add('animate-zoom-out');
+   this.closeDialog();
   }
 
   onSubmit(nameInput: HTMLInputElement) {
