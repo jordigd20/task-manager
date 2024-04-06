@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { BoardListService } from './board-list.service';
-import { Board, Colors, IconType } from '../../core/models/board.interface';
-import { DbService } from '../../core/services/db.service';
+import { BoardService } from './boards.service';
+import { Board, Colors, IconType } from '../models/board.interface';
+import { DbService } from './db.service';
 import Dexie from 'dexie';
 
-describe('BoardListService', () => {
-  let service: BoardListService;
+describe('BoardService', () => {
+  let service: BoardService;
   let dbService: DbService;
 
   const mockBoards: Board[] = [
@@ -45,6 +45,11 @@ describe('BoardListService', () => {
         }),
       }),
     },
+    tasks: {
+      add: jest
+      .fn()
+      .mockReturnValue(new Dexie.Promise((resolve) => resolve(1))),
+    }
   };
 
   beforeEach(() => {
@@ -58,7 +63,7 @@ describe('BoardListService', () => {
     });
 
     dbService = TestBed.inject(DbService);
-    service = TestBed.inject(BoardListService);
+    service = TestBed.inject(BoardService);
   });
 
   it('should be created', () => {

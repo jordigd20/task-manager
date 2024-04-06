@@ -6,16 +6,16 @@ import { BoardsEffects } from './boards.effects';
 import { provideMockStore } from '@ngrx/store/testing';
 import { initialState } from './boards.reducer';
 import { Board, Colors, IconType } from '../../core/models/board.interface';
-import { BoardListService } from '../services/board-list.service';
+import { BoardService } from '../../core/services/boards.service';
 import { BoardsActions } from '.';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
 
 describe('BoardsEffects', () => {
   let effects: BoardsEffects;
   let actions$ = new Observable<Action>();
-  let boardListService: BoardListService;
+  let boardService: BoardService;
 
-  const mockBoardListService = {
+  const mockBoardService = {
     getBoards: jest.fn(),
     addBoard: jest.fn(),
     updateBoard: jest.fn(),
@@ -38,8 +38,8 @@ describe('BoardsEffects', () => {
       providers: [
         BoardsEffects,
         {
-          provide: BoardListService,
-          useValue: mockBoardListService,
+          provide: BoardService,
+          useValue: mockBoardService,
         },
         provideMockStore({ initialState }),
         provideMockActions(() => actions$),
@@ -47,13 +47,13 @@ describe('BoardsEffects', () => {
     });
 
     effects = TestBed.inject(BoardsEffects);
-    boardListService = TestBed.inject(BoardListService);
+    boardService = TestBed.inject(BoardService);
   });
 
   describe('Load Boards', () => {
     it('loadBoards$ should return [Boards List] Boards Load Success', () => {
       // Arrange
-      mockBoardListService.getBoards.mockReturnValue(of(mockBoards));
+      mockBoardService.getBoards.mockReturnValue(of(mockBoards));
 
       // Act
       actions$ = of(BoardsActions.loadBoards());
@@ -64,12 +64,12 @@ describe('BoardsEffects', () => {
         BoardsActions.loadBoardsSuccess({ boards: mockBoards })
       );
 
-      expect(mockBoardListService.getBoards).toHaveBeenCalled();
+      expect(mockBoardService.getBoards).toHaveBeenCalled();
     });
 
     it('loadBoards$ should return [Boards List] Boards Load Failure', () => {
       // Arrange
-      mockBoardListService.getBoards.mockReturnValue(
+      mockBoardService.getBoards.mockReturnValue(
         throwError(() => {
           throw new Error('Error loading boards');
         })
@@ -84,7 +84,7 @@ describe('BoardsEffects', () => {
         BoardsActions.loadBoardsFailure({ error: 'Error loading boards' })
       );
 
-      expect(mockBoardListService.getBoards).toHaveBeenCalled();
+      expect(mockBoardService.getBoards).toHaveBeenCalled();
     });
   });
 
@@ -92,7 +92,7 @@ describe('BoardsEffects', () => {
     it('addBoard$ should return [Boards List] Add Board Success', () => {
       // Arrange
       const board = mockBoards[0];
-      mockBoardListService.addBoard.mockReturnValue(of(1));
+      mockBoardService.addBoard.mockReturnValue(of(1));
 
       // Act
       actions$ = of(BoardsActions.addBoard({ board }));
@@ -103,13 +103,13 @@ describe('BoardsEffects', () => {
         BoardsActions.addBoardSuccess({ id: 1 })
       );
 
-      expect(mockBoardListService.addBoard).toHaveBeenCalledWith(board);
+      expect(mockBoardService.addBoard).toHaveBeenCalledWith(board);
     });
 
     it('addBoard$ should return [Boards List] Add Board Failure', () => {
       // Arrange
       const board = mockBoards[0];
-      mockBoardListService.addBoard.mockReturnValue(
+      mockBoardService.addBoard.mockReturnValue(
         throwError(() => {
           throw new Error('Error adding board');
         })
@@ -124,7 +124,7 @@ describe('BoardsEffects', () => {
         BoardsActions.addBoardFailure({ error: 'Error adding board' })
       );
 
-      expect(mockBoardListService.addBoard).toHaveBeenCalledWith(board);
+      expect(mockBoardService.addBoard).toHaveBeenCalledWith(board);
     });
   });
 
@@ -132,7 +132,7 @@ describe('BoardsEffects', () => {
     it('updateBoard$ should return [Boards List] Update Board Success', () => {
       // Arrange
       const board = mockBoards[0];
-      mockBoardListService.updateBoard.mockReturnValue(of({}));
+      mockBoardService.updateBoard.mockReturnValue(of({}));
 
       // Act
       actions$ = of(BoardsActions.updateBoard({ board }));
@@ -143,14 +143,14 @@ describe('BoardsEffects', () => {
         BoardsActions.updateBoardSuccess()
       );
 
-      expect(mockBoardListService.updateBoard).toHaveBeenCalledWith(board);
+      expect(mockBoardService.updateBoard).toHaveBeenCalledWith(board);
     });
 
     it('updateBoard$ should return [Boards List] Update Board Failure', () => {
       // Arrange
       const board = mockBoards[0];
 
-      mockBoardListService.updateBoard.mockReturnValue(
+      mockBoardService.updateBoard.mockReturnValue(
         throwError(() => {
           throw new Error('Error updating board');
         })
@@ -165,7 +165,7 @@ describe('BoardsEffects', () => {
         BoardsActions.updateBoardFailure({ error: 'Error updating board' })
       );
 
-      expect(mockBoardListService.updateBoard).toHaveBeenCalledWith(board);
+      expect(mockBoardService.updateBoard).toHaveBeenCalledWith(board);
     });
   });
 
@@ -173,7 +173,7 @@ describe('BoardsEffects', () => {
     it('deleteBoard$ should return [Boards List] Delete Board Success', () => {
       // Arrange
       const id = 1;
-      mockBoardListService.deleteBoard.mockReturnValue(of(id));
+      mockBoardService.deleteBoard.mockReturnValue(of(id));
 
       // Act
       actions$ = of(BoardsActions.deleteBoard({ id }));
@@ -184,13 +184,13 @@ describe('BoardsEffects', () => {
         BoardsActions.deleteBoardSuccess({ id })
       );
 
-      expect(mockBoardListService.deleteBoard).toHaveBeenCalledWith(id);
+      expect(mockBoardService.deleteBoard).toHaveBeenCalledWith(id);
     });
 
     it('deleteBoard$ should return [Boards List] Delete Board Failure', () => {
       // Arrange
       const id = 1;
-      mockBoardListService.deleteBoard.mockReturnValue(
+      mockBoardService.deleteBoard.mockReturnValue(
         throwError(() => {
           throw new Error('Error deleting board');
         })
@@ -205,7 +205,7 @@ describe('BoardsEffects', () => {
         BoardsActions.deleteBoardFailure({ error: 'Error deleting board' })
       );
 
-      expect(mockBoardListService.deleteBoard).toHaveBeenCalledWith(id);
+      expect(mockBoardService.deleteBoard).toHaveBeenCalledWith(id);
     });
   });
 });

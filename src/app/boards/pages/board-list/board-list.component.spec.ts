@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BoardListComponent } from './board-list.component';
-import { BoardListService } from '../../services/board-list.service';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { initialState } from '../../state/boards.reducer';
 import { BoardsSelectors } from '../../state';
@@ -10,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 describe('BoardListComponent', () => {
   let component: BoardListComponent;
   let fixture: ComponentFixture<BoardListComponent>;
-  let boardListService: BoardListService;
   let store: MockStore;
 
   const mockBoards: Board[] = [
@@ -32,12 +30,6 @@ describe('BoardListComponent', () => {
           provide: ActivatedRoute,
           useValue: {},
         },
-        {
-          provide: BoardListService,
-          useValue: {
-            getBoards: jest.fn(),
-          },
-        },
         provideMockStore({
           initialState,
           selectors: [
@@ -55,7 +47,6 @@ describe('BoardListComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(BoardListComponent);
-    boardListService = TestBed.inject(BoardListService);
     store = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();

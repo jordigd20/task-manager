@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { BoardListService } from '../services/board-list.service';
+import { BoardService } from '../../core/services/boards.service';
 import { BoardsActions } from '.';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { from, of } from 'rxjs';
@@ -9,14 +9,14 @@ import { Store } from '@ngrx/store';
 @Injectable()
 export class BoardsEffects {
   private actions$ = inject(Actions);
-  private boardListService = inject(BoardListService);
+  private boardService = inject(BoardService);
   private store = inject(Store);
 
   loadBoards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BoardsActions.loadBoards),
       switchMap(() =>
-        from(this.boardListService.getBoards()).pipe(
+        from(this.boardService.getBoards()).pipe(
           map((boards) => BoardsActions.loadBoardsSuccess({ boards })),
           catchError((error) =>
             of(BoardsActions.loadBoardsFailure({ error: error.message }))
@@ -30,7 +30,7 @@ export class BoardsEffects {
     this.actions$.pipe(
       ofType(BoardsActions.addBoard),
       switchMap(({ board }) =>
-        from(this.boardListService.addBoard(board)).pipe(
+        from(this.boardService.addBoard(board)).pipe(
           map((idBoard) => BoardsActions.addBoardSuccess({ id: idBoard })),
           catchError((error) =>
             of(BoardsActions.addBoardFailure({ error: error.message })).pipe(
@@ -47,7 +47,7 @@ export class BoardsEffects {
     this.actions$.pipe(
       ofType(BoardsActions.updateBoard),
       switchMap(({ board }) =>
-        from(this.boardListService.updateBoard(board)).pipe(
+        from(this.boardService.updateBoard(board)).pipe(
           map(() => BoardsActions.updateBoardSuccess()),
           catchError((error) =>
             of(BoardsActions.updateBoardFailure({ error: error.message })).pipe(
@@ -64,7 +64,7 @@ export class BoardsEffects {
     this.actions$.pipe(
       ofType(BoardsActions.deleteBoard),
       switchMap(({ id }) =>
-        from(this.boardListService.deleteBoard(id)).pipe(
+        from(this.boardService.deleteBoard(id)).pipe(
           map((id) => BoardsActions.deleteBoardSuccess({ id })),
           catchError((error) =>
             of(BoardsActions.deleteBoardFailure({ error: error.message })).pipe(
