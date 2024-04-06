@@ -22,3 +22,7 @@ export const isBoardFormOpen = createSelector(
   selectBoardsState,
   (state) => state.isBoardFormOpen
 );
+export const tasks = createSelector(
+  selectBoardsState,
+  (state) => state.tasks
+);

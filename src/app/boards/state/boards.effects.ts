@@ -76,4 +76,18 @@ export class BoardsEffects {
       )
     )
   );
+
+  getBoardById$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BoardsActions.getBoardById),
+      switchMap(({ id }) =>
+        from(this.boardService.getBoardById(id)).pipe(
+          map(({board, tasks}) => BoardsActions.getBoardByIdSuccess({ board, tasks })),
+          catchError((error) =>
+            of(BoardsActions.getBoardByIdFailure({ error: error.message }))
+          )
+        )
+      )
+    )
+  );
 }

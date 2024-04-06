@@ -1,10 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import { Board } from '../../core/models/board.interface';
 import { BoardsActions } from '.';
+import { Task } from '../../core/models/task.interface';
 
 export interface BoardsState {
   boards: Board[];
   selectedBoard: Board | null;
+  tasks: Task[];
   status: 'pending' | 'loading' | 'success' | 'failure';
   error: string | null;
   isBoardFormOpen: boolean;
@@ -13,6 +15,7 @@ export interface BoardsState {
 export const initialState: BoardsState = {
   boards: [],
   selectedBoard: null,
+  tasks: [],
   status: 'pending',
   error: null,
   isBoardFormOpen: false,
@@ -93,5 +96,21 @@ export const boardsReducer = createReducer(
     status: 'failure' as 'failure',
     error,
     isBoardFormOpen: false,
+  })),
+  on(BoardsActions.getBoardById, (state) => ({
+    ...state,
+    status: 'loading' as 'loading',
+  })),
+  on(BoardsActions.getBoardByIdSuccess, (state, { board, tasks }) => ({
+    ...state,
+    selectedBoard: board,
+    tasks,
+    status: 'success' as 'success',
+    error: null,
+  })),
+  on(BoardsActions.getBoardByIdFailure, (state, { error }) => ({
+    ...state,
+    status: 'failure' as 'failure',
+    error,
   }))
 );

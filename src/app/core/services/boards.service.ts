@@ -3,12 +3,14 @@ import { DbService } from './db.service';
 import { liveQuery } from 'dexie';
 import { Board } from '../models/board.interface';
 import { TaskStatus } from '../models/task.interface';
+import { TasksService } from './tasks.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
   private db = inject(DbService);
+  private tasksService = inject(TasksService);
 
   constructor() {}
 
@@ -23,7 +25,9 @@ export class BoardService {
       throw new Error('Board not found');
     }
 
-    return board;
+    const tasks = await this.tasksService.getTasksByBoard(id);
+
+    return { board, tasks };
   }
 
   async addBoard(board: Board) {
