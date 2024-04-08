@@ -1,0 +1,23 @@
+<button class="text-start p-3 w-full h-full font-medium">
+  @if (task.image) {
+    <div class="mb-2 w-full h-36">
+      <img
+        class="w-full h-full object-cover rounded-sm"
+        src="https://images.unsplash.com/photo-1712311953600-81354526ec28?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        [alt]="task.title + ' image'"
+      />
+    </div>
+  }
+
+  {{ task.title }}
+
+  @if (task.tags.length > 0) {
+    <div class="pt-4 text-sm flex items-center gap-2">
+      @for (tag of task.tags; track $index) {
+        <span class="py-0.5 px-2 rounded-md bg-red-200 text-red-800 font-medium">
+          {{ tag.name }}
+        </span>
+      }
+    </div>
+  }
+</button>

@@ -1,1 +1,78 @@
-<p>board-detail works!</p>
+@if (board() != null) {
+  <ol class="flex gap-3 w-full h-full overflow-x-auto scrollbar">
+    @for (section of board()?.tasksOrder; track $index) {
+      <li class="w-full h-full max-h-full overflow-y-hidden flex flex-col min-w-56">
+        <div class="py-2 bg-background-elevated flex items-center">
+          <button class="text-muted rounded-md mr-1" aria-label="drag to move to another position">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 20C8.45 20 7.97933 19.8043 7.588 19.413C7.19667 19.0217 7.00067 18.5507 7 18C7 17.45 7.196 16.9793 7.588 16.588C7.98 16.1967 8.45067 16.0007 9 16C9.55 16 10.021 16.196 10.413 16.588C10.805 16.98 11.0007 17.4507 11 18C11 18.55 10.8043 19.021 10.413 19.413C10.0217 19.805 9.55067 20.0007 9 20ZM15 20C14.45 20 13.9793 19.8043 13.588 19.413C13.1967 19.0217 13.0007 18.5507 13 18C13 17.45 13.196 16.9793 13.588 16.588C13.98 16.1967 14.4507 16.0007 15 16C15.55 16 16.021 16.196 16.413 16.588C16.805 16.98 17.0007 17.4507 17 18C17 18.55 16.8043 19.021 16.413 19.413C16.0217 19.805 15.5507 20.0007 15 20ZM9 14C8.45 14 7.97933 13.8043 7.588 13.413C7.19667 13.0217 7.00067 12.5507 7 12C7 11.45 7.196 10.9793 7.588 10.588C7.98 10.1967 8.45067 10.0007 9 10C9.55 10 10.021 10.196 10.413 10.588C10.805 10.98 11.0007 11.4507 11 12C11 12.55 10.8043 13.021 10.413 13.413C10.0217 13.805 9.55067 14.0007 9 14ZM15 14C14.45 14 13.9793 13.8043 13.588 13.413C13.1967 13.0217 13.0007 12.5507 13 12C13 11.45 13.196 10.9793 13.588 10.588C13.98 10.1967 14.4507 10.0007 15 10C15.55 10 16.021 10.196 16.413 10.588C16.805 10.98 17.0007 11.4507 17 12C17 12.55 16.8043 13.021 16.413 13.413C16.0217 13.805 15.5507 14.0007 15 14ZM9 8C8.45 8 7.97933 7.80433 7.588 7.413C7.19667 7.02167 7.00067 6.55067 7 6C7 5.45 7.196 4.97933 7.588 4.588C7.98 4.19667 8.45067 4.00067 9 4C9.55 4 10.021 4.196 10.413 4.588C10.805 4.98 11.0007 5.45067 11 6C11 6.55 10.8043 7.021 10.413 7.413C10.0217 7.805 9.55067 8.00067 9 8ZM15 8C14.45 8 13.9793 7.80433 13.588 7.413C13.1967 7.02167 13.0007 6.55067 13 6C13 5.45 13.196 4.97933 13.588 4.588C13.98 4.19667 14.4507 4.00067 15 4C15.55 4 16.021 4.196 16.413 4.588C16.805 4.98 17.0007 5.45067 17 6C17 6.55 16.8043 7.021 16.413 7.413C16.0217 7.805 15.5507 8.00067 15 8Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+          <h2 class="font-semibold">{{ taskStatus[section].title }} (2)</h2>
+          <span
+            class="ml-2 w-2 h-2 rounded-full"
+            [style.backgroundColor]="taskStatus[section].color"
+          ></span>
+        </div>
+
+        <ol class="flex flex-col gap-2.5 mt-2 mb-3 px-2 overflow-y-auto scrollbar">
+          @if (tasks()) {
+            @for (task of tasks()![section]; track task.id) {
+              <li>
+                <task-card [task]="task" />
+              </li>
+            } @empty {
+              <li class="p-2 text-[#6B6B6B] dark:text-muted">No tasks</li>
+            }
+          }
+        </ol>
+
+        @if (section === 'backlog') {
+          <div class="px-2">
+            <button
+              class="w-full bg-accent text-accent-foreground py-2 pl-4 pr-2 inline-flex items-center justify-between gap-1 rounded-lg transition-all hover:ring-2 hover:ring-offset-2 hover:ring-offset-background hover:ring-accent hover:scale-[1.01]"
+            >
+              Add new task
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 6L12 18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M18 12L6 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+        }
+      </li>
+    }
+  </ol>
+} @else {
+  <div class="flex items-center justify-center h-full">
+    <div class="text-center">
+      <h2 class="error-message text-2xl font-semibold">No board found</h2>
+      <p class="mt-2">We couldn't find the board you're looking for.</p>
+    </div>
+  </div>
+}
