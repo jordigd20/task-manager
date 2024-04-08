@@ -2,20 +2,20 @@
   <h1
     class="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-logo to-purple-logo [-webkit-background-clip:text]"
   >
-    <a [routerLink]="['/boards']" class="inline-block lg:hidden">TM</a>
-    <a [routerLink]="['/boards']" class="hidden lg:inline-block">TaskManager</a>
+    <a [routerLink]="['/boards']" class="inline-block xl:hidden">TM</a>
+    <a [routerLink]="['/boards']" class="hidden xl:inline-block">TaskManager</a>
   </h1>
 
   <div
-    class="mt-6 text-center lg:text-start max-h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar"
+    class="mt-6 text-center xl:text-start max-h-[calc(100vh-160px)] overflow-y-auto overflow-x-hidden scrollbar"
   >
     <ul class="board-list space-y-2 overflow-x-hidden">
       @for(board of boards(); track board.id) {
       <li
-        class="inline-block lg:block font-medium rounded-full border-2 border-transparent hover:border-accent text-nowrap transition-[border-color]"
+        class="inline-block xl:block font-medium rounded-full border-2 border-transparent hover:border-accent text-nowrap transition-[border-color]"
       >
         <a
-          class="p-2 inline-flex lg:flex items-center gap-2 rounded-full"
+          class="p-2 inline-flex xl:flex items-center gap-2 rounded-full"
           [routerLink]="['/boards', board.id]"
         >
           <div class="relative">
@@ -36,7 +36,7 @@
             />
           </div>
 
-          <span class="hidden lg:inline-block overflow-hidden text-ellipsis">
+          <span class="hidden xl:inline-block overflow-hidden text-ellipsis">
             {{ board.name }}
           </span>
         </a>
@@ -45,7 +45,7 @@
     </ul>
 
     <button
-      class="mt-2 p-2 lg:w-full inline-flex lg:flex items-center gap-2 font-medium rounded-full border-2 border-transparent hover:border-accent text-nowrap transition-[border-color]"
+      class="mt-2 p-2 xl:w-full inline-flex xl:flex items-center gap-2 font-medium rounded-full border-2 border-transparent hover:border-accent text-nowrap transition-[border-color]"
       [disabled]="boardStatus() !== 'success'"
     >
       <svg
@@ -62,13 +62,13 @@
           d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18Z"
         />
       </svg>
-      <span class="sr-only lg:not-sr-only !whitespace-nowrap">
+      <span class="sr-only xl:not-sr-only !whitespace-nowrap">
         Add new board
       </span>
     </button>
   </div>
 
-  <div class="inline-flex lg:hidden justify-center mt-auto">
+  <div class="inline-flex xl:hidden justify-center mt-auto">
     <button
       class="p-2 rounded-lg hover:bg-background-elevated transition-[background-color]"
       [attr.aria-label]="
@@ -107,7 +107,7 @@
   </div>
 
   <div
-    class="hidden lg:flex relative items-center mt-auto w-full p-1 bg-background-elevated rounded-xl before:absolute before:w-[calc(50%-4px)] before:h-[calc(100%-8px)] before:bg-background before:rounded-lg before:top-1 before:transition-transform"
+    class="hidden xl:flex relative items-center mt-auto w-full p-1 bg-background-elevated rounded-xl before:absolute before:w-[calc(50%-4px)] before:h-[calc(100%-8px)] before:bg-background before:rounded-lg before:top-1 before:transition-transform"
     [ngClass]="{ 'before:translate-x-full': !isDarkMode() }"
   >
     <button

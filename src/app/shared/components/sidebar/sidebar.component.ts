@@ -20,7 +20,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'w-full max-h-screen py-4 px-0 lg:px-4  overflow-y-hidden overflow-x-hidden ',
+      'w-full max-h-screen py-4 px-0 xl:px-4  overflow-y-hidden overflow-x-hidden ',
   },
 })
 export class SidebarComponent implements OnInit {
