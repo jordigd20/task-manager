@@ -5,7 +5,7 @@ import {
   HostListener,
   ViewChild,
   inject,
-  signal,
+  signal
 } from '@angular/core';
 import { Board, IconType } from '../../../core/models/board.interface';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,10 +25,9 @@ import { Subject, filter, takeUntil } from 'rxjs';
   templateUrl: './board-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class:
-      'fixed left-1/2 top-1/2 z-40 w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
-    'data-testid': 'board-form',
-  },
+    class: 'fixed left-1/2 top-1/2 z-40 w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
+    'data-testid': 'board-form'
+  }
 })
 export class BoardFormComponent {
   @ViewChild('container') container!: ElementRef<HTMLDivElement>;
@@ -42,11 +41,8 @@ export class BoardFormComponent {
   } = inject(DIALOG_DATA);
 
   addBoardForm = this.fb.group({
-    name: [
-      this.data.board?.name ?? '',
-      [Validators.required, Validators.minLength(3)],
-    ],
-    icon: [this.data.board?.icon ?? IconType.Tools, Validators.required],
+    name: [this.data.board?.name ?? '', [Validators.required, Validators.minLength(3)]],
+    icon: [this.data.board?.icon ?? IconType.Tools, Validators.required]
   });
   isBoardFormOpen = this.store.select(BoardsSelectors.isBoardFormOpen);
   boardStatus = toSignal(this.store.select(BoardsSelectors.boardStatus));
@@ -89,7 +85,7 @@ export class BoardFormComponent {
   }
 
   @HostListener('window:keyup.esc') onKeyUpEsc() {
-   this.closeDialog();
+    this.closeDialog();
   }
 
   onSubmit(nameInput: HTMLInputElement) {
@@ -110,7 +106,7 @@ export class BoardFormComponent {
         ...this.data.board,
         name: this.name?.value as string,
         icon: this.iconSelected?.value as IconType,
-        color: iconsAvailable[this.iconSelected?.value!],
+        color: iconsAvailable[this.iconSelected?.value!]
       });
 
       return;
@@ -123,6 +119,7 @@ export class BoardFormComponent {
       color: iconsAvailable[this.iconSelected?.value!],
       createdAt: new Date(),
       tags: [],
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed']
     });
   }
 

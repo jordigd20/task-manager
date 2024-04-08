@@ -14,41 +14,33 @@ describe('BoardService', () => {
       name: 'Board 1',
       color: Colors.Blue,
       icon: IconType.Tools,
-      tags: [],
       createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: []
     },
     {
       id: 2,
       name: 'Board 2',
       color: Colors.Orange,
       icon: IconType.Eyes,
-      tags: [],
       createdAt: new Date(),
-    },
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: []
+    }
   ];
 
   const mockDbService = {
     boards: {
-      toArray: jest
-        .fn()
-        .mockResolvedValueOnce(
-          new Dexie.Promise((resolve) => resolve(mockBoards))
-        ),
-      add: jest
-        .fn()
-        .mockReturnValue(new Dexie.Promise((resolve) => resolve(1))),
+      toArray: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve(mockBoards))),
+      add: jest.fn().mockReturnValue(new Dexie.Promise((resolve) => resolve(1))),
       where: jest.fn().mockReturnValue({
         equals: jest.fn().mockReturnValue({
-          modify: jest
-            .fn()
-            .mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve())),
-        }),
-      }),
+          modify: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve()))
+        })
+      })
     },
     tasks: {
-      add: jest
-      .fn()
-      .mockReturnValue(new Dexie.Promise((resolve) => resolve(1))),
+      add: jest.fn().mockReturnValue(new Dexie.Promise((resolve) => resolve(1)))
     }
   };
 
@@ -57,9 +49,9 @@ describe('BoardService', () => {
       providers: [
         {
           provide: DbService,
-          useValue: mockDbService,
-        },
-      ],
+          useValue: mockDbService
+        }
+      ]
     });
 
     dbService = TestBed.inject(DbService);
@@ -85,8 +77,9 @@ describe('BoardService', () => {
       name: 'New Board',
       color: Colors.Green,
       icon: IconType.Eyes,
-      tags: [],
       createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: [],
     };
 
     jest.spyOn(mockDbService.boards, 'add');
@@ -102,8 +95,9 @@ describe('BoardService', () => {
       name: 'Updated Board',
       color: Colors.Green,
       icon: IconType.Eyes,
-      tags: [],
       createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: [],
     };
 
     jest.spyOn(mockDbService.boards, 'where');
@@ -118,13 +112,12 @@ describe('BoardService', () => {
       name: 'Updated Board',
       color: Colors.Green,
       icon: IconType.Eyes,
-      tags: [],
       createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: [],
     };
 
-    await expect(service.updateBoard(updatedBoard)).rejects.toThrow(
-      'Board id is required'
-    );
+    await expect(service.updateBoard(updatedBoard)).rejects.toThrow('Board id is required');
   });
 
   it('should delete a board by an id', async () => {
@@ -132,10 +125,8 @@ describe('BoardService', () => {
 
     mockDbService.boards.where = jest.fn().mockReturnValue({
       equals: jest.fn().mockReturnValue({
-        delete: jest
-          .fn()
-          .mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve(id))),
-      }),
+        delete: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve(id)))
+      })
     });
 
     jest.spyOn(mockDbService.boards, 'where');
@@ -151,8 +142,8 @@ describe('BoardService', () => {
 
     mockDbService.boards.where = jest.fn().mockReturnValue({
       equals: jest.fn().mockReturnValue({
-        delete: jest.fn().mockRejectedValueOnce(new Error('Error deleting')),
-      }),
+        delete: jest.fn().mockRejectedValueOnce(new Error('Error deleting'))
+      })
     });
 
     jest.spyOn(mockDbService.boards, 'where');

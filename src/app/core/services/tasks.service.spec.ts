@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { TasksService } from './tasks.service';
 import { DbService } from './db.service';
-import { Task, TaskStatus } from '../models/task.interface';
+import { Task } from '../models/task.interface';
 
 describe('TasksService', () => {
   let service: TasksService;
@@ -13,20 +13,20 @@ describe('TasksService', () => {
       id: 1,
       boardId: 1,
       title: 'Default Task',
-      status: TaskStatus.Backlog,
+      status: 'backlog',
       tags: [],
       image: '',
-      createdAt: new Date(),
+      createdAt: new Date()
     },
     {
       id: 2,
       boardId: 1,
       title: 'Task 2',
-      status: TaskStatus.Backlog,
+      status: 'backlog',
       tags: [],
       image: '',
-      createdAt: new Date(),
-    },
+      createdAt: new Date()
+    }
   ];
 
   beforeEach(() => {
@@ -38,13 +38,13 @@ describe('TasksService', () => {
             tasks: {
               where: jest.fn().mockReturnValue({
                 equals: jest.fn().mockReturnValue({
-                  toArray: jest.fn().mockResolvedValueOnce(mockTasks),
-                }),
-              }),
-            },
-          },
-        },
-      ],
+                  toArray: jest.fn().mockResolvedValueOnce(mockTasks)
+                })
+              })
+            }
+          }
+        }
+      ]
     });
 
     dbService = TestBed.inject(DbService);

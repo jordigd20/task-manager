@@ -1,13 +1,13 @@
 import { BoardsActions } from '.';
 import { Board, Colors, IconType } from '../../core/models/board.interface';
-import { Task, TaskStatus } from '../../core/models/task.interface';
-import { BoardsState, boardsReducer, initialState } from './boards.reducer';
+import { Task } from '../../core/models/task.interface';
+import { BoardsState, TaskState, boardsReducer, initialState } from './boards.reducer';
 
 describe('BoardsReducer', () => {
   describe('unknown action', () => {
     it('should return the default state', () => {
       const action = {
-        type: 'Unknown',
+        type: 'Unknown'
       };
 
       const state = boardsReducer(initialState, action);
@@ -20,7 +20,7 @@ describe('BoardsReducer', () => {
     it('[Boards Load] should set the status to loading and retrieve the state', () => {
       const newState: BoardsState = {
         ...initialState,
-        status: 'loading',
+        status: 'loading'
       };
 
       const action = BoardsActions.loadBoards();
@@ -37,9 +37,10 @@ describe('BoardsReducer', () => {
           name: 'Default Board',
           icon: IconType.Key,
           color: Colors.Green,
-          tags: ['Concept'],
-          createdAt: new Date(),
-        },
+          tags: [],
+          tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+          createdAt: new Date()
+        }
       ];
 
       const newState: BoardsState = {
@@ -47,7 +48,7 @@ describe('BoardsReducer', () => {
         boards: mockBoards,
         status: 'success',
         isBoardFormOpen: false,
-        error: null,
+        error: null
       };
 
       const action = BoardsActions.loadBoardsSuccess({ boards: mockBoards });
@@ -67,7 +68,7 @@ describe('BoardsReducer', () => {
         ...initialState,
         status: 'failure',
         isBoardFormOpen: false,
-        error,
+        error
       };
 
       expect(state).toEqual(newState);
@@ -82,7 +83,7 @@ describe('BoardsReducer', () => {
 
       const newState: BoardsState = {
         ...initialState,
-        isBoardFormOpen: true,
+        isBoardFormOpen: true
       };
 
       expect(state).toEqual(newState);
@@ -96,8 +97,9 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const action = BoardsActions.addBoard({ board: mockBoard });
@@ -106,7 +108,7 @@ describe('BoardsReducer', () => {
       const newState: BoardsState = {
         ...initialState,
         boards: [mockBoard],
-        status: 'loading',
+        status: 'loading'
       };
 
       expect(state).toEqual(newState);
@@ -118,24 +120,22 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const mockId = 1;
 
       const action = BoardsActions.addBoardSuccess({ id: mockId });
-      const state = boardsReducer(
-        { ...initialState, boards: [mockBoard] },
-        action
-      );
+      const state = boardsReducer({ ...initialState, boards: [mockBoard] }, action);
 
       const newState: BoardsState = {
         ...initialState,
         boards: [{ ...mockBoard, id: mockId }],
         status: 'success',
         error: null,
-        isBoardFormOpen: false,
+        isBoardFormOpen: false
       };
 
       expect(state).toEqual(newState);
@@ -147,24 +147,22 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const action = BoardsActions.addBoardFailure({
-        error: 'Error adding board',
+        error: 'Error adding board'
       });
-      const state = boardsReducer(
-        { ...initialState, boards: [mockBoard] },
-        action
-      );
+      const state = boardsReducer({ ...initialState, boards: [mockBoard] }, action);
 
       const newState: BoardsState = {
         ...initialState,
         boards: [],
         status: 'failure',
         error: 'Error adding board',
-        isBoardFormOpen: false,
+        isBoardFormOpen: false
       };
 
       expect(state).toEqual(newState);
@@ -179,8 +177,9 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const mockedState = { ...initialState, boards: [mockBoard] };
@@ -195,7 +194,7 @@ describe('BoardsReducer', () => {
       const newState: BoardsState = {
         ...mockedState,
         status: 'loading',
-        boards: [mockBoard],
+        boards: [mockBoard]
       };
 
       expect(state).toEqual(newState);
@@ -208,8 +207,9 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const mockedState = { ...initialState, boards: [mockBoard] };
@@ -225,7 +225,7 @@ describe('BoardsReducer', () => {
         ...mockedState,
         status: 'success',
         error: null,
-        isBoardFormOpen: false,
+        isBoardFormOpen: false
       };
 
       expect(state).toEqual(newState);
@@ -238,8 +238,9 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const mockedState = { ...initialState, boards: [mockBoard] };
@@ -249,7 +250,7 @@ describe('BoardsReducer', () => {
       mockBoard.color = Colors.Blue;
 
       const action = BoardsActions.updateBoardFailure({
-        error: 'Error updating board',
+        error: 'Error updating board'
       });
       const state = boardsReducer(mockedState, action);
 
@@ -257,7 +258,7 @@ describe('BoardsReducer', () => {
         ...mockedState,
         status: 'failure',
         error: 'Error updating board',
-        isBoardFormOpen: false,
+        isBoardFormOpen: false
       };
 
       expect(state).toEqual(newState);
@@ -272,8 +273,9 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const mockedState = { ...initialState, boards: [mockBoard] };
@@ -283,7 +285,7 @@ describe('BoardsReducer', () => {
 
       const newState: BoardsState = {
         ...mockedState,
-        status: 'loading',
+        status: 'loading'
       };
 
       expect(state).toEqual(newState);
@@ -296,8 +298,9 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const mockedState = { ...initialState, boards: [mockBoard] };
@@ -308,7 +311,7 @@ describe('BoardsReducer', () => {
       const newState: BoardsState = {
         ...initialState,
         status: 'success',
-        error: null,
+        error: null
       };
 
       expect(state).toEqual(newState);
@@ -321,21 +324,22 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const mockedState = { ...initialState, boards: [mockBoard] };
 
       const action = BoardsActions.deleteBoardFailure({
-        error: 'Error deleting board',
+        error: 'Error deleting board'
       });
       const state = boardsReducer(mockedState, action);
 
       const newState: BoardsState = {
         ...mockedState,
         status: 'failure',
-        error: 'Error deleting board',
+        error: 'Error deleting board'
       };
 
       expect(state).toEqual(newState);
@@ -350,7 +354,7 @@ describe('BoardsReducer', () => {
 
       const newState: BoardsState = {
         ...initialState,
-        status: 'loading',
+        status: 'loading'
       };
 
       expect(state).toEqual(newState);
@@ -363,8 +367,9 @@ describe('BoardsReducer', () => {
         name: 'New Board',
         icon: IconType.Eyes,
         color: Colors.Green,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
       };
 
       const mockTasks: Task[] = [
@@ -372,24 +377,31 @@ describe('BoardsReducer', () => {
           id: 1,
           boardId: 1,
           title: 'Default Task',
-          status: TaskStatus.Backlog,
+          status: 'backlog',
           tags: [],
           image: '',
-          createdAt: new Date(),
-        },
+          createdAt: new Date()
+        }
       ];
+
+      const taskState: TaskState = {
+        backlog: [mockTasks[0]],
+        'in-progress': [],
+        'in-review': [],
+        completed: []
+      };
 
       const action = BoardsActions.getBoardByIdSuccess({
         board: mockBoard,
-        tasks: mockTasks,
+        tasks: taskState
       });
       const state = boardsReducer(initialState, action);
 
       const newState: BoardsState = {
         ...initialState,
         selectedBoard: mockBoard,
-        tasks: mockTasks,
-        status: 'success',
+        tasks: taskState,
+        status: 'success'
       };
 
       expect(state).toEqual(newState);
@@ -398,14 +410,14 @@ describe('BoardsReducer', () => {
 
     it('[Get Board By Id Failure] should set the status to failure', () => {
       const action = BoardsActions.getBoardByIdFailure({
-        error: 'Error getting board',
+        error: 'Error getting board'
       });
       const state = boardsReducer(initialState, action);
 
       const newState: BoardsState = {
         ...initialState,
         status: 'failure',
-        error: 'Error getting board',
+        error: 'Error getting board'
       };
 
       expect(state).toEqual(newState);

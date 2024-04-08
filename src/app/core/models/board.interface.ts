@@ -1,9 +1,12 @@
+import { Tag } from './task.interface';
+
 export interface Board {
   id?: number;
   name: string;
   icon: IconType;
   color: string;
-  tags: string[];
+  tags: Tag[];
+  tasksOrder: ('backlog' | 'in-progress' | 'in-review' | 'completed')[];
   createdAt: Date;
 }
 
@@ -20,7 +23,7 @@ export enum IconType {
   Star = 'star',
   Books = 'books',
   Artist = 'artist',
-  Helmet = 'helmet',
+  Helmet = 'helmet'
 }
 
 export enum Colors {
@@ -30,5 +33,5 @@ export enum Colors {
   Green = '#c7f5d3',
   Blue = '#c4dafb',
   Purple = '#e6d6fc',
-  Red = '#f9c1c1',
+  Red = '#f9c1c1'
 }

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { BoardService } from '../../core/services/boards.service';
-import { BoardsActions } from '.';
+import { BoardsActions, TaskState } from '.';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { from, of } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -18,9 +18,7 @@ export class BoardsEffects {
       switchMap(() =>
         from(this.boardService.getBoards()).pipe(
           map((boards) => BoardsActions.loadBoardsSuccess({ boards })),
-          catchError((error) =>
-            of(BoardsActions.loadBoardsFailure({ error: error.message }))
-          )
+          catchError((error) => of(BoardsActions.loadBoardsFailure({ error: error.message })))
         )
       )
     )
@@ -82,10 +80,22 @@ export class BoardsEffects {
       ofType(BoardsActions.getBoardById),
       switchMap(({ id }) =>
         from(this.boardService.getBoardById(id)).pipe(
-          map(({board, tasks}) => BoardsActions.getBoardByIdSuccess({ board, tasks })),
-          catchError((error) =>
-            of(BoardsActions.getBoardByIdFailure({ error: error.message }))
-          )
+          map(({ board, tasks }) => {
+            const taskState: TaskState = {
+              backlog: [],
+              'in-progress': [],
+              'in-review': [],
+              completed: []
+            };
+
+            tasks.forEach((task) => {
+              taskState[task.status].push(task);
+            });
+
+            return { board, tasks: taskState };
+          }),
+          map(({ board, tasks }) => BoardsActions.getBoardByIdSuccess({ board, tasks })),
+          catchError((error) => of(BoardsActions.getBoardByIdFailure({ error: error.message })))
         )
       )
     )

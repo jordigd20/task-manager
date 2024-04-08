@@ -2,15 +2,14 @@ export interface Task {
   id?: number;
   boardId: number;
   title: string;
-  status: TaskStatus;
-  tags: string[];
+  status: 'backlog' | 'in-progress' | 'in-review' | 'completed';
+  tags: Tag[];
   image: string;
   createdAt: Date;
 }
 
-export enum TaskStatus {
-  Backlog = 'backlog',
-  InProgress = 'in-progress',
-  InReview = 'in-review',
-  Completed = 'completed',
+export interface Tag {
+  id: string;
+  name: string;
+  color: string;
 }

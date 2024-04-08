@@ -3,12 +3,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { Observable, of, throwError } from 'rxjs';
 import { provideMockStore } from '@ngrx/store/testing';
-import { initialState } from './boards.reducer';
+import { TaskState, initialState } from './boards.reducer';
 import { Board, Colors, IconType } from '../../core/models/board.interface';
 import { BoardService } from '../../core/services/boards.service';
 import { BoardsActions, BoardsEffects } from '.';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { Task, TaskStatus } from '../../core/models/task.interface';
+import { Task } from '../../core/models/task.interface';
 
 describe('BoardsEffects', () => {
   let effects: BoardsEffects;
@@ -20,7 +20,7 @@ describe('BoardsEffects', () => {
     getBoardById: jest.fn(),
     addBoard: jest.fn(),
     updateBoard: jest.fn(),
-    deleteBoard: jest.fn(),
+    deleteBoard: jest.fn()
   };
 
   const mockBoards: Board[] = [
@@ -29,9 +29,10 @@ describe('BoardsEffects', () => {
       name: 'Default Board',
       icon: IconType.Key,
       color: Colors.Green,
-      tags: ['Concept'],
-      createdAt: new Date(),
-    },
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: [],
+      createdAt: new Date()
+    }
   ];
 
   const mockTasks: Task[] = [
@@ -39,20 +40,20 @@ describe('BoardsEffects', () => {
       id: 1,
       boardId: 1,
       title: 'Default Task',
-      status: TaskStatus.Backlog,
+      status: 'backlog',
       tags: [],
       image: '',
-      createdAt: new Date(),
+      createdAt: new Date()
     },
     {
       id: 2,
       boardId: 1,
       title: 'Task 2',
-      status: TaskStatus.Backlog,
+      status: 'backlog',
       tags: [],
       image: '',
-      createdAt: new Date(),
-    },
+      createdAt: new Date()
+    }
   ];
 
   beforeEach(async () => {
@@ -61,11 +62,11 @@ describe('BoardsEffects', () => {
         BoardsEffects,
         {
           provide: BoardService,
-          useValue: mockBoardService,
+          useValue: mockBoardService
         },
         provideMockStore({ initialState }),
-        provideMockActions(() => actions$),
-      ],
+        provideMockActions(() => actions$)
+      ]
     });
 
     effects = TestBed.inject(BoardsEffects);
@@ -121,9 +122,7 @@ describe('BoardsEffects', () => {
 
       // Assert
       const observerSpy = subscribeSpyTo(effects.addBoard$);
-      expect(observerSpy.getLastValue()).toEqual(
-        BoardsActions.addBoardSuccess({ id: 1 })
-      );
+      expect(observerSpy.getLastValue()).toEqual(BoardsActions.addBoardSuccess({ id: 1 }));
 
       expect(mockBoardService.addBoard).toHaveBeenCalledWith(board);
     });
@@ -161,9 +160,7 @@ describe('BoardsEffects', () => {
 
       // Assert
       const observerSpy = subscribeSpyTo(effects.updateBoard$);
-      expect(observerSpy.getLastValue()).toEqual(
-        BoardsActions.updateBoardSuccess()
-      );
+      expect(observerSpy.getLastValue()).toEqual(BoardsActions.updateBoardSuccess());
 
       expect(mockBoardService.updateBoard).toHaveBeenCalledWith(board);
     });
@@ -202,9 +199,7 @@ describe('BoardsEffects', () => {
 
       // Assert
       const observerSpy = subscribeSpyTo(effects.deleteBoard$);
-      expect(observerSpy.getLastValue()).toEqual(
-        BoardsActions.deleteBoardSuccess({ id })
-      );
+      expect(observerSpy.getLastValue()).toEqual(BoardsActions.deleteBoardSuccess({ id }));
 
       expect(mockBoardService.deleteBoard).toHaveBeenCalledWith(id);
     });
@@ -237,7 +232,7 @@ describe('BoardsEffects', () => {
       mockBoardService.getBoardById.mockReturnValue(
         of({
           board: mockBoards[0],
-          tasks: mockTasks,
+          tasks: mockTasks
         })
       );
 
@@ -245,11 +240,22 @@ describe('BoardsEffects', () => {
       actions$ = of(BoardsActions.getBoardById({ id: 1 }));
 
       // Assert
+      const taskState: TaskState = {
+        backlog: [],
+        'in-progress': [],
+        'in-review': [],
+        completed: []
+      };
+
+      mockTasks.forEach((task) => {
+        taskState[task.status].push(task);
+      });
+
       const observerSpy = subscribeSpyTo(effects.getBoardById$);
       expect(observerSpy.getLastValue()).toEqual(
         BoardsActions.getBoardByIdSuccess({
           board: mockBoards[0],
-          tasks: mockTasks,
+          tasks: taskState
         })
       );
       expect(mockBoardService.getBoardById).toHaveBeenCalledWith(1);
@@ -270,7 +276,7 @@ describe('BoardsEffects', () => {
       const observerSpy = subscribeSpyTo(effects.getBoardById$);
       expect(observerSpy.getLastValue()).toEqual(
         BoardsActions.getBoardByIdFailure({
-          error: 'Error getting board by id',
+          error: 'Error getting board by id'
         })
       );
       expect(mockBoardService.getBoardById).toHaveBeenCalledWith(1);

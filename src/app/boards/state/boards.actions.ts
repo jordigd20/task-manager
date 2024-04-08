@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Board } from '../../core/models/board.interface';
 import { Task } from '../../core/models/task.interface';
+import { TaskState } from './boards.reducer';
 
 export const loadBoards = createAction('[Boards List] Load Boards');
 
@@ -16,10 +17,7 @@ export const loadBoardsFailure = createAction(
 
 export const openBoardForm = createAction('[Boards List] Open Board Form');
 
-export const addBoard = createAction(
-  '[Boards List] Add Board',
-  props<{ board: Board }>()
-);
+export const addBoard = createAction('[Boards List] Add Board', props<{ board: Board }>());
 
 export const addBoardSuccess = createAction(
   '[Boards List] Add Board Success',
@@ -31,24 +29,16 @@ export const addBoardFailure = createAction(
   props<{ error: string }>()
 );
 
-export const updateBoard = createAction(
-  '[Boards List] Update Board',
-  props<{ board: Board }>()
-);
+export const updateBoard = createAction('[Boards List] Update Board', props<{ board: Board }>());
 
-export const updateBoardSuccess = createAction(
-  '[Boards List] Update Board Success'
-);
+export const updateBoardSuccess = createAction('[Boards List] Update Board Success');
 
 export const updateBoardFailure = createAction(
   '[Boards List] Update Board Failure',
   props<{ error: string }>()
 );
 
-export const deleteBoard = createAction(
-  '[Boards List] Delete Board',
-  props<{ id: number }>()
-);
+export const deleteBoard = createAction('[Boards List] Delete Board', props<{ id: number }>());
 
 export const deleteBoardSuccess = createAction(
   '[Boards List] Delete Board Success',
@@ -67,7 +57,7 @@ export const getBoardById = createAction(
 
 export const getBoardByIdSuccess = createAction(
   '[Board Details] Get Board By Id Success',
-  props<{ board: Board; tasks: Task[] }>()
+  props<{ board: Board; tasks: TaskState }>()
 );
 
 export const getBoardByIdFailure = createAction(

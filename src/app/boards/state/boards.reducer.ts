@@ -6,111 +6,121 @@ import { Task } from '../../core/models/task.interface';
 export interface BoardsState {
   boards: Board[];
   selectedBoard: Board | null;
-  tasks: Task[];
+  tasks: TaskState;
   status: 'pending' | 'loading' | 'success' | 'failure';
   error: string | null;
   isBoardFormOpen: boolean;
 }
 
+export interface TaskState {
+  backlog: Task[];
+  'in-progress': Task[];
+  'in-review': Task[];
+  completed: Task[];
+}
+
 export const initialState: BoardsState = {
   boards: [],
   selectedBoard: null,
-  tasks: [],
+  tasks: {
+    backlog: [],
+    'in-progress': [],
+    'in-review': [],
+    completed: []
+  },
   status: 'pending',
   error: null,
-  isBoardFormOpen: false,
+  isBoardFormOpen: false
 };
 
 export const boardsReducer = createReducer(
   initialState,
   on(BoardsActions.loadBoards, (state) => ({
     ...state,
-    status: 'loading' as 'loading',
+    status: 'loading' as 'loading'
   })),
   on(BoardsActions.loadBoardsSuccess, (state, { boards }) => ({
     ...state,
     boards,
     status: 'success' as 'success',
-    error: null,
+    error: null
   })),
   on(BoardsActions.loadBoardsFailure, (state, { error }) => ({
     ...state,
     status: 'failure' as 'failure',
-    error,
+    error
   })),
   on(BoardsActions.openBoardForm, (state) => ({
     ...state,
-    isBoardFormOpen: true,
+    isBoardFormOpen: true
   })),
   on(BoardsActions.addBoard, (state, { board }) => ({
     ...state,
     boards: [...state.boards, board],
-    status: 'loading' as 'loading',
+    status: 'loading' as 'loading'
   })),
   on(BoardsActions.addBoardSuccess, (state, { id }) => ({
     ...state,
-    boards: state.boards.map((board) =>
-      board.id == null ? { ...board, id } : board
-    ),
+    boards: state.boards.map((board) => (board.id == null ? { ...board, id } : board)),
     status: 'success' as 'success',
     error: null,
-    isBoardFormOpen: false,
+    isBoardFormOpen: false
   })),
   on(BoardsActions.addBoardFailure, (state, { error }) => ({
     ...state,
     boards: state.boards.slice(0, -1),
     status: 'failure' as 'failure',
     error,
-    isBoardFormOpen: false,
+    isBoardFormOpen: false
   })),
   on(BoardsActions.updateBoard, (state, { board }) => ({
     ...state,
     boards: state.boards.map((b) => (b.id === board.id ? board : b)),
-    status: 'loading' as 'loading',
+    status: 'loading' as 'loading'
   })),
   on(BoardsActions.updateBoardSuccess, (state) => ({
     ...state,
     status: 'success' as 'success',
     error: null,
-    isBoardFormOpen: false,
+    isBoardFormOpen: false
   })),
   on(BoardsActions.updateBoardFailure, (state, { error }) => ({
     ...state,
     status: 'failure' as 'failure',
     error,
-    isBoardFormOpen: false,
+    isBoardFormOpen: false
   })),
   on(BoardsActions.deleteBoard, (state) => ({
     ...state,
-    status: 'loading' as 'loading',
+    status: 'loading' as 'loading'
   })),
   on(BoardsActions.deleteBoardSuccess, (state, { id }) => ({
     ...state,
     boards: state.boards.filter((board) => board.id !== id),
     status: 'success' as 'success',
     error: null,
-    isBoardFormOpen: false,
+    isBoardFormOpen: false
   })),
   on(BoardsActions.deleteBoardFailure, (state, { error }) => ({
     ...state,
     status: 'failure' as 'failure',
     error,
-    isBoardFormOpen: false,
+    isBoardFormOpen: false
   })),
   on(BoardsActions.getBoardById, (state) => ({
     ...state,
-    status: 'loading' as 'loading',
+    status: 'loading' as 'loading'
   })),
   on(BoardsActions.getBoardByIdSuccess, (state, { board, tasks }) => ({
     ...state,
     selectedBoard: board,
     tasks,
     status: 'success' as 'success',
-    error: null,
+    error: null
   })),
   on(BoardsActions.getBoardByIdFailure, (state, { error }) => ({
     ...state,
     status: 'failure' as 'failure',
-    error,
+    error
   }))
 );

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import Dexie from 'dexie';
 import { Board, Colors, IconType } from '../models/board.interface';
-import { Task, TaskStatus } from '../models/task.interface';
+import { Task } from '../models/task.interface';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DbService extends Dexie {
   boards!: Dexie.Table<Board, number>;
@@ -15,7 +15,7 @@ export class DbService extends Dexie {
 
     this.version(1).stores({
       boards: '++id',
-      tasks: '++id, boardId',
+      tasks: '++id, boardId'
     });
 
     // Triggered the first time the database is created
@@ -29,7 +29,8 @@ export class DbService extends Dexie {
     //   name: 'Default Board',
     //   icon: IconType.Tools,
     //   color: Colors.Blue,
-    //   tags: ['Concept'],
+    //   tags: [{ id: 'concept', name: 'Concept', color: 'red'}],
+    //  tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
     //   createdAt: new Date(),
     // });
 
@@ -37,7 +38,7 @@ export class DbService extends Dexie {
     //   boardId: defaultBoard,
     //   title: 'Default Task',
     //   status: TaskStatus.Backlog,
-    //   tags: ['Concept'],
+    //   tags: [{ id: 'concept', name: 'Concept', color: 'red'}],
     //   image: '',
     //   createdAt: new Date(),
     // });
@@ -67,33 +68,67 @@ export class DbService extends Dexie {
       { color: Colors.Red, icon: IconType.Airplane },
       { color: Colors.Pink, icon: IconType.Star },
       { color: Colors.Orange, icon: IconType.Books },
-      { color: Colors.Yellow, icon: IconType.Artist },
+      { color: Colors.Yellow, icon: IconType.Artist }
     ];
 
     const defaultProperties = {
       color: Colors.Blue,
       icon: IconType.Tools,
-      tags: ['Concept'],
+      tags: [{ id: 'concept', name: 'Concept', color: 'red' }]
     };
 
-    const boards: Board[] = [{
-      name: `Id laborum anim consectetur aliquip enim cupidatat nulla.`,
-      color: Colors.Blue,
-      icon: IconType.Tools,
-      tags: ['Concept'],
-      createdAt: new Date(),
-    }];
+    const boards: Board[] = [
+      {
+        name: `Default Board`,
+        color: Colors.Blue,
+        icon: IconType.Tools,
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        tags: [{ id: 'concept', name: 'Concept', color: 'red' }],
+        createdAt: new Date()
+      }
+    ];
 
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 4; i++) {
       const properties = boardProperties[i] || defaultProperties;
       boards.push({
-        name: `Id laborum anim consectetur aliquip enim cupidatat nulla. ${i + 1}`,
+        name: `Board ${i + 1}`,
         ...properties,
-        tags: ['Concept'],
-        createdAt: new Date(),
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        tags: [{ id: 'concept', name: 'Concept', color: 'red' }],
+        createdAt: new Date()
       });
     }
 
     await this.boards.bulkAdd(boards);
+
+    const tasks: Task[] = [];
+
+    for (let i = 0; i < boards.length; i++) {
+      tasks.push({
+        boardId: i + 1,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [{ id: 'concept', name: 'Concept', color: 'red' }],
+        image: 'https://images.unsplash.com/photo-1704318847747-1b3fc0e645ba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        createdAt: new Date()
+      });
+
+      const min = 1;
+      const max = 6;
+      const randomCount = Math.random() * (max - min) + min;
+
+      for (let j = 0; j < randomCount; j++) {
+        tasks.push({
+          boardId: i + 1,
+          title: `Task ${j + 1}`,
+          status: j % 2 === 0 ? 'backlog' : 'in-progress',
+          tags: [],
+          image: '',
+          createdAt: new Date()
+        });
+      }
+    }
+
+    await this.tasks.bulkAdd(tasks);
   }
 }

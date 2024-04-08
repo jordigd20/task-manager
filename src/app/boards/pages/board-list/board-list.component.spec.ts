@@ -17,8 +17,9 @@ describe('BoardListComponent', () => {
       name: 'Default Board',
       icon: IconType.Key,
       color: Colors.Green,
-      tags: ['Concept'],
       createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: [],
     },
   ];
 

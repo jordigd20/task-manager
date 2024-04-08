@@ -14,10 +14,10 @@ describe('BoardCardComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: {},
-        },
+          useValue: {}
+        }
       ],
-      schemas: [NO_ERRORS_SCHEMA],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BoardCardComponent);
@@ -28,8 +28,9 @@ describe('BoardCardComponent', () => {
       name: 'Default Board',
       icon: IconType.Key,
       color: Colors.Green,
-      tags: ['Concept'],
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
       createdAt: new Date(),
+      tags: []
     };
 
     fixture.detectChanges();

@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { DbService } from './db.service';
 import { liveQuery } from 'dexie';
 import { Board } from '../models/board.interface';
-import { TaskStatus } from '../models/task.interface';
 import { TasksService } from './tasks.service';
 
 @Injectable({
@@ -36,7 +35,7 @@ export class BoardService {
     await this.db.tasks.add({
       boardId: idBoard,
       title: 'Default Task',
-      status: TaskStatus.Backlog,
+      status: 'backlog',
       tags: [],
       image: '',
       createdAt: new Date(),
