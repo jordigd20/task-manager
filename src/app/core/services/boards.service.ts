@@ -5,7 +5,7 @@ import { Board } from '../models/board.interface';
 import { TasksService } from './tasks.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BoardService {
   private db = inject(DbService);
@@ -36,9 +36,10 @@ export class BoardService {
       boardId: idBoard,
       title: 'Default Task',
       status: 'backlog',
+      index: 0,
       tags: [],
       image: '',
-      createdAt: new Date(),
+      createdAt: new Date()
     });
 
     return idBoard;

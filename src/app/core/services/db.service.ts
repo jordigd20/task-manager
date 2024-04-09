@@ -15,7 +15,7 @@ export class DbService extends Dexie {
 
     this.version(1).stores({
       boards: '++id',
-      tasks: '++id, boardId'
+      tasks: '++id, boardId, index, status, [boardId+status+index]'
     });
 
     // Triggered the first time the database is created
@@ -108,20 +108,37 @@ export class DbService extends Dexie {
         boardId: i + 1,
         title: 'Default Task',
         status: 'backlog',
+        index: 0,
         tags: [{ id: 'concept', name: 'Concept', color: 'red' }],
-        image: 'https://images.unsplash.com/photo-1704318847747-1b3fc0e645ba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        image:
+          'https://images.unsplash.com/photo-1704318847747-1b3fc0e645ba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         createdAt: new Date()
       });
 
       const min = 1;
       const max = 6;
-      const randomCount = Math.random() * (max - min) + min;
+      let randomCount = Math.random() * (max - min) + min;
 
       for (let j = 0; j < randomCount; j++) {
         tasks.push({
           boardId: i + 1,
-          title: `Task ${j + 1}`,
-          status: j % 2 === 0 ? 'backlog' : 'in-progress',
+          title: `Backlog ${j + 1}`,
+          index: j + 1,
+          status: 'backlog',
+          tags: [],
+          image: '',
+          createdAt: new Date()
+        });
+      }
+
+      randomCount = Math.random() * (max - min) + min;
+
+      for (let j = 0; j < randomCount; j++) {
+        tasks.push({
+          boardId: i + 1,
+          title: `Progress ${j + 1}`,
+          index: j,
+          status: 'in-progress',
           tags: [],
           image: '',
           createdAt: new Date()
