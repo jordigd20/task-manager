@@ -1,7 +1,7 @@
 import { BoardsActions } from '.';
 import { Board, Colors, IconType } from '../../core/models/board.interface';
 import { Task } from '../../core/models/task.interface';
-import { BoardsState, TaskState, boardsReducer, initialState } from './boards.reducer';
+import { BoardsState, boardsReducer, initialState } from './boards.reducer';
 
 describe('BoardsReducer', () => {
   describe('unknown action', () => {
@@ -344,84 +344,6 @@ describe('BoardsReducer', () => {
 
       expect(state).toEqual(newState);
       expect(state).not.toBe(mockedState);
-    });
-  });
-
-  describe('Get Board By Id', () => {
-    it('[Get Board By Id] should set the status to loading', () => {
-      const action = BoardsActions.getBoardById({ id: 1 });
-      const state = boardsReducer(initialState, action);
-
-      const newState: BoardsState = {
-        ...initialState,
-        status: 'loading'
-      };
-
-      expect(state).toEqual(newState);
-      expect(state).not.toBe(initialState);
-    });
-
-    it('[Get Board By Id Success] should set the the selected board and the tasks from the board', () => {
-      const mockBoard: Board = {
-        id: 1,
-        name: 'New Board',
-        icon: IconType.Eyes,
-        color: Colors.Green,
-        tags: [],
-        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
-        createdAt: new Date()
-      };
-
-      const mockTasks: Task[] = [
-        {
-          id: 1,
-          boardId: 1,
-          title: 'Default Task',
-          status: 'backlog',
-          tags: [],
-          image: '',
-          createdAt: new Date()
-        }
-      ];
-
-      const taskState: TaskState = {
-        backlog: [mockTasks[0]],
-        'in-progress': [],
-        'in-review': [],
-        completed: []
-      };
-
-      const action = BoardsActions.getBoardByIdSuccess({
-        board: mockBoard,
-        tasks: taskState
-      });
-      const state = boardsReducer(initialState, action);
-
-      const newState: BoardsState = {
-        ...initialState,
-        selectedBoard: mockBoard,
-        tasks: taskState,
-        status: 'success'
-      };
-
-      expect(state).toEqual(newState);
-      expect(state).not.toBe(initialState);
-    });
-
-    it('[Get Board By Id Failure] should set the status to failure', () => {
-      const action = BoardsActions.getBoardByIdFailure({
-        error: 'Error getting board'
-      });
-      const state = boardsReducer(initialState, action);
-
-      const newState: BoardsState = {
-        ...initialState,
-        status: 'failure',
-        error: 'Error getting board'
-      };
-
-      expect(state).toEqual(newState);
-      expect(state).not.toBe(initialState);
     });
   });
 });

@@ -3,12 +3,11 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { Observable, of, throwError } from 'rxjs';
 import { provideMockStore } from '@ngrx/store/testing';
-import { TaskState, initialState } from './boards.reducer';
+import { initialState } from './boards.reducer';
 import { Board, Colors, IconType } from '../../core/models/board.interface';
 import { BoardService } from '../../core/services/boards.service';
 import { BoardsActions, BoardsEffects } from '.';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { Task } from '../../core/models/task.interface';
 
 describe('BoardsEffects', () => {
   let effects: BoardsEffects;
@@ -31,27 +30,6 @@ describe('BoardsEffects', () => {
       color: Colors.Green,
       tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
       tags: [],
-      createdAt: new Date()
-    }
-  ];
-
-  const mockTasks: Task[] = [
-    {
-      id: 1,
-      boardId: 1,
-      title: 'Default Task',
-      status: 'backlog',
-      tags: [],
-      image: '',
-      createdAt: new Date()
-    },
-    {
-      id: 2,
-      boardId: 1,
-      title: 'Task 2',
-      status: 'backlog',
-      tags: [],
-      image: '',
       createdAt: new Date()
     }
   ];
@@ -223,63 +201,6 @@ describe('BoardsEffects', () => {
       );
 
       expect(mockBoardService.deleteBoard).toHaveBeenCalledWith(id);
-    });
-  });
-
-  describe('Get Board By Id', () => {
-    it('getBoardById$ should return [Board Details] Get Board By Id Success', () => {
-      // Arrange
-      mockBoardService.getBoardById.mockReturnValue(
-        of({
-          board: mockBoards[0],
-          tasks: mockTasks
-        })
-      );
-
-      // Act
-      actions$ = of(BoardsActions.getBoardById({ id: 1 }));
-
-      // Assert
-      const taskState: TaskState = {
-        backlog: [],
-        'in-progress': [],
-        'in-review': [],
-        completed: []
-      };
-
-      mockTasks.forEach((task) => {
-        taskState[task.status].push(task);
-      });
-
-      const observerSpy = subscribeSpyTo(effects.getBoardById$);
-      expect(observerSpy.getLastValue()).toEqual(
-        BoardsActions.getBoardByIdSuccess({
-          board: mockBoards[0],
-          tasks: taskState
-        })
-      );
-      expect(mockBoardService.getBoardById).toHaveBeenCalledWith(1);
-    });
-
-    it('getBoardById$ should return [Board Details] Get Board By Id Failure', () => {
-      // Arrange
-      mockBoardService.getBoardById.mockReturnValue(
-        throwError(() => {
-          throw new Error('Error getting board by id');
-        })
-      );
-
-      // Act
-      actions$ = of(BoardsActions.getBoardById({ id: 1 }));
-
-      // Assert
-      const observerSpy = subscribeSpyTo(effects.getBoardById$);
-      expect(observerSpy.getLastValue()).toEqual(
-        BoardsActions.getBoardByIdFailure({
-          error: 'Error getting board by id'
-        })
-      );
-      expect(mockBoardService.getBoardById).toHaveBeenCalledWith(1);
     });
   });
 });
