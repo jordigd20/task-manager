@@ -3,8 +3,8 @@ import { BoardLayoutComponent } from './board-layout.component';
 import { ActivatedRoute } from '@angular/router';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { provideMockStore } from '@ngrx/store/testing';
-import { initialState } from '../../state/boards.reducer';
-import { BoardsSelectors } from '../../state';
+import { initialState } from '../../state/boards/boards.reducer';
+import { BoardsSelectors } from '../../state/boards';
 
 describe('BoardLayoutComponent', () => {
   let component: BoardLayoutComponent;
@@ -16,22 +16,22 @@ describe('BoardLayoutComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: {},
+          useValue: {}
         },
         provideMockStore({
           initialState,
           selectors: [
             {
               selector: BoardsSelectors.boards,
-              value: initialState.boards,
+              value: initialState.boards
             },
             {
               selector: BoardsSelectors.boardStatus,
-              value: initialState.status,
-            },
-          ],
-        }),
-      ],
+              value: initialState.status
+            }
+          ]
+        })
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BoardLayoutComponent);

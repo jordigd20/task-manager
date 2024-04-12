@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BoardFormComponent } from './board-form.component';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { initialState } from '../../state/boards.reducer';
+import { initialState } from '../../state/boards/boards.reducer';
 import { of } from 'rxjs';
-import { BoardsSelectors } from '../../state';
+import { BoardsSelectors } from '../../state/boards';
 import { IconType } from '../../../core/models/board.interface';
 
 describe('BoardFormComponent', () => {
@@ -22,32 +22,32 @@ describe('BoardFormComponent', () => {
           provide: DialogRef,
           useValue: {
             outsidePointerEvents: {
-              pipe: jest.fn().mockReturnValue(of({})),
+              pipe: jest.fn().mockReturnValue(of({}))
             },
-            close: jest.fn(),
-          },
+            close: jest.fn()
+          }
         },
         {
           provide: DIALOG_DATA,
           useValue: {
             board: undefined,
-            confirmHandler: () => {},
-          },
+            confirmHandler: () => {}
+          }
         },
         provideMockStore({
           initialState,
           selectors: [
             {
               selector: BoardsSelectors.boardStatus,
-              value: initialState.status,
+              value: initialState.status
             },
             {
               selector: BoardsSelectors.isBoardFormOpen,
-              value: true,
-            },
-          ],
-        }),
-      ],
+              value: true
+            }
+          ]
+        })
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BoardFormComponent);
@@ -66,18 +66,14 @@ describe('BoardFormComponent', () => {
     store.refreshState();
     fixture.detectChanges();
 
-    expect(component.container.nativeElement.classList).toContain(
-      'animate-zoom-out'
-    );
+    expect(component.container.nativeElement.classList).toContain('animate-zoom-out');
   });
 
   it('should close dialog when click outside', () => {
     component.container.nativeElement.classList.add('animate-zoom-in');
     dialogRef.outsidePointerEvents.pipe().subscribe((event: MouseEvent) => {
       expect(event.type).toBe('click');
-      expect(component.container.nativeElement.classList).not.toContain(
-        'animate-zoom-in'
-      );
+      expect(component.container.nativeElement.classList).not.toContain('animate-zoom-in');
     });
   });
 
@@ -90,9 +86,7 @@ describe('BoardFormComponent', () => {
   it('should close dialog on keyup esc', () => {
     component.container.nativeElement.classList.add('animate-zoom-in');
     component.onKeyUpEsc();
-    expect(component.container.nativeElement.classList).toContain(
-      'animate-zoom-out'
-    );
+    expect(component.container.nativeElement.classList).toContain('animate-zoom-out');
   });
 
   it('should set isSubmitted to true on submit', () => {
@@ -126,9 +120,7 @@ describe('BoardFormComponent', () => {
   it('should close dialog on closeDialog', () => {
     component.container.nativeElement.classList.add('animate-zoom-in');
     component.closeDialog();
-    expect(component.container.nativeElement.classList).toContain(
-      'animate-zoom-out'
-    );
+    expect(component.container.nativeElement.classList).toContain('animate-zoom-out');
   });
 
   it('should close dialog on animation end', () => {

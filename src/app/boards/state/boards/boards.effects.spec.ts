@@ -4,8 +4,8 @@ import { Action } from '@ngrx/store';
 import { Observable, of, throwError } from 'rxjs';
 import { provideMockStore } from '@ngrx/store/testing';
 import { initialState } from './boards.reducer';
-import { Board, Colors, IconType } from '../../core/models/board.interface';
-import { BoardService } from '../../core/services/boards.service';
+import { Board, Colors, IconType } from '../../../core/models/board.interface';
+import { BoardService } from '../../../core/services/boards.service';
 import { BoardsActions, BoardsEffects } from '.';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
 

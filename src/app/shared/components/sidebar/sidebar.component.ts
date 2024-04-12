@@ -10,7 +10,7 @@ import {
 import { NgClass } from '@angular/common';
 import { ActivationEnd, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BoardsActions, BoardsSelectors } from '../../../boards/state';
+import { BoardsActions, BoardsSelectors } from '../../../boards/state/boards';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, filter, takeUntil } from 'rxjs';
 

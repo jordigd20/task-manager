@@ -5,8 +5,8 @@ import { routes } from './app.routes';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
-import { BoardsEffects } from './boards/state/boards.effects';
-import { boardsReducer } from './boards/state';
+import { BoardsEffects } from './boards/state/boards/boards.effects';
+import { boardsReducer } from './boards/state/boards';
 import { TasksEffects, tasksReducer } from './boards/state/tasks';
 
 export const appConfig: ApplicationConfig = {

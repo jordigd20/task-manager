@@ -5,9 +5,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import Dexie, { PromiseExtended } from 'dexie';
 import { Board, Colors, IconType } from '../../../core/models/board.interface';
-import { BoardsSelectors } from '../../../boards/state';
+import { BoardsSelectors } from '../../../boards/state/boards';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { initialState } from '../../../boards/state/boards.reducer';
+import { initialState } from '../../../boards/state/boards/boards.reducer';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -24,8 +24,8 @@ describe('SidebarComponent', () => {
       color: Colors.Green,
       createdAt: new Date(),
       tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
-      tags: [],
-    },
+      tags: []
+    }
   ];
 
   beforeEach(async () => {
@@ -38,29 +38,29 @@ describe('SidebarComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: {},
+          useValue: {}
         },
         {
           provide: Renderer2,
           useValue: {
             addClass: jest.fn(),
-            removeClass: jest.fn(),
-          },
+            removeClass: jest.fn()
+          }
         },
         provideMockStore({
           initialState,
           selectors: [
             {
               selector: BoardsSelectors.boards,
-              value: initialState.boards,
+              value: initialState.boards
             },
             {
               selector: BoardsSelectors.boardStatus,
-              value: initialState.status,
-            },
-          ],
-        }),
-      ],
+              value: initialState.status
+            }
+          ]
+        })
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SidebarComponent);
@@ -92,9 +92,7 @@ describe('SidebarComponent', () => {
     component.toggleThemeMode();
 
     expect(component.isDarkMode()).toEqual(!isDarkMode);
-    expect(document.documentElement.classList.contains('dark')).toBe(
-      !isDarkMode
-    );
+    expect(document.documentElement.classList.contains('dark')).toBe(!isDarkMode);
   });
 
   it('should switch to dark mode', () => {

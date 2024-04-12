@@ -14,7 +14,7 @@ import { NgClass } from '@angular/common';
 import { ObjectEntriesPipe } from '../../../core/pipes/object-entries.pipe';
 import { iconsAvailable } from '../../../shared/utils/icons';
 import { Store } from '@ngrx/store';
-import { BoardsSelectors } from '../../state';
+import { BoardsSelectors } from '../../state/boards';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, filter, takeUntil } from 'rxjs';
 

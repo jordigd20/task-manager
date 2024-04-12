@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Board } from '../../core/models/board.interface';
+import { Board } from '../../../core/models/board.interface';
 import { BoardsActions } from '.';
 
 export interface BoardsState {

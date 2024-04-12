@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { AppState } from '../../shared/state/app.state';
+import { AppState } from '../../../shared/state/app.state';
 
 export const selectBoardsState = (state: AppState) => state.boardsState;
 

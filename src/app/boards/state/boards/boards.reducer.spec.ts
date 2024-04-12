@@ -1,6 +1,6 @@
 import { BoardsActions } from '.';
-import { Board, Colors, IconType } from '../../core/models/board.interface';
-import { Task } from '../../core/models/task.interface';
+import { Board, Colors, IconType } from '../../../core/models/board.interface';
+import { Task } from '../../../core/models/task.interface';
 import { BoardsState, boardsReducer, initialState } from './boards.reducer';
 
 describe('BoardsReducer', () => {

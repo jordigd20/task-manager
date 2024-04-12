@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BoardListComponent } from './board-list.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { initialState } from '../../state/boards.reducer';
-import { BoardsSelectors } from '../../state';
+import { initialState } from '../../state/boards/boards.reducer';
+import { BoardsSelectors } from '../../state/boards';
 import { Board, Colors, IconType } from '../../../core/models/board.interface';
 import { ActivatedRoute } from '@angular/router';
 

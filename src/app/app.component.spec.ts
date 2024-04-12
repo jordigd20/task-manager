@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { initialState } from './boards/state/boards.reducer';
+import { initialState } from './boards/state/boards/boards.reducer';
 
 describe('AppComponent', () => {
   let store: MockStore;

@@ -5,10 +5,9 @@ import { BoardCardComponent } from '../../ui/board-card/board-card.component';
 import { CommonModule } from '@angular/common';
 import { Board } from '../../../core/models/board.interface';
 import { Store } from '@ngrx/store';
-import { BoardsActions, BoardsSelectors } from '../../state';
+import { BoardsActions, BoardsSelectors } from '../../state/boards';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { boardStatus } from '../../state/boards.selectors';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { BoardFormComponent } from '../../ui/board-form/board-form.component';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
@@ -22,21 +21,21 @@ import { ConfirmationModalComponent } from '../../../shared/components/confirmat
     RouterLink,
     BoardCardComponent,
     FooterComponent,
-    DialogModule,
+    DialogModule
   ],
   templateUrl: './board-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'relative block w-full h-full bg-background-elevated rounded-lg p-4 overflow-y-auto scrollbar',
-  },
+      'relative block w-full h-full bg-background-elevated rounded-lg p-4 overflow-y-auto scrollbar'
+  }
 })
 export class BoardListComponent {
   store = inject(Store);
   dialog = inject(Dialog);
 
   boards = toSignal(this.store.select(BoardsSelectors.boards));
-  boardStatus = toSignal(this.store.select(boardStatus));
+  boardStatus = toSignal(this.store.select(BoardsSelectors.boardStatus));
 
   trackByBoardId(index: number, board: Board) {
     return board.id;
@@ -54,8 +53,8 @@ export class BoardListComponent {
       data: {
         confirmHandler: (board: Board) => {
           this.store.dispatch(BoardsActions.addBoard({ board }));
-        },
-      },
+        }
+      }
     });
   }
 
@@ -68,8 +67,8 @@ export class BoardListComponent {
       data: {
         board,
         confirmHandler: (newBoard: Board) =>
-          this.store.dispatch(BoardsActions.updateBoard({ board: newBoard })),
-      },
+          this.store.dispatch(BoardsActions.updateBoard({ board: newBoard }))
+      }
     });
   }
 
@@ -84,9 +83,8 @@ export class BoardListComponent {
         message: `Are you sure you want to delete "<b>${board.name}</b>" board?`,
         confirmText: 'Delete',
         isDestructive: true,
-        confirmHandler: () =>
-          this.store.dispatch(BoardsActions.deleteBoard({ id: board.id! })),
-      },
+        confirmHandler: () => this.store.dispatch(BoardsActions.deleteBoard({ id: board.id! }))
+      }
     });
   }
 }

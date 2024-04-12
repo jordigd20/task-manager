@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { BoardService } from '../../core/services/boards.service';
+import { BoardService } from '../../../core/services/boards.service';
 import { BoardsActions } from '.';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { from, of } from 'rxjs';

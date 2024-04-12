@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BoardDetailComponent } from './board-detail.component';
 import { ActivatedRoute } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { BoardsActions, BoardsSelectors, initialState } from '../../state';
+import { BoardsActions, BoardsSelectors, initialState } from '../../state/boards';
 
 describe('BoardDetailComponent', () => {
   let component: BoardDetailComponent;

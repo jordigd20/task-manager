@@ -1,4 +1,4 @@
-import { BoardsState } from "../../boards/state";
+import { BoardsState } from "../../boards/state/boards";
 import { TaskState } from "../../boards/state/tasks";
 
 export interface AppState {
