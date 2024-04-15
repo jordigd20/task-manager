@@ -1,5 +1,5 @@
-@if (board() != null) {
-  <ol class="flex gap-3 w-full h-full overflow-x-auto scrollbar">
+@if (board() != null && loadStatus() === 'success') {
+  <ol class="flex gap-3 w-full h-full overflow-x-auto scrollbar" cdkDropListGroup>
     @for (section of board()?.tasksOrder; track $index) {
       <li class="w-full h-full max-h-full overflow-y-hidden flex flex-col min-w-56">
         <div class="py-2 bg-background-elevated flex items-center">
@@ -24,17 +24,21 @@
           ></span>
         </div>
 
-        <ol class="flex flex-col gap-2.5 mt-2 mb-3 px-2 overflow-y-auto scrollbar">
-          @if (tasks()) {
+        @if (tasks()) {
+          <ol
+            [id]="section"
+            class="flex flex-col gap-2.5 pt-2 pb-3 px-2 overflow-y-auto scrollbar"
+            cdkDropList
+            [cdkDropListData]="tasks()![section]"
+            (cdkDropListDropped)="onTaskDrop($event)"
+          >
             @for (task of tasks()![section]; track task.id) {
-              <li>
-                <task-card [task]="task" />
+              <li cdkDrag>
+                <task-card #taskCard [task]="task" class="task-card" />
               </li>
-            } @empty {
-              <li class="p-2 text-[#6B6B6B] dark:text-muted">No tasks</li>
             }
-          }
-        </ol>
+          </ol>
+        }
 
         @if (section === 'backlog') {
           <div class="px-2">
@@ -68,7 +72,7 @@
       </li>
     }
   </ol>
-} @else {
+} @else if (loadStatus() === 'failure') {
   <div class="flex items-center justify-center h-full">
     <div class="text-center">
       <h2 class="error-message text-2xl font-semibold">No board found</h2>
