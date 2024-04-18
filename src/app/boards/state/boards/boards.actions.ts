@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Board } from '../../../core/models/board.interface';
+import { TaskSections } from '../tasks';
 
 export const loadBoards = createAction('[Boards List] Load Boards');
 
@@ -45,5 +46,20 @@ export const deleteBoardSuccess = createAction(
 
 export const deleteBoardFailure = createAction(
   '[Boards List] Delete Board Failure',
+  props<{ error: string }>()
+);
+
+export const reorderTaskSections = createAction(
+  '[Boards Details] Reorder Task Sections',
+  props<{ idBoard: number; sections: (keyof TaskSections)[] }>()
+);
+
+export const reorderTaskSectionsSuccess = createAction(
+  '[Boards Details] Reorder Task Sections Success',
+  props<{ sections: (keyof TaskSections)[] }>()
+);
+
+export const reorderTaskSectionsFailure = createAction(
+  '[Boards Details] Reorder Task Sections Failure',
   props<{ error: string }>()
 );

@@ -5,6 +5,7 @@ import { BoardsActions } from '.';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { from, of } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { TasksActions } from '../tasks';
 
 @Injectable()
 export class BoardsEffects {
@@ -69,6 +70,21 @@ export class BoardsEffects {
               // TODO: Show error message to the user
               tap(() => this.store.dispatch(BoardsActions.loadBoards()))
             )
+          )
+        )
+      )
+    )
+  );
+
+  reorderTaskSections$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BoardsActions.reorderTaskSections),
+      switchMap(({ idBoard, sections }) =>
+        from(this.boardService.reorderTaskSections(idBoard, sections)).pipe(
+          map(() => BoardsActions.reorderTaskSectionsSuccess({ sections })),
+          map(() => TasksActions.reorderBoardSections({ sections })),
+          catchError((error) =>
+            of(BoardsActions.reorderTaskSectionsFailure({ error: error.message }))
           )
         )
       )

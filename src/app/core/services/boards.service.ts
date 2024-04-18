@@ -3,6 +3,7 @@ import { DbService } from './db.service';
 import { liveQuery } from 'dexie';
 import { Board } from '../models/board.interface';
 import { TasksService } from './tasks.service';
+import { TaskSections } from '../../boards/state/tasks';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,10 @@ export class BoardService {
     }
 
     return await this.db.boards.where('id').equals(board.id).modify(board);
+  }
+
+  async reorderTaskSections(idBoard: number, sections: (keyof TaskSections)[]) {
+    return await this.db.boards.where('id').equals(idBoard).modify({ tasksOrder: sections });
   }
 
   async deleteBoard(id: number) {

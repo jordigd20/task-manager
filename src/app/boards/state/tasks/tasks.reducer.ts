@@ -49,6 +49,19 @@ export const tasksReducer = createReducer(
     status: 'failure' as 'failure',
     error
   })),
+  on(TasksActions.reorderBoardSections, (state, { sections }) => {
+    if (state.activeBoard == null) {
+      return { ...state };
+    }
+
+    return {
+      ...state,
+      activeBoard: {
+        ...state.activeBoard,
+        tasksOrder: sections
+      }
+    };
+  }),
   on(TasksActions.reorderTaskSuccess, (state, { tasks, status }) => ({
     ...state,
     tasks: {

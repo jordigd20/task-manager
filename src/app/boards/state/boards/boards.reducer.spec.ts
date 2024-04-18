@@ -1,6 +1,7 @@
 import { BoardsActions } from '.';
 import { Board, Colors, IconType } from '../../../core/models/board.interface';
 import { Task } from '../../../core/models/task.interface';
+import { TaskSections } from '../tasks';
 import { BoardsState, boardsReducer, initialState } from './boards.reducer';
 
 describe('BoardsReducer', () => {
@@ -344,6 +345,65 @@ describe('BoardsReducer', () => {
 
       expect(state).toEqual(newState);
       expect(state).not.toBe(mockedState);
+    });
+  });
+
+  describe('Reorder Task Sections', () => {
+    it('[Reorder Task Sections] should set the status to loading', () => {
+      const action = BoardsActions.reorderTaskSections({ idBoard: 1, sections: [] });
+      const state = boardsReducer(initialState, action);
+
+      const newState: BoardsState = {
+        ...initialState,
+        status: 'loading'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+
+    it('[Reorder Task Sections Success] should update the task sections', () => {
+      const mockBoard: Board = {
+        id: 1,
+        name: 'New Board',
+        icon: IconType.Eyes,
+        color: Colors.Green,
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
+      };
+
+      const mockedState = { ...initialState, boards: [mockBoard] };
+
+      const sections: (keyof TaskSections)[] = ['completed', 'in-progress', 'in-review', 'backlog'];
+
+      const action = BoardsActions.reorderTaskSectionsSuccess({ sections });
+      const state = boardsReducer(mockedState, action);
+
+      const newState: BoardsState = {
+        ...mockedState,
+        boards: [{ ...mockBoard, tasksOrder: sections }],
+        status: 'success'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(mockedState);
+    });
+
+    it('[Reorder Task Sections Failure] should set the status to failure', () => {
+      const action = BoardsActions.reorderTaskSectionsFailure({
+        error: 'Error reordering task sections'
+      });
+      const state = boardsReducer(initialState, action);
+
+      const newState: BoardsState = {
+        ...initialState,
+        status: 'failure',
+        error: 'Error reordering task sections'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
     });
   });
 });

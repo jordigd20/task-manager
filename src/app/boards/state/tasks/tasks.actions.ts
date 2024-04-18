@@ -18,6 +18,11 @@ export const getActiveBoardFailure = createAction(
   props<{ error: string }>()
 );
 
+export const reorderBoardSections = createAction(
+  '[Board Details] Reorder Board Sections',
+  props<{ sections: (keyof TaskSections)[] }>()
+);
+
 export const reorderTask = createAction(
   '[Board Details] Reorder Task',
   props<{

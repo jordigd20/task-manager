@@ -95,6 +95,52 @@ describe('TasksReducer', () => {
     });
   });
 
+  describe('Reorder Board Sections', () => {
+    it('[Reorder Board Sections] should reorder the sections of the active board', () => {
+      const mockBoard: Board = {
+        id: 1,
+        name: 'New Board',
+        icon: IconType.Eyes,
+        color: Colors.Green,
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
+      };
+
+      const mockState: TaskState = {
+        ...initialState,
+        activeBoard: mockBoard
+      };
+
+      const action = TasksActions.reorderBoardSections({
+        sections: ['in-progress', 'backlog', 'in-review', 'completed']
+      });
+      const state = tasksReducer(mockState, action);
+
+      const newBoard: Board = {
+        ...mockBoard,
+        tasksOrder: ['in-progress', 'backlog', 'in-review', 'completed']
+      };
+
+      const newState: TaskState = {
+        ...mockState,
+        activeBoard: newBoard
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(mockState);
+    });
+
+    it('[Reorder Board Sections] should not reorder the sections if the active board is null', () => {
+      const action = TasksActions.reorderBoardSections({
+        sections: ['in-progress', 'backlog', 'in-review', 'completed']
+      });
+      const state = tasksReducer(initialState, action);
+
+      expect(state).toEqual(initialState);
+    });
+  });
+
   describe('Reorder Task', () => {
     it('[Reorder Task Success] should reorder the tasks in the specified section', () => {
       const mockTasks: Task[] = [

@@ -10,6 +10,7 @@ describe('TaskCardComponent', () => {
   const mockTask: Task = {
     id: 1,
     boardId: 1,
+    index: 0,
     title: 'Default Task',
     status: 'backlog',
     createdAt: new Date(),

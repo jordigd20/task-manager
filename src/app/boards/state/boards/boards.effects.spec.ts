@@ -8,6 +8,7 @@ import { Board, Colors, IconType } from '../../../core/models/board.interface';
 import { BoardService } from '../../../core/services/boards.service';
 import { BoardsActions, BoardsEffects } from '.';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
+import { TaskSections, TasksActions } from '../tasks';
 
 describe('BoardsEffects', () => {
   let effects: BoardsEffects;
@@ -19,7 +20,8 @@ describe('BoardsEffects', () => {
     getBoardById: jest.fn(),
     addBoard: jest.fn(),
     updateBoard: jest.fn(),
-    deleteBoard: jest.fn()
+    deleteBoard: jest.fn(),
+    reorderTaskSections: jest.fn()
   };
 
   const mockBoards: Board[] = [
@@ -201,6 +203,46 @@ describe('BoardsEffects', () => {
       );
 
       expect(mockBoardService.deleteBoard).toHaveBeenCalledWith(id);
+    });
+  });
+
+  describe('Reorder Task Sections', () => {
+    it('reorderTaskSections$ should return [Boards Details] Reorder Task Sections Success', () => {
+      // Arrange
+      const idBoard = 1;
+      const sections: (keyof TaskSections)[] = ['backlog', 'in-progress', 'in-review', 'completed'];
+      mockBoardService.reorderTaskSections.mockReturnValue(of({}));
+
+      // Act
+      actions$ = of(BoardsActions.reorderTaskSections({ idBoard, sections }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.reorderTaskSections$);
+      expect(observerSpy.getLastValue()).toEqual(TasksActions.reorderBoardSections({ sections }));
+
+      expect(mockBoardService.reorderTaskSections).toHaveBeenCalledWith(idBoard, sections);
+    });
+
+    it('reorderTaskSections$ should return [Boards Details] Reorder Task Sections Failure', () => {
+      // Arrange
+      const idBoard = 1;
+      const sections: (keyof TaskSections)[] = ['backlog', 'in-progress', 'in-review', 'completed'];
+      mockBoardService.reorderTaskSections.mockReturnValue(
+        throwError(() => {
+          throw new Error('Error reordering task sections');
+        })
+      );
+
+      // Act
+      actions$ = of(BoardsActions.reorderTaskSections({ idBoard, sections }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.reorderTaskSections$);
+      expect(observerSpy.getLastValue()).toEqual(
+        BoardsActions.reorderTaskSectionsFailure({ error: 'Error reordering task sections' })
+      );
+
+      expect(mockBoardService.reorderTaskSections).toHaveBeenCalledWith(idBoard, sections);
     });
   });
 });

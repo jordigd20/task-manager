@@ -1,9 +1,24 @@
-@if (board() != null && loadStatus() === 'success') {
-  <ol class="flex gap-3 w-full h-full overflow-x-auto scrollbar" cdkDropListGroup>
-    @for (section of board()?.tasksOrder; track $index) {
-      <li class="w-full h-full max-h-full overflow-y-hidden flex flex-col min-w-56">
+@if (board() && loadStatus() === 'success') {
+  <ol
+    class="flex gap-3 w-full h-full overflow-x-auto scrollbar"
+    cdkDropList
+    [cdkDropListData]="boardSections()"
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="onSectionDrop($event)"
+  >
+    @for (section of boardSections(); track $index) {
+      <li
+        class="w-full h-full max-h-full overflow-y-hidden flex flex-col min-w-56 bg-background-elevated rounded-md"
+        cdkDrag
+        cdkDragPreviewContainer="parent"
+        data-testid="task-section"
+      >
         <div class="py-2 bg-background-elevated flex items-center">
-          <button class="text-muted rounded-md mr-1" aria-label="drag to move to another position">
+          <button
+            class="text-muted rounded-md mr-1"
+            aria-label="drag to move to another position"
+            cdkDragHandle
+          >
             <svg
               width="24"
               height="24"
@@ -27,13 +42,14 @@
         @if (tasks()) {
           <ol
             [id]="section"
-            class="flex flex-col gap-2.5 pt-2 pb-3 px-2 overflow-y-auto scrollbar"
+            class="flex flex-col gap-2.5 pt-2 pb-5 px-2 overflow-y-auto scrollbar"
             cdkDropList
+            [cdkDropListConnectedTo]="boardSections()"
             [cdkDropListData]="tasks()![section]"
             (cdkDropListDropped)="onTaskDrop($event)"
           >
             @for (task of tasks()![section]; track task.id) {
-              <li cdkDrag>
+              <li cdkDrag cdkDragPreviewContainer="parent">
                 <task-card #taskCard [task]="task" class="task-card" />
               </li>
             }
@@ -44,6 +60,7 @@
           <div class="px-2">
             <button
               class="w-full bg-accent text-accent-foreground py-2 pl-4 pr-2 inline-flex items-center justify-between gap-1 rounded-lg transition-all hover:ring-2 hover:ring-offset-2 hover:ring-offset-background hover:ring-accent hover:scale-[1.01]"
+              data-testid="add-task-button"
             >
               Add new task
               <svg

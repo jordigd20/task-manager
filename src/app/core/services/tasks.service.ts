@@ -21,8 +21,6 @@ export class TasksService {
       throw new Error('Task id is required');
     }
 
-    console.log(task);
-
     await this.db.tasks.where('id').equals(task.id).modify(task);
 
     return task;
@@ -59,8 +57,6 @@ export class TasksService {
     await this.db.transaction('rw', this.db.tasks, async () => {
       return await Promise.all(modifyTasks);
     });
-
-    console.log({ status, tasks, fromIndex, toIndex });
 
     return { status, tasks };
   }
@@ -103,8 +99,6 @@ export class TasksService {
     await this.db.transaction('rw', this.db.tasks, async () => {
       return await Promise.all(modifyTasks);
     });
-
-    console.log({ previousSectionTasks, targetSectionTasks });
 
     return {
       previousSectionTasks,

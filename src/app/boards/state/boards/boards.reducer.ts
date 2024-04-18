@@ -89,5 +89,20 @@ export const boardsReducer = createReducer(
     status: 'failure' as 'failure',
     error,
     isBoardFormOpen: false
+  })),
+  on(BoardsActions.reorderTaskSections, (state) => ({
+    ...state,
+    status: 'loading' as 'loading'
+  })),
+  on(BoardsActions.reorderTaskSectionsSuccess, (state, { sections }) => ({
+    ...state,
+    boards: state.boards.map((board) => ({ ...board, tasksOrder: sections })),
+    status: 'success' as 'success',
+    error: null
+  })),
+  on(BoardsActions.reorderTaskSectionsFailure, (state, { error }) => ({
+    ...state,
+    status: 'failure' as 'failure',
+    error
   }))
 );

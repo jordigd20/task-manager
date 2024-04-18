@@ -6,6 +6,7 @@ import { TaskCardComponent } from '../../ui/task-card/task-card.component';
 import {
   CdkDrag,
   CdkDragDrop,
+  CdkDragHandle,
   CdkDropList,
   CdkDropListGroup,
   moveItemInArray,
@@ -13,11 +14,12 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Task } from '../../../core/models/task.interface';
 import { TaskSections, TasksActions, TasksSelectors } from '../../state/tasks';
+import { BoardsActions } from '../../state/boards';
 
 @Component({
   selector: 'board-detail',
   standalone: true,
-  imports: [TaskCardComponent, CdkDropListGroup, CdkDropList, CdkDrag],
+  imports: [TaskCardComponent, CdkDropListGroup, CdkDropList, CdkDrag, CdkDragHandle],
   templateUrl: './board-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -35,11 +37,32 @@ export class BoardDetailComponent {
     completed: { title: 'Completed', color: '#79db88' }
   };
   tasks$ = this.store.select(TasksSelectors.tasks);
-  board = toSignal(this.store.select(TasksSelectors.activeBoard));
+  board$ = this.store.select(TasksSelectors.activeBoard);
   tasks = signal<TaskSections | undefined>(undefined);
+  board = toSignal(this.board$);
+  boardSections = signal<(keyof TaskSections)[]>([]);
   loadStatus = toSignal(this.store.select(TasksSelectors.taskStatus));
 
   ngOnInit() {
+    this.getActiveBoard();
+    this.updateTasks();
+    this.updateBoardSections();
+  }
+
+  getActiveBoard() {
+    this.activatedRoute.params.subscribe((params) => {
+      const id = Number(params['id']);
+
+      if (isNaN(id)) {
+        this.store.dispatch(TasksActions.getActiveBoardFailure({ error: 'Invalid board ID' }));
+        return;
+      }
+
+      this.store.dispatch(TasksActions.getActiveBoard({ id }));
+    });
+  }
+
+  updateTasks() {
     this.tasks$.subscribe((tasks) => {
       this.tasks.update((state) => {
         if (!state) {
@@ -55,16 +78,13 @@ export class BoardDetailComponent {
         };
       });
     });
+  }
 
-    this.activatedRoute.params.subscribe((params) => {
-      const id = Number(params['id']);
-
-      if (isNaN(id)) {
-        this.store.dispatch(TasksActions.getActiveBoardFailure({ error: 'Invalid board ID' }));
-        return;
+  updateBoardSections() {
+    this.board$.subscribe((board) => {
+      if (board?.tasksOrder) {
+        this.boardSections.set([...board.tasksOrder]);
       }
-
-      this.store.dispatch(TasksActions.getActiveBoard({ id }));
     });
   }
 
@@ -97,5 +117,19 @@ export class BoardDetailComponent {
         })
       );
     }
+  }
+
+  onSectionDrop(event: CdkDragDrop<(keyof TaskSections)[]>) {
+    const { previousIndex, currentIndex, container } = event;
+
+    if (this.board() == null) {
+      return;
+    }
+
+    moveItemInArray(container.data, previousIndex, currentIndex);
+
+    this.store.dispatch(
+      BoardsActions.reorderTaskSections({ idBoard: this.board()?.id!, sections: container.data })
+    );
   }
 }
