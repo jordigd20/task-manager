@@ -18,6 +18,7 @@
             class="text-muted rounded-md mr-1"
             aria-label="drag to move to another position"
             cdkDragHandle
+            data-testid="drag-handle"
           >
             <svg
               width="24"
@@ -49,7 +50,7 @@
             (cdkDropListDropped)="onTaskDrop($event)"
           >
             @for (task of tasks()![section]; track task.id) {
-              <li cdkDrag cdkDragPreviewContainer="parent">
+              <li cdkDrag cdkDragPreviewContainer="parent" data-testid="task-card">
                 <task-card #taskCard [task]="task" class="task-card" />
               </li>
             }

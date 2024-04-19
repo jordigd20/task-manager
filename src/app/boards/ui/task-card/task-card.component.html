@@ -9,7 +9,9 @@
     </div>
   }
 
-  {{ task.title }}
+  <span class="task-title">
+    {{ task.title }}
+  </span>
 
   @if (task.tags.length > 0) {
     <div class="pt-4 text-sm flex items-center gap-2 min-h-10">
