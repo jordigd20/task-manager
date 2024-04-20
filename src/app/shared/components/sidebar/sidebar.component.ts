@@ -13,6 +13,9 @@ import { Store } from '@ngrx/store';
 import { BoardsActions, BoardsSelectors } from '../../../boards/state/boards';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, filter, takeUntil } from 'rxjs';
+import { Dialog } from '@angular/cdk/dialog';
+import { BoardFormComponent } from '../../../boards/ui/board-form/board-form.component';
+import { Board } from '../../../core/models/board.interface';
 
 @Component({
   selector: 'sidebar',
@@ -28,6 +31,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   renderer = inject(Renderer2);
   store = inject(Store);
   router = inject(Router);
+  dialog = inject(Dialog);
 
   isDarkMode = signal<boolean>(document.documentElement.classList.contains('dark'));
   boards = toSignal(this.store.select(BoardsSelectors.boards));
@@ -71,5 +75,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
   switchToLightMode() {
     this.isDarkMode.set(false);
     this.renderer.removeClass(document.documentElement, 'dark');
+  }
+
+  openAddBoardDialog() {
+    this.store.dispatch(BoardsActions.openBoardForm());
+    this.dialog.open(BoardFormComponent, {
+      ariaLabel: 'Add new board',
+      backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
+      disableClose: true,
+      data: {
+        confirmHandler: (board: Board) => {
+          this.store.dispatch(BoardsActions.addBoard({ board }));
+        }
+      }
+    });
   }
 }

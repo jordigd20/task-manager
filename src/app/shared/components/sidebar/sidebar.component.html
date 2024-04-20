@@ -50,6 +50,7 @@
     <button
       class="mt-2 p-2 xl:w-full inline-flex xl:flex items-center gap-2 font-medium rounded-full border-2 border-transparent hover:border-accent text-nowrap transition-[border-color]"
       [disabled]="boardStatus() !== 'success'"
+      (click)="openAddBoardDialog()"
     >
       <svg
         width="24"

@@ -50,6 +50,7 @@ export class BoardListComponent {
     this.dialog.open(BoardFormComponent, {
       ariaLabel: 'Add new board',
       backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
+      disableClose: true,
       data: {
         confirmHandler: (board: Board) => {
           this.store.dispatch(BoardsActions.addBoard({ board }));
