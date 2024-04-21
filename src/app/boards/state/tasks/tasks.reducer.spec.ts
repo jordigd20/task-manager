@@ -272,4 +272,19 @@ describe('TasksReducer', () => {
       expect(state).not.toBe(initialState);
     });
   });
+
+  describe('Open Task Form', () => {
+    it('[Open Task Form] should set the task form open', () => {
+      const action = TasksActions.openTaskForm();
+      const state = tasksReducer(initialState, action);
+
+      const newState: TaskState = {
+        ...initialState,
+        isTaskFormOpen: true
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+  });
 });

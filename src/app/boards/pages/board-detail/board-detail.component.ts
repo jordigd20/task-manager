@@ -15,6 +15,8 @@ import {
 import { Task } from '../../../core/models/task.interface';
 import { TaskSections, TasksActions, TasksSelectors } from '../../state/tasks';
 import { BoardsActions } from '../../state/boards';
+import { Dialog } from '@angular/cdk/dialog';
+import { TaskFormComponent } from '../../ui/task-form/task-form.component';
 
 @Component({
   selector: 'board-detail',
@@ -29,6 +31,7 @@ import { BoardsActions } from '../../state/boards';
 export class BoardDetailComponent {
   activatedRoute = inject(ActivatedRoute);
   store = inject(Store);
+  dialog = inject(Dialog);
 
   taskStatus = {
     backlog: { title: 'Backlog', color: '#40bef4' },
@@ -131,5 +134,37 @@ export class BoardDetailComponent {
     this.store.dispatch(
       BoardsActions.reorderTaskSections({ idBoard: this.board()?.id!, sections: container.data })
     );
+  }
+
+  openAddTaskForm() {
+    this.store.dispatch(TasksActions.openTaskForm());
+
+    this.dialog.open(TaskFormComponent, {
+      id: 'task-form',
+      ariaLabel: 'Add new task',
+      backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
+      disableClose: true,
+      data: {
+        // confirmHandler: (board: Board) => {
+        //   this.store.dispatch(BoardsActions.addBoard({ board }));
+        // }
+      }
+    });
+  }
+
+  openEditTaskForm(task: Task) {
+    this.store.dispatch(TasksActions.openTaskForm());
+
+    this.dialog.open(TaskFormComponent, {
+      id: 'task-form',
+      ariaLabel: 'Edit task',
+      backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
+      disableClose: true,
+      data: {
+        task
+        // confirmHandler: (newBoard: Board) =>
+        //   this.store.dispatch(BoardsActions.updateBoard({ board: newBoard }))
+      }
+    });
   }
 }

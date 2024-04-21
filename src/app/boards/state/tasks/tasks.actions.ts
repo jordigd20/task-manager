@@ -70,3 +70,5 @@ export const transferTaskFailure = createAction(
   '[Board Details] Transfer Task Failure',
   props<{ error: string }>()
 );
+
+export const openTaskForm = createAction('[Board Details] Open Task Form');

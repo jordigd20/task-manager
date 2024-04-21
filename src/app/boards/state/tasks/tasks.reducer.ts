@@ -97,5 +97,9 @@ export const tasksReducer = createReducer(
     ...state,
     status: 'failure' as 'failure',
     error
+  })),
+  on(TasksActions.openTaskForm, (state) => ({
+    ...state,
+    isTaskFormOpen: true
   }))
 );

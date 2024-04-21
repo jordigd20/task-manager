@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Task } from '../../../core/models/task.interface';
 
 @Component({
@@ -14,4 +14,5 @@ import { Task } from '../../../core/models/task.interface';
 })
 export class TaskCardComponent {
   @Input({ required: true }) task!: Task;
+  @Output() edit = new EventEmitter<void>();
 }
