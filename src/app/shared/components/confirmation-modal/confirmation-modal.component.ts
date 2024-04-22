@@ -6,7 +6,7 @@ import {
   ElementRef,
   HostListener,
   ViewChild,
-  inject,
+  inject
 } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -17,10 +17,9 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './confirmation-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class:
-      'fixed left-1/2 top-1/2 z-40 w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
-    'data-testid': 'confirmation-modal',
-  },
+    class: 'fixed left-1/2 top-1/2 z-40 w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
+    'data-testid': 'confirmation-modal'
+  }
 })
 export class ConfirmationModalComponent {
   @ViewChild('container')
