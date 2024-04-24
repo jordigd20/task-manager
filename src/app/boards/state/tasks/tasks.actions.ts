@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Task } from '../../../core/models/task.interface';
+import { Tag, Task } from '../../../core/models/task.interface';
 import { TaskSections } from './tasks.reducer';
 import { Board } from '../../../core/models/board.interface';
 
@@ -72,3 +72,18 @@ export const transferTaskFailure = createAction(
 );
 
 export const openTaskForm = createAction('[Board Details] Open Task Form');
+
+export const updateBoardTags = createAction(
+  '[Board Details] Update Board Tags',
+  props<{ board: Board }>()
+);
+
+export const updateBoardTagsSuccess = createAction(
+  '[Board Details] Update Board Tags Success',
+  props<{ tags: Tag[] }>()
+);
+
+export const updateBoardTagsFailure = createAction(
+  '[Board Details] Update Board Tags Failure',
+  props<{ error: string }>()
+);

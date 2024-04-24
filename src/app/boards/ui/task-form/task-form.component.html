@@ -51,10 +51,13 @@
     </div>
   </div>
 
-  <form class="mt-2">
+  <form class="mt-2" [formGroup]="taskForm" (ngSubmit)="onSubmit()">
     <div class="py-4 space-y-2">
-      <label class="font-medium" for="task-name">
-        <!-- [ngClass]="{ 'text-red-500': name?.invalid && isSubmitted() }" -->
+      <label
+        class="font-medium"
+        [ngClass]="{ 'text-red-500': name?.invalid && isSubmitted() }"
+        for="task-name"
+      >
         Task name
       </label>
       <input
@@ -66,52 +69,96 @@
         formControlName="name"
       />
 
-      <!-- @if (name?.invalid && isSubmitted()) {
+      @if (name?.invalid && isSubmitted()) {
         <p class="transition-all text-red-500" data-testid="invalid-task-name">
           A name is required and must be at least 3 characters long.
         </p>
-      } -->
-    </div>
-    <div class="py-4 space-y-2">
-      <label class="font-medium" for="create-tag"> Create tag </label>
-      <input
-        #createTagInput
-        class="w-full p-2 bg-background dark:bg-background-elevated rounded-lg border border-muted placeholder:text-muted focus:outline-none focus:ring focus:ring-accent focus:ring-offset-0 focus:border-transparent transition-all"
-        type="text"
-        placeholder="e.g. Tag"
-        id="create-tag"
-        formControlName="create-tag"
-      />
+      }
     </div>
 
-    <div class="py-4 space-y-1">
-      <span class="font-medium">Select tags</span>
-      <div class="flex items-center gap-2 flex-wrap">
+    <div class="py-4 space-y-2">
+      <label
+        class="font-medium"
+        for="create-tag"
+        [ngClass]="{ 'text-red-500': createTag?.invalid && isSubmitted() }"
+      >
+        Create tag
+      </label>
+
+      <div class="flex items-center">
+        <input
+          #createTagInput
+          class="peer w-full p-2 bg-background dark:bg-background-elevated rounded-l-lg border border-muted border-r-0 placeholder:text-muted focus:outline-none focus:ring focus:ring-accent focus:ring-offset-0 focus:border-transparent transition-all"
+          type="text"
+          placeholder="e.g. Tag"
+          id="create-tag"
+          formControlName="createTag"
+        />
+
         <button
-          class="py-0.5 pl-2.5 pr-1.5 inline-flex items-center gap-2 rounded-lg font-medium border-2 border-[#e1c8f4] bg-[#e1c8f4] text-[#703194] transition-all aria-pressed:border-[#703194] hover:scale-[1.02]"
+          class="bg-accent border border-accent text-accent-foreground rounded-r-lg py-2 px-3 transition-all peer-focus:ring peer-focus:ring-accent peer-focus:ring-offset-0 peer-focus:border-transparent"
           type="button"
-          [attr.aria-pressed]="false"
+          (click)="onCreateTag()"
         >
-          Concept
           <svg
-            class="mt-[2px] size-4"
             width="24"
             height="24"
             viewBox="0 0 24 24"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              fill="currentColor"
-              d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59L7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12L5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4"
-            />
+            <path d="M12 6L12 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M18 12L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           </svg>
         </button>
+      </div>
 
-        <!-- <p class="text-sm text-muted">Create new tags to categorize your tasks.</p> -->
+      @if (createTag?.invalid && isSubmitted()) {
+        <p class="transition-all text-red-500" data-testid="invalid-create-task">
+          The tag name must be less than 20 characters long.
+        </p>
+      }
+    </div>
+
+    <div class="py-4 space-y-2">
+      <span class="font-medium">Select tags</span>
+      <div class="flex items-center gap-2 flex-wrap">
+        @for (tag of availableTags(); track tag.id) {
+          <div class="relative">
+            <button
+              class="peer py-1 pl-2.5 pr-8 rounded-lg font-medium border-2 bg-[#e1c8f4] text-[#703194] transition-all border-[#e1c8f4] hover:border-[#703194] aria-pressed:bg-[#703194] aria-pressed:text-white"
+              type="button"
+              [attr.aria-pressed]="tags?.value?.includes(tag)"
+              (click)="toggleTag(tag)"
+            >
+              {{ tag.name }}
+            </button>
+            <button
+              class="absolute p-0.5 right-1.5 top-1.5 rounded-md text-[#703194] transition-all hover:bg-[#703194] hover:text-white peer-aria-pressed:bg-[#e1c8f4] peer-aria-pressed:text-[#703194]"
+              type="button"
+              (click)="openDeleteTagDialog(tag)"
+            >
+              <svg
+                class="size-[18px]"
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"
+                />
+              </svg>
+            </button>
+          </div>
+        } @empty {
+          <p class="text-muted">Create new tags to categorize your tasks.</p>
+        }
       </div>
     </div>
 
-    <div class="pt-4 flex items-center justify-end gap-2">
+    <div class="flex items-center justify-end gap-2">
       @if (data.task) {
         <button
           class="py-2 pl-4 pr-3 inline-flex items-center justify-between gap-1 rounded-full transition-all bg-red-500 text-white hover:bg-red-700 disabled:bg-red-700"

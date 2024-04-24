@@ -82,4 +82,16 @@ export class TasksEffects {
       )
     )
   );
+
+  updateBoardTags$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TasksActions.updateBoardTags),
+      switchMap(({ board }) =>
+        from(this.boardService.updateBoard(board)).pipe(
+          map(() => TasksActions.updateBoardTagsSuccess({ tags: board.tags })),
+          catchError((error) => of(TasksActions.updateBoardTagsFailure({ error: error.message })))
+        )
+      )
+    )
+  );
 }

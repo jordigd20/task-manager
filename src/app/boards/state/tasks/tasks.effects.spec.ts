@@ -267,4 +267,66 @@ describe('TasksEffects', () => {
       });
     });
   });
+
+  describe('Update Board Tags', () => {
+    it('updateBoardTags$ should return UpdateBoardTagsSuccess', () => {
+      // Arrange
+      const board = mockBoards[0];
+      const tags = [
+        {
+          id: `${Date.now()}`,
+          name: 'Tag 1',
+          color: 'blue'
+        }
+      ];
+
+      board.tags = tags;
+
+      boardService.updateBoard = jest.fn().mockReturnValue(of({ board }));
+
+      // Act
+      actions$ = of(TasksActions.updateBoardTags({ board }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.updateBoardTags$);
+      expect(observerSpy.getLastValue()).toEqual(
+        TasksActions.updateBoardTagsSuccess({
+          tags
+        })
+      );
+      expect(boardService.updateBoard).toHaveBeenCalledWith(board);
+    });
+
+    it('updateBoardTags$ should return UpdateBoardTagsFailure', () => {
+      // Arrange
+      const board = mockBoards[0];
+      const tags = [
+        {
+          id: `${Date.now()}`,
+          name: 'Tag 1',
+          color: 'blue'
+        }
+      ];
+
+      board.tags = tags;
+
+      boardService.updateBoard = jest.fn().mockReturnValue(
+        throwError(() => {
+          throw new Error('Error updating board tags');
+        })
+      );
+
+      // Act
+      actions$ = of(TasksActions.updateBoardTags({ board }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.updateBoardTags$);
+      expect(observerSpy.getLastValue()).toEqual(
+        TasksActions.updateBoardTagsFailure({
+          error: 'Error updating board tags'
+        })
+      );
+      expect(boardService.updateBoard).toHaveBeenCalledWith(board);
+    });
+  });
 });

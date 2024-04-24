@@ -8,20 +8,23 @@ import {
   OnDestroy,
   OnInit,
   HostListener,
-  signal
+  signal,
+  computed
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Task } from '../../../core/models/task.interface';
+import { Tag, Task } from '../../../core/models/task.interface';
 import { Subject, filter, takeUntil } from 'rxjs';
-import { TasksSelectors } from '../../state/tasks';
+import { TasksActions, TasksSelectors } from '../../state/tasks';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
 import { NgClass } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BoardsActions } from '../../state/boards';
 
 @Component({
   selector: 'app-task-form',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, ReactiveFormsModule],
   templateUrl: './task-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -35,21 +38,52 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   dialogRef = inject(DialogRef);
   dialog = inject(Dialog);
   store = inject(Store);
+  fb = inject(FormBuilder);
   data: {
     task?: Task;
     confirmHandler: (task: Task) => void;
   } = inject(DIALOG_DATA);
 
-  isTaskFormOpen = this.store.select(TasksSelectors.isTaskFormOpen);
+  taskForm = this.fb.group({
+    name: [
+      this.data.task?.title ?? '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(200)]
+    ],
+    status: ['backlog', Validators.required],
+    createTag: ['', Validators.maxLength(20)],
+    tags: [this.data.task?.tags ?? []]
+  });
+
+  isTaskFormOpen$ = this.store.select(TasksSelectors.isTaskFormOpen);
+  activeBoard = toSignal(this.store.select(TasksSelectors.activeBoard));
   taskStatus = toSignal(this.store.select(TasksSelectors.taskStatus));
+  availableTags = computed(() => this.activeBoard()?.tags);
+
   disableClosingDialog = signal(false);
+  isSubmitted = signal(false);
   destroy$ = new Subject<void>();
 
+  get name() {
+    return this.taskForm.get('name');
+  }
+
+  get status() {
+    return this.taskForm.get('status');
+  }
+
+  get createTag() {
+    return this.taskForm.get('createTag');
+  }
+
+  get tags() {
+    return this.taskForm.get('tags');
+  }
+
   ngOnInit() {
-    this.isTaskFormOpen
+    this.isTaskFormOpen$
       .pipe(
-        takeUntil(this.destroy$),
-        filter((isOpen) => isOpen === false)
+        filter((isOpen) => isOpen === false),
+        takeUntil(this.destroy$)
       )
       .subscribe(() => {
         this.closeDialog();
@@ -111,5 +145,86 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.disableClosingDialog.set(false);
     });
+  }
+
+  openDeleteTagDialog(tag: Tag) {
+    this.disableClosingDialog.set(true);
+
+    const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+      id: 'confirmation-modal',
+      ariaLabel: 'Delete tag',
+      backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
+      disableClose: true,
+      data: {
+        title: 'Delete tag',
+        message: `Are you sure you want to delete "<b>${tag.name}</b>" tag?`,
+        confirmText: 'Delete',
+        isDestructive: true,
+        confirmHandler: () =>
+          this.store.dispatch(
+            TasksActions.updateBoardTags({
+              board: {
+                ...this.activeBoard()!,
+                tags: this.activeBoard()!.tags.filter((t) => t.id !== tag.id)
+              }
+            })
+          )
+      }
+    });
+
+    dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.disableClosingDialog.set(false);
+    });
+  }
+
+  onCreateTag() {
+    if (this.createTag?.invalid || this.createTag?.value === '') {
+      return;
+    }
+
+    if (this.activeBoard()!.tags.length >= 5) {
+      // TODO: Show error message
+      return;
+    }
+
+    const tag: Tag = {
+      id: `${Date.now()}`,
+      name: this.createTag!.value!.trim(),
+      color: 'purple'
+    };
+
+    this.store.dispatch(
+      TasksActions.updateBoardTags({
+        board: {
+          ...this.activeBoard()!,
+          tags: [...this.activeBoard()!.tags, tag]
+        }
+      })
+    );
+    // this.store.dispatch(
+    //   BoardsActions.updateBoard({
+    //     board: {
+    //       ...this.activeBoard()!,
+    //       tags: [...this.activeBoard()!.tags, tag]
+    //     }
+    //   })
+    // );
+  }
+
+  toggleTag(tag: Tag) {
+    if (this.tags == null || this.tags.value == null) {
+      return;
+    }
+
+    if (this.tags.value.includes(tag)) {
+      this.tags.setValue(this.tags.value.filter((t) => t.id !== tag.id));
+    } else {
+      this.tags.setValue([...this.tags.value, tag]);
+    }
+  }
+
+  onSubmit() {
+    console.log(this.taskForm);
+    this.isSubmitted.set(true);
   }
 }

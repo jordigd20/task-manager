@@ -287,4 +287,63 @@ describe('TasksReducer', () => {
       expect(state).not.toBe(initialState);
     });
   });
+
+  describe('Update Board Tags', () => {
+    it('[Update Board Tags Success] should update the tags of the active board', () => {
+      const mockBoard: Board = {
+        id: 1,
+        name: 'New Board',
+        icon: IconType.Eyes,
+        color: Colors.Green,
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
+      };
+      const tags = [
+        {
+          id: `${Date.now()}`,
+          name: 'Tag 1',
+          color: 'blue'
+        }
+      ];
+
+      const action = TasksActions.updateBoardTagsSuccess({
+        tags
+      });
+
+      const mockState = {
+        ...initialState,
+        activeBoard: mockBoard
+      };
+      const state = tasksReducer(mockState, action);
+
+      const newState: TaskState = {
+        ...mockState,
+        activeBoard: {
+          ...mockBoard,
+          tags
+        },
+        status: 'success'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+
+    it('[Update Board Tags Failure] should set the status to failure', () => {
+      const action = TasksActions.updateBoardTagsFailure({
+        error: 'Error updating board tags'
+      });
+      const state = tasksReducer(initialState, action);
+
+      const newState: TaskState = {
+        ...initialState,
+        status: 'failure',
+        error: 'Error updating board tags'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+  });
 });

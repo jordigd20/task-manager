@@ -101,5 +101,22 @@ export const tasksReducer = createReducer(
   on(TasksActions.openTaskForm, (state) => ({
     ...state,
     isTaskFormOpen: true
+  })),
+  on(TasksActions.updateBoardTags, (state) => ({
+    ...state,
+    status: 'loading' as 'loading'
+  })),
+  on(TasksActions.updateBoardTagsSuccess, (state, { tags }) => ({
+    ...state,
+    status: 'success' as 'success',
+    activeBoard: {
+      ...state.activeBoard!,
+      tags
+    }
+  })),
+  on(TasksActions.updateBoardTagsFailure, (state, { error }) => ({
+    ...state,
+    status: 'failure' as 'failure',
+    error
   }))
 );
