@@ -1,4 +1,18 @@
-@if (board() && loadStatus() === 'success') {
+@if (!board() && loadStatus() === 'failure') {
+  <div class="flex items-center justify-center h-full">
+    <div class="text-center">
+      <h2 class="error-message text-2xl font-semibold">No board found</h2>
+      <p class="mt-2">We couldn't find the board you're looking for.</p>
+    </div>
+  </div>
+} @else if (board() && loadStatus() === 'failure') {
+  <div class="flex items-center justify-center h-full">
+    <div class="text-center">
+      <h2 class="error-message text-2xl font-semibold">Something went wrong...</h2>
+      <p class="mt-2">We couldn't load your board. Please try again later.</p>
+    </div>
+  </div>
+} @else {
   <ol
     class="flex gap-3 w-full h-full overflow-x-auto scrollbar"
     cdkDropList
@@ -96,11 +110,4 @@
       </li>
     }
   </ol>
-} @else if (loadStatus() === 'failure') {
-  <div class="flex items-center justify-center h-full">
-    <div class="text-center">
-      <h2 class="error-message text-2xl font-semibold">No board found</h2>
-      <p class="mt-2">We couldn't find the board you're looking for.</p>
-    </div>
-  </div>
 }
