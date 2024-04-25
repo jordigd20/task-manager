@@ -19,7 +19,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
 import { NgClass } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BoardsActions } from '../../state/boards';
 
 @Component({
   selector: 'app-task-form',

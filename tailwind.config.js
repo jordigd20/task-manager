@@ -37,6 +37,10 @@ module.exports = {
         border: 'var(--border)',
         'blue-logo': 'var(--blue-logo)',
         'purple-logo': 'var(--purple-logo)',
+        tag: {
+          DEFAULT: 'var(--tag)',
+          foreground: 'var(--tag-foreground)',
+        }
       },
       fontFamily: {
         sans: ['Outfit Variable', ...defaultTheme.fontFamily.sans],

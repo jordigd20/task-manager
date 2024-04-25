@@ -21,14 +21,19 @@
   --blue-logo: #00c6ff;
   --purple-logo: #c854ff;
 
-  --red: #a05d54;
-  --red-foreground: #5d3532;
+  --red: #f8ccd0;
+  --red-foreground: #931b2b;
   --blue: #c4dbfa;
   --blue-foreground: #274cb4;
   --green: #d8f4ea;
-  --green-foreground: #1fa474;
+  --green-foreground: #157453;
   --yellow: #fff2ae;
   --yellow-foreground: #8d6109;
+  --purple: #e1c8f4;
+  --purple-foreground: #703194;
+
+  --tag: #e1c8f4;
+  --tag-foreground: #703194;
 }
 
 :root.dark {
