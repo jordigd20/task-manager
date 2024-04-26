@@ -346,4 +346,175 @@ describe('TasksReducer', () => {
       expect(state).not.toBe(initialState);
     });
   });
+
+  describe('Add Task', () => {
+    it('[Add Task] should add a new task to the backlog section', () => {
+      const mockTask: Task = {
+        id: 1,
+        boardId: 1,
+        index: 0,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [],
+        image: '',
+        createdAt: new Date()
+      };
+
+      const action = TasksActions.addTask({
+        task: mockTask
+      });
+      const state = tasksReducer(initialState, action);
+
+      const newState: TaskState = {
+        ...initialState,
+        tasks: {
+          backlog: [mockTask],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        },
+        status: 'loading'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+
+    it('[Add Task Success] should update the id of the task and set the status to success', () => {
+      const mockTask: Task = {
+        id: undefined,
+        boardId: 1,
+        index: 0,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [],
+        image: '',
+        createdAt: new Date()
+      };
+
+      const action = TasksActions.addTaskSuccess({ idTask: 1 });
+      const state = tasksReducer({
+        ...initialState,
+        tasks: {
+          backlog: [mockTask],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        }
+      }, action);
+
+      const newTask: Task = {
+        ...mockTask,
+        id: 1
+      };
+
+      const newState: TaskState = {
+        ...initialState,
+        tasks: {
+          backlog: [newTask],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        },
+        status: 'success'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+
+    it('[Add Task Failure] should set the status to failure', () => {
+      const action = TasksActions.addTaskFailure({
+        error: 'Error adding task'
+      });
+      const state = tasksReducer(initialState, action);
+
+      const newState: TaskState = {
+        ...initialState,
+        status: 'failure',
+        error: 'Error adding task'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+  })
+
+  describe('Update Task', () => {
+    it('[Update Task] should set the status to loading', () => {
+      const action = TasksActions.updateTask({} as any);
+      const state = tasksReducer(initialState, action);
+
+      const newState: TaskState = {
+        ...initialState,
+        status: 'loading'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+
+    it('[Update Task Success] should update the task in the specified section', () => {
+      const mockTask: Task = {
+        id: 1,
+        boardId: 1,
+        index: 0,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [],
+        image: '',
+        createdAt: new Date()
+      };
+
+      const mockState: TaskState = {
+        ...initialState,
+        tasks: {
+          backlog: [mockTask],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        }
+      };
+
+      const updatedTask: Task = {
+        ...mockTask,
+        title: 'Updated Task'
+      };
+
+      const action = TasksActions.updateTaskSuccess({
+        task: updatedTask
+      });
+      const state = tasksReducer(mockState, action);
+
+      const newState: TaskState = {
+        ...mockState,
+        tasks: {
+          backlog: [updatedTask],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        },
+        status: 'success'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(mockState);
+    });
+
+    it('[Update Task Failure] should set the status to failure', () => {
+      const action = TasksActions.updateTaskFailure({
+        error: 'Error updating task'
+      });
+      const state = tasksReducer(initialState, action);
+
+      const newState: TaskState = {
+        ...initialState,
+        status: 'failure',
+        error: 'Error updating task'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+  });
 });

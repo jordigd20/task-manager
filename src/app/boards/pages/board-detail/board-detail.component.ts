@@ -145,9 +145,7 @@ export class BoardDetailComponent {
       backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
       disableClose: true,
       data: {
-        // confirmHandler: (board: Board) => {
-        //   this.store.dispatch(BoardsActions.addBoard({ board }));
-        // }
+        confirmHandler: (task: Task) => this.store.dispatch(TasksActions.addTask({ task }))
       }
     });
   }
@@ -161,9 +159,8 @@ export class BoardDetailComponent {
       backdropClass: ['backdrop-blur-[1px]', 'bg-black/40'],
       disableClose: true,
       data: {
-        task
-        // confirmHandler: (newBoard: Board) =>
-        //   this.store.dispatch(BoardsActions.updateBoard({ board: newBoard }))
+        task,
+        confirmHandler: (task: Task) => this.store.dispatch(TasksActions.updateTask({ task }))
       }
     });
   }

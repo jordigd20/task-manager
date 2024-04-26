@@ -16,7 +16,14 @@
   @if (task.tags.length > 0) {
     <div class="pt-4 text-sm flex items-center gap-2 min-h-10">
       @for (tag of task.tags; track $index) {
-        <span class="py-0.5 px-2 rounded-md bg-red-200 text-red-800 font-medium">
+        <!-- prettier-ignore-attribute -->
+        <span
+          class="py-0.5 px-2 rounded-md bg-tag text-tag-foreground font-medium"
+          [attr.style]="
+            '--tag: var(--' + tag.color + ');' +
+            '--tag-foreground: var(--' + tag.color + '-foreground);'
+          "
+        >
           {{ tag.name }}
         </span>
       }

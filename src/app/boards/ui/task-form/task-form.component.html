@@ -122,7 +122,7 @@
 
     <div class="py-4 space-y-2">
       <span class="font-medium">Select tags</span>
-      <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-2.5 flex-wrap">
         @for (tag of availableTags(); track tag.id) {
           <!-- prettier-ignore-attribute -->
           <div
@@ -133,15 +133,15 @@
             "
           >
             <button
-              class="peer py-1 pl-2.5 pr-8 rounded-lg font-medium border-2 bg-tag text-tag-foreground transition-all border-tag hover:border-tag-foreground aria-pressed:bg-tag-foreground aria-pressed:text-white aria-pressed:border-tag-foreground"
+              class="peer py-1 pl-2.5 pr-8 rounded-lg font-medium border-2 bg-tag text-tag-foreground transition-all border-tag hover:border-tag-foreground aria-pressed:bg-tag-foreground aria-pressed:text-white aria-pressed:border-tag-foreground aria-pressed:shadow-[inset_0px_0px_4px_0px_var(--tag)]"
               type="button"
-              [attr.aria-pressed]="tags?.value?.includes(tag)"
+              [attr.aria-pressed]="activeTags[tag.id]"
               (click)="toggleTag(tag)"
             >
               {{ tag.name }}
             </button>
             <button
-              class="absolute p-0.5 right-1.5 top-1.5 rounded-md text-tag-foreground transition-all hover:bg-tag-foreground hover:text-white peer-aria-pressed:bg-tag peer-aria-pressed:text-tag-foreground peer-aria-pressed:hover:bg-white"
+              class="absolute p-0.5 right-1.5 top-1.5 rounded-md text-tag-foreground transition-all hover:bg-tag-foreground hover:text-white peer-aria-pressed:text-tag peer-aria-pressed:hover:bg-tag peer-aria-pressed:hover:text-tag-foreground"
               type="button"
               (click)="openDeleteTagDialog(tag)"
             >

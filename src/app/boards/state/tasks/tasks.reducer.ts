@@ -118,5 +118,47 @@ export const tasksReducer = createReducer(
     ...state,
     status: 'failure' as 'failure',
     error
+  })),
+  on(TasksActions.addTask, (state, { task }) => ({
+    ...state,
+    tasks: {
+      ...state.tasks,
+      backlog: [...state.tasks.backlog, task]
+    },
+    status: 'loading' as 'loading'
+  })),
+  on(TasksActions.addTaskSuccess, (state, { idTask }) => ({
+    ...state,
+    tasks: {
+      ...state.tasks,
+      backlog: state.tasks.backlog.map((task) => (task.id == null ? { ...task, id: idTask } : task))
+    },
+    status: 'success' as 'success',
+    isTaskFormOpen: false
+  })),
+  on(TasksActions.addTaskFailure, (state, { error }) => ({
+    ...state,
+    status: 'failure' as 'failure',
+    error,
+    isTaskFormOpen: false
+  })),
+  on(TasksActions.updateTask, (state) => ({
+    ...state,
+    status: 'loading' as 'loading'
+  })),
+  on(TasksActions.updateTaskSuccess, (state, { task }) => ({
+    ...state,
+    tasks: {
+      ...state.tasks,
+      [task.status]: state.tasks[task.status].map((t) => (t.id === task.id ? task : t))
+    },
+    status: 'success' as 'success',
+    isTaskFormOpen: false
+  })),
+  on(TasksActions.updateTaskFailure, (state, { error }) => ({
+    ...state,
+    status: 'failure' as 'failure',
+    error,
+    isTaskFormOpen: false
   }))
 );

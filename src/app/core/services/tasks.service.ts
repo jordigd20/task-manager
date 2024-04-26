@@ -12,6 +12,10 @@ export class TasksService {
 
   constructor() {}
 
+  async createTask(task: Task) {
+    return await this.db.tasks.add(task);
+  }
+
   async getTasksByBoard(idBoard: number) {
     return await this.db.tasks.where('boardId').equals(idBoard).sortBy('index');
   }
@@ -24,10 +28,6 @@ export class TasksService {
     await this.db.tasks.where('id').equals(task.id).modify(task);
 
     return task;
-  }
-
-  async getLastTaskByStatus(idBoard: number, status: string) {
-    return (await this.db.tasks.where({ boardId: idBoard, status }).reverse().sortBy('index'))[0];
   }
 
   async reorderTasks({

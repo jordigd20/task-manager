@@ -87,3 +87,27 @@ export const updateBoardTagsFailure = createAction(
   '[Board Details] Update Board Tags Failure',
   props<{ error: string }>()
 );
+
+export const addTask = createAction('[Board Details] Add Task', props<{ task: Task }>());
+
+export const addTaskSuccess = createAction(
+  '[Board Details] Add Task Success',
+  props<{ idTask: number }>()
+);
+
+export const addTaskFailure = createAction(
+  '[Board Details] Add Task Failure',
+  props<{ error: string }>()
+);
+
+export const updateTask = createAction('[Board Details] Update Task', props<{ task: Task }>());
+
+export const updateTaskSuccess = createAction(
+  '[Board Details] Update Task Success',
+  props<{ task: Task }>()
+);
+
+export const updateTaskFailure = createAction(
+  '[Board Details] Update Task Failure',
+  props<{ error: string }>()
+);

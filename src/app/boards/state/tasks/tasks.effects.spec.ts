@@ -329,4 +329,120 @@ describe('TasksEffects', () => {
       expect(boardService.updateBoard).toHaveBeenCalledWith(board);
     });
   });
+
+  describe('Add Task', () => {
+    it('addTask$ should return AddTaskSuccess', () => {
+      // Arrange
+      const task: Task = {
+        id: 3,
+        boardId: 1,
+        index: 2,
+        title: 'Task 3',
+        status: 'backlog',
+        tags: [],
+        image: '',
+        createdAt: new Date()
+      };
+
+      tasksService.createTask = jest.fn().mockReturnValue(of(3));
+
+      // Act
+      actions$ = of(TasksActions.addTask({ task }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.addTask$);
+      expect(observerSpy.getLastValue()).toEqual(TasksActions.addTaskSuccess({ idTask: 3 }));
+      expect(tasksService.createTask).toHaveBeenCalledWith(task);
+    });
+
+    it('addTask$ should return AddTaskFailure', () => {
+      // Arrange
+      const task: Task = {
+        id: 3,
+        boardId: 1,
+        index: 2,
+        title: 'Task 3',
+        status: 'backlog',
+        tags: [],
+        image: '',
+        createdAt: new Date()
+      };
+
+      tasksService.createTask = jest.fn().mockReturnValue(
+        throwError(() => {
+          throw new Error('Error creating task');
+        })
+      );
+
+      // Act
+      actions$ = of(TasksActions.addTask({ task }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.addTask$);
+      expect(observerSpy.getLastValue()).toEqual(
+        TasksActions.addTaskFailure({
+          error: 'Error creating task'
+        })
+      );
+      expect(tasksService.createTask).toHaveBeenCalledWith(task);
+    });
+  });
+
+  describe('Update Task', () => {
+    it('updateTask$ should return UpdateTaskSuccess', () => {
+      // Arrange
+      const task: Task = {
+        id: 1,
+        boardId: 1,
+        index: 0,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [],
+        image: '',
+        createdAt: new Date()
+      };
+
+      tasksService.updateTask = jest.fn().mockReturnValue(of(task));
+
+      // Act
+      actions$ = of(TasksActions.updateTask({ task }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.updateTask$);
+      expect(observerSpy.getLastValue()).toEqual(TasksActions.updateTaskSuccess({ task }));
+      expect(tasksService.updateTask).toHaveBeenCalledWith(task);
+    });
+
+    it('updateTask$ should return UpdateTaskFailure', () => {
+      // Arrange
+      const task: Task = {
+        id: 1,
+        boardId: 1,
+        index: 0,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [],
+        image: '',
+        createdAt: new Date()
+      };
+
+      tasksService.updateTask = jest.fn().mockReturnValue(
+        throwError(() => {
+          throw new Error('Error updating task');
+        })
+      );
+
+      // Act
+      actions$ = of(TasksActions.updateTask({ task }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.updateTask$);
+      expect(observerSpy.getLastValue()).toEqual(
+        TasksActions.updateTaskFailure({
+          error: 'Error updating task'
+        })
+      );
+      expect(tasksService.updateTask).toHaveBeenCalledWith(task);
+    });
+  });
 });

@@ -94,4 +94,28 @@ export class TasksEffects {
       )
     )
   );
+
+  addTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TasksActions.addTask),
+      switchMap(({ task }) =>
+        from(this.tasksService.createTask(task)).pipe(
+          map((idTask) => TasksActions.addTaskSuccess({ idTask })),
+          catchError((error) => of(TasksActions.addTaskFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  updateTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TasksActions.updateTask),
+      switchMap(({ task }) =>
+        from(this.tasksService.updateTask(task)).pipe(
+          map(() => TasksActions.updateTaskSuccess({ task })),
+          catchError((error) => of(TasksActions.updateTaskFailure({ error: error.message })))
+        )
+      )
+    )
+  );
 }
