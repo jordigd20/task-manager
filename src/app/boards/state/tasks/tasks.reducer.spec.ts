@@ -1,6 +1,6 @@
 import { TasksActions } from '.';
 import { Board, Colors, IconType } from '../../../core/models/board.interface';
-import { Task } from '../../../core/models/task.interface';
+import { Tag, Task } from '../../../core/models/task.interface';
 import { TaskSections, TaskState, initialState, tasksReducer } from './tasks.reducer';
 
 describe('TasksReducer', () => {
@@ -288,8 +288,8 @@ describe('TasksReducer', () => {
     });
   });
 
-  describe('Update Board Tags', () => {
-    it('[Update Board Tags Success] should update the tags of the active board', () => {
+  describe('Create Tag', () => {
+    it('[Create Tag Success] should update the tags of the active board', () => {
       const mockBoard: Board = {
         id: 1,
         name: 'New Board',
@@ -299,16 +299,13 @@ describe('TasksReducer', () => {
         tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
         createdAt: new Date()
       };
-      const tags = [
-        {
-          id: `${Date.now()}`,
-          name: 'Tag 1',
-          color: 'blue'
-        }
-      ];
-
-      const action = TasksActions.updateBoardTagsSuccess({
-        tags
+      const tag: Tag = {
+        id: `${Date.now()}`,
+        name: 'Tag 1',
+        color: 'blue'
+      };
+      const action = TasksActions.createTagSuccess({
+        tag
       });
 
       const mockState = {
@@ -321,7 +318,7 @@ describe('TasksReducer', () => {
         ...mockState,
         activeBoard: {
           ...mockBoard,
-          tags
+          tags: [tag]
         },
         status: 'success'
       };
@@ -331,15 +328,105 @@ describe('TasksReducer', () => {
     });
 
     it('[Update Board Tags Failure] should set the status to failure', () => {
-      const action = TasksActions.updateBoardTagsFailure({
-        error: 'Error updating board tags'
+      const action = TasksActions.createTagFailure({
+        error: 'Error creating the tag'
       });
       const state = tasksReducer(initialState, action);
 
       const newState: TaskState = {
         ...initialState,
         status: 'failure',
-        error: 'Error updating board tags'
+        error: 'Error creating the tag'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+  });
+
+  describe('Delete Tag', () => {
+    it('[Delete Tag Success] should update the tags of the active board and the tasks', () => {
+      const mockBoard: Board = {
+        id: 1,
+        name: 'New Board',
+        icon: IconType.Eyes,
+        color: Colors.Green,
+        tags: [],
+        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+        createdAt: new Date()
+      };
+      const tag: Tag = {
+        id: `${Date.now()}`,
+        name: 'Tag 1',
+        color: 'blue'
+      };
+      const action = TasksActions.deleteTagSuccess({
+        tags: [],
+        tag
+      });
+
+      const mockState: TaskState = {
+        ...initialState,
+        activeBoard: mockBoard,
+        tasks: {
+          backlog: [
+            {
+              id: 1,
+              boardId: 1,
+              index: 0,
+              title: 'Default Task',
+              status: 'backlog',
+              tags: [tag],
+              image: '',
+              createdAt: new Date()
+            }
+          ],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        }
+      };
+      const state = tasksReducer(mockState, action);
+
+      const newState: TaskState = {
+        ...mockState,
+        activeBoard: {
+          ...mockBoard,
+          tags: []
+        },
+        tasks: {
+          backlog: [
+            {
+              id: 1,
+              boardId: 1,
+              index: 0,
+              title: 'Default Task',
+              status: 'backlog',
+              tags: [],
+              image: '',
+              createdAt: new Date()
+            }
+          ],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        }
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+
+    it('[Delete Tag Failure] should set the status to failure', () => {
+      const action = TasksActions.deleteTagFailure({
+        error: 'Error deleting the tag'
+      });
+      const state = tasksReducer(initialState, action);
+
+      const newState: TaskState = {
+        ...initialState,
+        status: 'failure',
+        error: 'Error deleting the tag'
       };
 
       expect(state).toEqual(newState);
@@ -393,15 +480,18 @@ describe('TasksReducer', () => {
       };
 
       const action = TasksActions.addTaskSuccess({ idTask: 1 });
-      const state = tasksReducer({
-        ...initialState,
-        tasks: {
-          backlog: [mockTask],
-          'in-progress': [],
-          'in-review': [],
-          completed: []
-        }
-      }, action);
+      const state = tasksReducer(
+        {
+          ...initialState,
+          tasks: {
+            backlog: [mockTask],
+            'in-progress': [],
+            'in-review': [],
+            completed: []
+          }
+        },
+        action
+      );
 
       const newTask: Task = {
         ...mockTask,
@@ -438,7 +528,7 @@ describe('TasksReducer', () => {
       expect(state).toEqual(newState);
       expect(state).not.toBe(initialState);
     });
-  })
+  });
 
   describe('Update Task', () => {
     it('[Update Task] should set the status to loading', () => {

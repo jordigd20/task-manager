@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import { BoardService } from '../../../core/services/boards.service';
 import { TasksService } from '../../../core/services/tasks.service';
 import { Board, Colors, IconType } from '../../../core/models/board.interface';
-import { Task } from '../../../core/models/task.interface';
+import { Tag, Task } from '../../../core/models/task.interface';
 import { TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TaskSections, initialState } from './tasks.reducer';
@@ -19,7 +19,9 @@ describe('TasksEffects', () => {
   let tasksService: TasksService;
 
   const mockBoardService = {
-    getBoardById: jest.fn()
+    getBoardById: jest.fn(),
+    createTag: jest.fn(),
+    deleteTag: jest.fn()
   };
 
   const mockBoards: Board[] = [
@@ -268,65 +270,99 @@ describe('TasksEffects', () => {
     });
   });
 
-  describe('Update Board Tags', () => {
-    it('updateBoardTags$ should return UpdateBoardTagsSuccess', () => {
+  describe('Create Tag', () => {
+    it('createTag$ should return CreateTagSuccess', () => {
       // Arrange
-      const board = mockBoards[0];
-      const tags = [
-        {
-          id: `${Date.now()}`,
-          name: 'Tag 1',
-          color: 'blue'
-        }
-      ];
+      const tag: Tag = {
+        id: `${Date.now()}`,
+        name: 'New Tag',
+        color: Colors.Blue
+      };
 
-      board.tags = tags;
-
-      boardService.updateBoard = jest.fn().mockReturnValue(of({ board }));
+      boardService.createTag = jest.fn().mockReturnValue(of(tag));
 
       // Act
-      actions$ = of(TasksActions.updateBoardTags({ board }));
+      actions$ = of(TasksActions.createTag({ board: mockBoards[0], tag }));
 
       // Assert
-      const observerSpy = subscribeSpyTo(effects.updateBoardTags$);
-      expect(observerSpy.getLastValue()).toEqual(
-        TasksActions.updateBoardTagsSuccess({
-          tags
-        })
-      );
-      expect(boardService.updateBoard).toHaveBeenCalledWith(board);
+      const observerSpy = subscribeSpyTo(effects.createTag$);
+      expect(observerSpy.getLastValue()).toEqual(TasksActions.createTagSuccess({ tag }));
+      expect(boardService.createTag).toHaveBeenCalledWith(mockBoards[0], tag);
     });
 
-    it('updateBoardTags$ should return UpdateBoardTagsFailure', () => {
+    it('createTag$ should return CreateTagFailure', () => {
       // Arrange
-      const board = mockBoards[0];
-      const tags = [
-        {
-          id: `${Date.now()}`,
-          name: 'Tag 1',
-          color: 'blue'
-        }
-      ];
+      const tag: Tag = {
+        id: `${Date.now()}`,
+        name: 'New Tag',
+        color: Colors.Blue
+      };
 
-      board.tags = tags;
-
-      boardService.updateBoard = jest.fn().mockReturnValue(
+      boardService.createTag = jest.fn().mockReturnValue(
         throwError(() => {
-          throw new Error('Error updating board tags');
+          throw new Error('Error creating tag');
         })
       );
 
       // Act
-      actions$ = of(TasksActions.updateBoardTags({ board }));
+      actions$ = of(TasksActions.createTag({ board: mockBoards[0], tag }));
 
       // Assert
-      const observerSpy = subscribeSpyTo(effects.updateBoardTags$);
+      const observerSpy = subscribeSpyTo(effects.createTag$);
       expect(observerSpy.getLastValue()).toEqual(
-        TasksActions.updateBoardTagsFailure({
-          error: 'Error updating board tags'
+        TasksActions.createTagFailure({
+          error: 'Error creating tag'
         })
       );
-      expect(boardService.updateBoard).toHaveBeenCalledWith(board);
+      expect(boardService.createTag).toHaveBeenCalledWith(mockBoards[0], tag);
+    });
+  });
+
+  describe('Delete Tag', () => {
+    it('deleteTag$ should return DeleteTagSuccess', () => {
+      // Arrange
+      const tag: Tag = {
+        id: `${Date.now()}`,
+        name: 'New Tag',
+        color: Colors.Blue
+      };
+
+      boardService.deleteTag = jest.fn().mockReturnValue(of(tag));
+
+      // Act
+      actions$ = of(TasksActions.deleteTag({ board: mockBoards[0], tag }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.deleteTag$);
+      expect(observerSpy.getLastValue()).toEqual(TasksActions.deleteTagSuccess({ tags: [], tag }));
+      expect(boardService.deleteTag).toHaveBeenCalledWith(mockBoards[0], tag);
+    });
+
+    it('deleteTag$ should return DeleteTagFailure', () => {
+      // Arrange
+      const tag: Tag = {
+        id: `${Date.now()}`,
+        name: 'New Tag',
+        color: Colors.Blue
+      };
+
+      boardService.deleteTag = jest.fn().mockReturnValue(
+        throwError(() => {
+          throw new Error('Error deleting tag');
+        })
+      );
+
+      // Act
+      actions$ = of(TasksActions.deleteTag({ board: mockBoards[0], tag }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.deleteTag$);
+      expect(observerSpy.getLastValue()).toEqual(
+        TasksActions.deleteTagFailure({
+          error: 'Error deleting tag'
+        })
+      );
+      expect(boardService.deleteTag).toHaveBeenCalledWith(mockBoards[0], tag);
     });
   });
 

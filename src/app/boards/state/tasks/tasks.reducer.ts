@@ -102,19 +102,46 @@ export const tasksReducer = createReducer(
     ...state,
     isTaskFormOpen: true
   })),
-  on(TasksActions.updateBoardTags, (state) => ({
+  on(TasksActions.createTagSuccess, (state, { tag }) => ({
     ...state,
-    status: 'loading' as 'loading'
+    activeBoard: {
+      ...state.activeBoard!,
+      tags: [...state.activeBoard!.tags, tag]
+    },
+    status: 'success' as 'success'
   })),
-  on(TasksActions.updateBoardTagsSuccess, (state, { tags }) => ({
+  on(TasksActions.createTagFailure, (state, { error }) => ({
     ...state,
-    status: 'success' as 'success',
+    status: 'failure' as 'failure',
+    error
+  })),
+  on(TasksActions.deleteTagSuccess, (state, { tags, tag }) => ({
+    ...state,
     activeBoard: {
       ...state.activeBoard!,
       tags
+    },
+    tasks: {
+      ...state.tasks,
+      backlog: state.tasks.backlog.map((task) => ({
+        ...task,
+        tags: task.tags.filter((t) => t.id !== tag.id)
+      })),
+      'in-progress': state.tasks['in-progress'].map((task) => ({
+        ...task,
+        tags: task.tags.filter((t) => t.id !== tag.id)
+      })),
+      'in-review': state.tasks['in-review'].map((task) => ({
+        ...task,
+        tags: task.tags.filter((t) => t.id !== tag.id)
+      })),
+      completed: state.tasks.completed.map((task) => ({
+        ...task,
+        tags: task.tags.filter((t) => t.id !== tag.id)
+      }))
     }
   })),
-  on(TasksActions.updateBoardTagsFailure, (state, { error }) => ({
+  on(TasksActions.deleteTagFailure, (state, { error }) => ({
     ...state,
     status: 'failure' as 'failure',
     error

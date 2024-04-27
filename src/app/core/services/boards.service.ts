@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { DbService } from './db.service';
-import { liveQuery } from 'dexie';
+import { PromiseExtended, liveQuery } from 'dexie';
 import { Board } from '../models/board.interface';
 import { TasksService } from './tasks.service';
 import { TaskSections } from '../../boards/state/tasks';
+import { Tag } from '../models/task.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -60,5 +61,46 @@ export class BoardService {
 
   async deleteBoard(id: number) {
     return await this.db.boards.where('id').equals(id).delete();
+  }
+
+  async createTag(board: Board, tag: Tag) {
+    if (board.id == null) {
+      throw new Error('Board id is required');
+    }
+
+    await this.db.boards
+      .where('id')
+      .equals(board.id)
+      .modify({ ...board, tags: [...board.tags, tag] });
+
+    return tag;
+  }
+
+  async deleteTag(board: Board, tag: Tag) {
+    if (board.id == null) {
+      throw new Error('Board id is required');
+    }
+
+    await this.db.boards.where('id').equals(board.id).modify(board);
+
+    const tasks = await this.tasksService.getTasksByBoard(board.id);
+    const modifyTasks: PromiseExtended<number>[] = [];
+
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i];
+
+      if (task.tags.some((t) => t.id === tag.id)) {
+        modifyTasks.push(
+          this.db.tasks
+            .where('id')
+            .equals(task.id!)
+            .modify({ ...task, tags: task.tags.filter((t) => t.id !== tag.id) })
+        );
+      }
+    }
+
+    return await this.db.transaction('rw', this.db.tasks, async () => {
+      return await Promise.all(modifyTasks);
+    });
   }
 }

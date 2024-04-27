@@ -181,11 +181,12 @@ export class TaskFormComponent implements OnInit, OnDestroy {
         isDestructive: true,
         confirmHandler: () =>
           this.store.dispatch(
-            TasksActions.updateBoardTags({
+            TasksActions.deleteTag({
               board: {
                 ...this.activeBoard()!,
                 tags: this.activeBoard()!.tags.filter((t) => t.id !== tag.id)
-              }
+              },
+              tag
             })
           )
       }
@@ -218,11 +219,9 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     };
 
     this.store.dispatch(
-      TasksActions.updateBoardTags({
-        board: {
-          ...this.activeBoard()!,
-          tags: [...this.activeBoard()!.tags, tag]
-        }
+      TasksActions.createTag({
+        board: this.activeBoard()!,
+        tag
       })
     );
   }
@@ -245,6 +244,10 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.isSubmitted.set(true);
+
+    if (this.activeBoard() == null || this.backlogTasks() == null) {
+      return;
+    }
 
     if (this.name?.invalid) {
       this.nameInput.nativeElement.focus();

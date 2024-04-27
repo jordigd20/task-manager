@@ -73,18 +73,33 @@ export const transferTaskFailure = createAction(
 
 export const openTaskForm = createAction('[Board Details] Open Task Form');
 
-export const updateBoardTags = createAction(
-  '[Board Details] Update Board Tags',
-  props<{ board: Board }>()
+export const createTag = createAction(
+  '[Board Details] Create Tag',
+  props<{ board: Board; tag: Tag }>()
 );
 
-export const updateBoardTagsSuccess = createAction(
-  '[Board Details] Update Board Tags Success',
-  props<{ tags: Tag[] }>()
+export const createTagSuccess = createAction(
+  '[Board Details] Create Tag Success',
+  props<{ tag: Tag }>()
 );
 
-export const updateBoardTagsFailure = createAction(
-  '[Board Details] Update Board Tags Failure',
+export const createTagFailure = createAction(
+  '[Board Details] Create Tag Failure',
+  props<{ error: string }>()
+);
+
+export const deleteTag = createAction(
+  '[Board Details] Delete Tag',
+  props<{ board: Board; tag: Tag }>()
+);
+
+export const deleteTagSuccess = createAction(
+  '[Board Details] Delete Tag Success',
+  props<{ tags: Tag[]; tag: Tag }>()
+);
+
+export const deleteTagFailure = createAction(
+  '[Board Details] Delete Tag Failure',
   props<{ error: string }>()
 );
 

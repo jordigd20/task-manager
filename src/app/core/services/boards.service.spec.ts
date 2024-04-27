@@ -3,6 +3,7 @@ import { BoardService } from './boards.service';
 import { Board, Colors, IconType } from '../models/board.interface';
 import { DbService } from './db.service';
 import Dexie from 'dexie';
+import { Tag } from '../models/task.interface';
 
 describe('BoardService', () => {
   let service: BoardService;
@@ -37,11 +38,18 @@ describe('BoardService', () => {
         equals: jest.fn().mockReturnValue({
           modify: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve()))
         })
-      })
+      }),
+      get: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve(mockBoards[0])))
     },
     tasks: {
-      add: jest.fn().mockReturnValue(new Dexie.Promise((resolve) => resolve(1)))
-    }
+      add: jest.fn().mockReturnValue(new Dexie.Promise((resolve) => resolve(1))),
+      where: jest.fn().mockReturnValue({
+        equals: jest.fn().mockReturnValue({
+          modify: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve()))
+        })
+      })
+    },
+    transaction: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve()))
   };
 
   beforeEach(() => {
@@ -79,7 +87,7 @@ describe('BoardService', () => {
       icon: IconType.Eyes,
       createdAt: new Date(),
       tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
-      tags: [],
+      tags: []
     };
 
     jest.spyOn(mockDbService.boards, 'add');
@@ -87,6 +95,23 @@ describe('BoardService', () => {
     await service.addBoard(newBoard);
 
     expect(dbService.boards.add).toHaveBeenCalledWith(newBoard);
+  });
+
+  it('should get board by an id', async () => {
+    const id = 1;
+
+    mockDbService.tasks.where = jest.fn().mockReturnValue({
+      equals: jest.fn().mockReturnValue({
+        sortBy: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve([])))
+      })
+    });
+
+    jest.spyOn(mockDbService.boards, 'get');
+
+    await service.getBoardById(id);
+
+    expect(dbService.boards.get).toHaveBeenCalledWith(id);
+    expect(dbService.tasks.where).toHaveBeenCalledWith('boardId');
   });
 
   it('should update an existing board', async () => {
@@ -97,7 +122,7 @@ describe('BoardService', () => {
       icon: IconType.Eyes,
       createdAt: new Date(),
       tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
-      tags: [],
+      tags: []
     };
 
     jest.spyOn(mockDbService.boards, 'where');
@@ -114,7 +139,7 @@ describe('BoardService', () => {
       icon: IconType.Eyes,
       createdAt: new Date(),
       tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
-      tags: [],
+      tags: []
     };
 
     await expect(service.updateBoard(updatedBoard)).rejects.toThrow('Board id is required');
@@ -149,5 +174,104 @@ describe('BoardService', () => {
     jest.spyOn(mockDbService.boards, 'where');
 
     await expect(service.deleteBoard(id)).rejects.toThrow('Error deleting');
+  });
+
+  it('should create a new tag for a board', async () => {
+    const board: Board = {
+      id: 1,
+      name: 'Board 1',
+      color: Colors.Blue,
+      icon: IconType.Tools,
+      createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: []
+    };
+
+    const tag: Tag = {
+      id: `${Date.now()}`,
+      name: 'Tag 1',
+      color: Colors.Green
+    };
+
+    mockDbService.boards.where = jest.fn().mockReturnValue({
+      equals: jest.fn().mockReturnValue({
+        modify: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve()))
+      })
+    });
+
+    jest.spyOn(mockDbService.boards, 'where');
+
+    await service.createTag(board, tag);
+
+    expect(dbService.boards.where).toHaveBeenCalledWith('id');
+  });
+
+  it('should throw an error when creating a tag for a board without an id', async () => {
+    const board: Board = {
+      name: 'Board 1',
+      color: Colors.Blue,
+      icon: IconType.Tools,
+      createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: []
+    };
+
+    const tag: Tag = {
+      id: `${Date.now()}`,
+      name: 'Tag 1',
+      color: Colors.Green
+    };
+
+    await expect(service.createTag(board, tag)).rejects.toThrow('Board id is required');
+  });
+
+  it('should delete a tag for a board', async () => {
+    const board: Board = {
+      id: 1,
+      name: 'Board 1',
+      color: Colors.Blue,
+      icon: IconType.Tools,
+      createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: []
+    };
+
+    const tag: Tag = {
+      id: `${Date.now()}`,
+      name: 'Tag 1',
+      color: Colors.Green
+    };
+
+    mockDbService.tasks.where = jest.fn().mockReturnValue({
+      equals: jest.fn().mockReturnValue({
+        sortBy: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve([])))
+      })
+    });
+
+    jest.spyOn(mockDbService.boards, 'where');
+
+    await service.deleteTag(board, tag);
+
+    expect(dbService.tasks.where).toHaveBeenCalledWith('boardId');
+    expect(dbService.transaction).toHaveBeenCalled();
+  });
+
+  it('should throw an error when deleting a tag for a board without an id', async () => {
+    const board: Board = {
+      name: 'Board 1',
+      color: Colors.Blue,
+      icon: IconType.Tools,
+      createdAt: new Date(),
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      tags: []
+    };
+
+    const tag: Tag = {
+      id: `${Date.now()}`,
+      name: 'Tag 1',
+      color: Colors.Green
+    };
+
+    await expect(service.deleteTag(board, tag)).rejects.toThrow('Board id is required');
   });
 });

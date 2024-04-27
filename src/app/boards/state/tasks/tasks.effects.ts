@@ -83,13 +83,25 @@ export class TasksEffects {
     )
   );
 
-  updateBoardTags$ = createEffect(() =>
+  createTag$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TasksActions.updateBoardTags),
-      switchMap(({ board }) =>
-        from(this.boardService.updateBoard(board)).pipe(
-          map(() => TasksActions.updateBoardTagsSuccess({ tags: board.tags })),
-          catchError((error) => of(TasksActions.updateBoardTagsFailure({ error: error.message })))
+      ofType(TasksActions.createTag),
+      switchMap(({ board, tag }) =>
+        from(this.boardService.createTag(board, tag)).pipe(
+          map(() => TasksActions.createTagSuccess({ tag })),
+          catchError((error) => of(TasksActions.createTagFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  deleteTag$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TasksActions.deleteTag),
+      switchMap(({ board, tag }) =>
+        from(this.boardService.deleteTag(board, tag)).pipe(
+          map(() => TasksActions.deleteTagSuccess({ tags: board.tags, tag })),
+          catchError((error) => of(TasksActions.deleteTagFailure({ error: error.message })))
         )
       )
     )
