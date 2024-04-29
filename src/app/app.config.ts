@@ -8,6 +8,7 @@ import { provideEffects } from '@ngrx/effects';
 import { BoardsEffects } from './boards/state/boards/boards.effects';
 import { boardsReducer } from './boards/state/boards';
 import { TasksEffects, tasksReducer } from './boards/state/tasks';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
       tasksState: tasksReducer
     }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects(BoardsEffects, TasksEffects)
+    provideEffects(BoardsEffects, TasksEffects),
+    provideHttpClient()
   ]
 };
