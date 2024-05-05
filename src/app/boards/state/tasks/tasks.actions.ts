@@ -3,6 +3,11 @@ import { Tag, Task } from '../../../core/models/task.interface';
 import { TaskSections } from './tasks.reducer';
 import { Board } from '../../../core/models/board.interface';
 
+export const setStatus = createAction(
+  '[Board Details] Set Status',
+  props<{ status: 'pending' | 'loading' | 'success' | 'failure' }>()
+);
+
 export const getActiveBoard = createAction(
   '[Board Details] Get Active Board',
   props<{ id: number }>()

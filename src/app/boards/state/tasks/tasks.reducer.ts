@@ -33,6 +33,10 @@ export const initialState: TaskState = {
 
 export const tasksReducer = createReducer(
   initialState,
+  on(TasksActions.setStatus, (state, { status }) => ({
+    ...state,
+    status
+  })),
   on(TasksActions.getActiveBoard, (state) => ({
     ...state,
     status: 'loading' as 'loading'

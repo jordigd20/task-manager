@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TaskFormComponent } from './task-form.component';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -7,11 +6,13 @@ import { TasksSelectors, initialState } from '../../state/tasks';
 import { of } from 'rxjs';
 import { signal } from '@angular/core';
 import { Board } from '../../../core/models/board.interface';
+import { UploadService } from '../../../core/services/upload.service';
 
 describe('TaskFormComponent', () => {
   let component: TaskFormComponent;
   let fixture: ComponentFixture<TaskFormComponent>;
   let dialogRef: DialogRef;
+  let uploadService: UploadService;
   let store: MockStore;
 
   beforeEach(async () => {
@@ -32,6 +33,12 @@ describe('TaskFormComponent', () => {
           useValue: {
             board: undefined,
             confirmHandler: () => {}
+          }
+        },
+        {
+          provide: UploadService,
+          useValue: {
+            uploadImage: jest.fn()
           }
         },
         provideMockStore({
@@ -56,6 +63,7 @@ describe('TaskFormComponent', () => {
 
     fixture = TestBed.createComponent(TaskFormComponent);
     dialogRef = TestBed.inject(DialogRef);
+    uploadService = TestBed.inject(UploadService);
     store = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -64,15 +72,6 @@ describe('TaskFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  // it('should close dialog when board is added or updated', () => {
-  //   store.overrideSelector(TasksSelectors.isTaskFormOpen, false);
-  //   store.refreshState();
-  //   fixture.detectChanges();
-
-  //   expect(component.container.nativeElement.classList).toContain('animate-zoom-out');
-
-  // });
 
   it('should close dialog when click outside', () => {
     component.container.nativeElement.classList.add('animate-zoom-in');

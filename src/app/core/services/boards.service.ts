@@ -40,7 +40,7 @@ export class BoardService {
       status: 'backlog',
       index: 0,
       tags: [],
-      image: '',
+      image: { url: '', publicId: '' },
       createdAt: new Date()
     });
 

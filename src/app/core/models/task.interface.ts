@@ -5,7 +5,10 @@ export interface Task {
   title: string;
   status: 'backlog' | 'in-progress' | 'in-review' | 'completed';
   tags: Tag[];
-  image: string;
+  image: {
+    url: string;
+    publicId: string;
+  };
   createdAt: Date;
 }
 

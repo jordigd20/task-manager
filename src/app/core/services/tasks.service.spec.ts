@@ -17,7 +17,7 @@ describe('TasksService', () => {
       title: 'Default Task',
       status: 'backlog',
       tags: [],
-      image: '',
+      image: { url: '', publicId: '' },
       createdAt: new Date()
     },
     {
@@ -27,7 +27,7 @@ describe('TasksService', () => {
       title: 'Task 2',
       status: 'backlog',
       tags: [],
-      image: '',
+      image: { url: '', publicId: '' },
       createdAt: new Date()
     }
   ];
@@ -84,7 +84,7 @@ describe('TasksService', () => {
       title: 'Default Task',
       status: 'backlog',
       tags: [],
-      image: '',
+      image: { url: '', publicId: '' },
       createdAt: new Date()
     };
 

@@ -110,8 +110,10 @@ export class DbService extends Dexie {
         status: 'backlog',
         index: 0,
         tags: [{ id: 'concept', name: 'Concept', color: 'red' }],
-        image:
-          'https://images.unsplash.com/photo-1704318847747-1b3fc0e645ba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        image: {
+          url: 'https://res.cloudinary.com/demz9lbb3/image/upload/v1705671201/cld-sample-2.jpg',
+          publicId: 'cld-sample-2'
+        },
         createdAt: new Date()
       });
 
@@ -126,7 +128,10 @@ export class DbService extends Dexie {
           index: j + 1,
           status: 'backlog',
           tags: [],
-          image: '',
+          image: {
+            url: '',
+            publicId: ''
+          },
           createdAt: new Date()
         });
       }
@@ -140,7 +145,10 @@ export class DbService extends Dexie {
           index: j,
           status: 'in-progress',
           tags: [],
-          image: '',
+          image: {
+            url: '',
+            publicId: ''
+          },
           createdAt: new Date()
         });
       }

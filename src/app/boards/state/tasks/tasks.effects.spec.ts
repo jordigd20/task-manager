@@ -44,7 +44,7 @@ describe('TasksEffects', () => {
       title: 'Default Task',
       status: 'backlog',
       tags: [],
-      image: '',
+      image: { url: '', publicId: '' },
       createdAt: new Date()
     },
     {
@@ -54,7 +54,7 @@ describe('TasksEffects', () => {
       title: 'Task 2',
       status: 'backlog',
       tags: [],
-      image: '',
+      image: { url: '', publicId: '' },
       createdAt: new Date()
     }
   ];
@@ -376,7 +376,7 @@ describe('TasksEffects', () => {
         title: 'Task 3',
         status: 'backlog',
         tags: [],
-        image: '',
+        image: { url: '', publicId: '' },
         createdAt: new Date()
       };
 
@@ -400,7 +400,7 @@ describe('TasksEffects', () => {
         title: 'Task 3',
         status: 'backlog',
         tags: [],
-        image: '',
+        image: { url: '', publicId: '' },
         createdAt: new Date()
       };
 
@@ -434,7 +434,7 @@ describe('TasksEffects', () => {
         title: 'Default Task',
         status: 'backlog',
         tags: [],
-        image: '',
+        image: { url: '', publicId: '' },
         createdAt: new Date()
       };
 
@@ -458,7 +458,7 @@ describe('TasksEffects', () => {
         title: 'Default Task',
         status: 'backlog',
         tags: [],
-        image: '',
+        image: { url: '', publicId: '' },
         createdAt: new Date()
       };
 

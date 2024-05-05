@@ -49,7 +49,7 @@ describe('TasksReducer', () => {
           title: 'Default Task',
           status: 'backlog',
           tags: [],
-          image: '',
+          image: { url: '', publicId: '' },
           createdAt: new Date()
         }
       ];
@@ -151,7 +151,7 @@ describe('TasksReducer', () => {
           title: 'Default Task',
           status: 'backlog',
           tags: [],
-          image: '',
+          image: { url: '', publicId: '' },
           createdAt: new Date()
         }
       ];
@@ -214,7 +214,7 @@ describe('TasksReducer', () => {
           title: 'Default Task',
           status: 'backlog',
           tags: [],
-          image: '',
+          image: { url: '', publicId: '' },
           createdAt: new Date()
         }
       ];
@@ -377,7 +377,7 @@ describe('TasksReducer', () => {
               title: 'Default Task',
               status: 'backlog',
               tags: [tag],
-              image: '',
+              image: { url: '', publicId: '' },
               createdAt: new Date()
             }
           ],
@@ -403,7 +403,7 @@ describe('TasksReducer', () => {
               title: 'Default Task',
               status: 'backlog',
               tags: [],
-              image: '',
+              image: { url: '', publicId: '' },
               createdAt: new Date()
             }
           ],
@@ -443,7 +443,7 @@ describe('TasksReducer', () => {
         title: 'Default Task',
         status: 'backlog',
         tags: [],
-        image: '',
+        image: { url: '', publicId: '' },
         createdAt: new Date()
       };
 
@@ -475,7 +475,7 @@ describe('TasksReducer', () => {
         title: 'Default Task',
         status: 'backlog',
         tags: [],
-        image: '',
+        image: { url: '', publicId: '' },
         createdAt: new Date()
       };
 
@@ -552,7 +552,7 @@ describe('TasksReducer', () => {
         title: 'Default Task',
         status: 'backlog',
         tags: [],
-        image: '',
+        image: { url: '', publicId: '' },
         createdAt: new Date()
       };
 

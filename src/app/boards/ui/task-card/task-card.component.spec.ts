@@ -14,7 +14,7 @@ describe('TaskCardComponent', () => {
     title: 'Default Task',
     status: 'backlog',
     createdAt: new Date(),
-    image: '',
+    image: { url: '', publicId: '' },
     tags: []
   };
 

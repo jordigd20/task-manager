@@ -19,6 +19,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
 import { NgClass } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UploadService } from '../../../core/services/upload.service';
 
 const tagColors = ['purple', 'blue', 'green', 'yellow', 'red'];
 
@@ -42,6 +43,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   dialog = inject(Dialog);
   store = inject(Store);
   fb = inject(FormBuilder);
+  uploadService = inject(UploadService);
   data: {
     task?: Task;
     confirmHandler: (task: Task) => void;
@@ -52,6 +54,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       this.data.task?.title ?? '',
       [Validators.required, Validators.minLength(3), Validators.maxLength(200)]
     ],
+    file: [{} as File],
     createTag: ['', Validators.maxLength(20)],
     tags: [this.data.task?.tags ?? []]
   });
@@ -65,6 +68,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   availableTags = computed(() => this.activeBoard()?.tags ?? []);
   activeTags: { [key: string]: boolean } = {};
 
+  imageUrl = signal<string>(this.data.task?.image.url ?? '');
+  imageId = signal<string>(this.data.task?.image.publicId ?? '');
   disableClosingDialog = signal(false);
   isSubmitted = signal(false);
   destroy$ = new Subject<void>();
@@ -99,6 +104,13 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   @HostListener('window:keyup.esc') onKeyUpEsc() {
     if (!this.disableClosingDialog()) {
       this.closeDialog();
+    }
+  }
+
+  @HostListener('window:keydown.enter', ['$event']) onKeyUpEnter(event: KeyboardEvent) {
+    if (event.target === this.createTagInput.nativeElement) {
+      event.preventDefault();
+      this.onCreateTag();
     }
   }
 
@@ -197,6 +209,34 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  onFileUpload(event: any) {
+    const file = event.target.files[0] as File;
+
+    if (file == null) {
+      return;
+    }
+
+    if (file.size > 1024 * 1024 * 2) {
+      // TODO: Show error message
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      console.log(reader);
+      this.imageUrl.set(reader.result as string);
+      this.taskForm.patchValue({ file });
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  deleteImage() {
+    this.imageUrl.set('');
+    this.taskForm.patchValue({ file: {} as File });
+  }
+
   onCreateTag() {
     if (this.createTag?.invalid || this.createTag?.value === '') {
       this.createTagInput.nativeElement.focus();
@@ -254,11 +294,129 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.store.dispatch(TasksActions.setStatus({ status: 'loading' }));
+
     if (this.data.task?.id) {
-      this.data.confirmHandler({
-        ...this.data.task,
-        title: this.name?.value as string,
-        tags: this.tags?.value as Tag[]
+      this.updateTask();
+      return;
+    }
+
+    this.createTask();
+  }
+
+  updateTask() {
+    // If the image is updated and the previous image is the default image
+    if (
+      this.imageUrl() &&
+      this.taskForm.get('file')?.value &&
+      this.imageUrl() !== this.data.task?.image.url &&
+      (this.data.task?.image.publicId === 'cld-sample-2' || this.data.task?.image.publicId === '')
+    ) {
+      this.uploadService.createImage(this.taskForm.get('file')?.value!).subscribe({
+        next: (response) => {
+          this.data.confirmHandler({
+            ...this.data.task!,
+            title: this.name?.value as string,
+            tags: this.tags?.value as Tag[],
+            image: {
+              url: response.secureUrl,
+              publicId: response.publicId
+            }
+          });
+        },
+        error: (error) => {
+          // TODO: Show error message
+          console.error(error);
+          this.store.dispatch(TasksActions.setStatus({ status: 'success' }));
+        }
+      });
+
+      return;
+    }
+
+    // If the image is updated and the previous image is not the default image
+    if (
+      this.imageUrl() &&
+      this.taskForm.get('file')?.value &&
+      this.imageUrl() !== this.data.task?.image.url
+    ) {
+      this.uploadService.updateImage(this.imageId(), this.taskForm.get('file')?.value!).subscribe({
+        next: (response) => {
+          this.data.confirmHandler({
+            ...this.data.task!,
+            title: this.name?.value as string,
+            tags: this.tags?.value as Tag[],
+            image: {
+              url: response.secureUrl,
+              publicId: response.publicId
+            }
+          });
+        },
+        error: (error) => {
+          // TODO: Show error message
+          console.error(error);
+          this.store.dispatch(TasksActions.setStatus({ status: 'success' }));
+        }
+      });
+
+      return;
+    }
+
+    // If there was an image and it's been removed
+    if (!this.imageUrl() && this.data.task?.image.publicId) {
+      this.uploadService.deleteImage(this.data.task?.image.publicId).subscribe({
+        next: () => {
+          this.data.confirmHandler({
+            ...this.data.task!,
+            title: this.name?.value as string,
+            tags: this.tags?.value as Tag[],
+            image: { url: '', publicId: '' }
+          });
+        },
+        error: (error) => {
+          // TODO: Show error message
+          console.error(error);
+          this.store.dispatch(TasksActions.setStatus({ status: 'success' }));
+        }
+      });
+
+      return;
+    }
+
+    // No image has been updated
+    this.data.confirmHandler({
+      ...this.data.task!,
+      title: this.name?.value as string,
+      tags: this.tags?.value as Tag[],
+      image: {
+        url: this.imageUrl() || '',
+        publicId: this.imageId() || ''
+      }
+    });
+  }
+
+  createTask() {
+    if (this.imageUrl() && this.taskForm.get('file')?.value) {
+      this.uploadService.createImage(this.taskForm.get('file')?.value!).subscribe({
+        next: (response) => {
+          this.data.confirmHandler({
+            boardId: this.activeBoard()!.id!,
+            index: this.backlogTasks()!.length,
+            title: this.name?.value as string,
+            status: 'backlog',
+            tags: this.tags?.value as Tag[],
+            image: {
+              url: response.secureUrl,
+              publicId: response.publicId
+            },
+            createdAt: new Date()
+          });
+        },
+        error: (error) => {
+          // TODO: Show error message
+          console.error(error);
+          this.store.dispatch(TasksActions.setStatus({ status: 'success' }));
+        }
       });
 
       return;
@@ -270,7 +428,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       title: this.name?.value as string,
       status: 'backlog',
       tags: this.tags?.value as Tag[],
-      image: '',
+      image: { url: '', publicId: '' },
       createdAt: new Date()
     });
   }
