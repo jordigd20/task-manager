@@ -9,6 +9,8 @@
 
   <div
     class="relative mt-2 w-full h-56 border-2 border-dashed border-accent rounded-md transition-[border-color]"
+    (dragover)="$event.preventDefault()"
+    (drop)="onFileDrop($event)"
   >
     @if (imageUrl()) {
       <img

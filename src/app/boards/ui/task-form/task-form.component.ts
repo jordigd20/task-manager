@@ -209,6 +209,23 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  onFileDrop(event: DragEvent) {
+    event.preventDefault();
+
+    if (!event.dataTransfer || event.dataTransfer?.files.length === 0) {
+      return;
+    }
+
+    if (event.dataTransfer.files.length > 1) {
+      // TODO: Show error message
+      console.warn('Only one file can be uploaded at a time');
+      return;
+    }
+
+    const file = event.dataTransfer.files[0];
+    this.readFile(file);
+  }
+
   onFileUpload(event: any) {
     const file = event.target.files[0] as File;
 
@@ -216,15 +233,35 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.readFile(file);
+  }
+
+  readFile(file: File) {
+    const allowedMimeTypes = [
+      'image/png',
+      'image/jpeg',
+      'image/gif',
+      'image/svg',
+      'image/webp',
+      'image/avif',
+      'image/svg+xml'
+    ];
+
+    if (!allowedMimeTypes.includes(file.type)) {
+      // TODO: Show error message
+      console.warn('File extension not supported');
+      return;
+    }
+
     if (file.size > 1024 * 1024 * 2) {
       // TODO: Show error message
+      console.warn('File size is too large');
       return;
     }
 
     const reader = new FileReader();
 
     reader.onload = () => {
-      console.log(reader);
       this.imageUrl.set(reader.result as string);
       this.taskForm.patchValue({ file });
     };
