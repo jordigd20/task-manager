@@ -151,4 +151,97 @@ describe('Board Details', () => {
         .and('contain.text', 'A name is required and must be at least 3 characters long.');
     });
   });
+
+  describe('Handle tags', () => {
+    it('should add a tag when clicking on the add tag button', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      cy.get('[data-testid="task-form"] input[id="create-tag-input"]').type('Test tag');
+      cy.get('[data-testid="create-tag-btn"]').click();
+
+      cy.get('[data-testid="toggle-tag-btn"]').should('contain.text', 'Test tag');
+    });
+
+    it('should display an error message if the tag name is longer than 20 characters', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      cy.get('[data-testid="task-form"] input[id="create-tag-input"]').type(
+        'This is a very long tag name that should not be accepted'
+      );
+
+      cy.get('[data-testid="invalid-create-tag"]')
+        .should('be.visible')
+        .and('contain.text', 'The tag name must be less than 20 characters long.');
+    });
+
+    it('should not let the user create more than 5 tags', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      for (let i = 0; i < 6; i++) {
+        cy.get('[data-testid="task-form"] input[id="create-tag-input"]').type(`Tag ${i}`);
+        cy.get('[data-testid="create-tag-btn"]').click();
+        cy.get('[data-testid="task-form"] input[id="create-tag-input"]').clear();
+      }
+
+      cy.get('[data-testid="toggle-tag-btn"]').should('have.length', 5);
+    });
+
+    it('should create a task with an active tag', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+      cy.get('[data-testid="task-form"] input[id="task-name"]').type('Test with tag');
+
+      cy.get('[data-testid="toggle-tag-btn"]')
+        .first()
+        .then(($firstTag) => {
+          const text = $firstTag.text().trim();
+
+          cy.get('[data-testid="toggle-tag-btn"]').first().click();
+          cy.get('[data-testid="toggle-tag-btn"]')
+            .first()
+            .should('have.attr', 'aria-pressed', 'true');
+
+          cy.get('[data-testid="task-form"] button[type="submit"]').click();
+
+          cy.get('[data-testid="task-form"]').should('not.exist');
+          cy.get('[data-testid="task-card"]').should('contain.text', text);
+        });
+    });
+
+    it('should a remove a tag when clicking on the remove tag button', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      cy.get('[data-testid="toggle-tag-btn"]')
+        .first()
+        .then(($firstTag) => {
+          const text = $firstTag.text().trim();
+
+          cy.get('[data-testid="delete-tag-btn"]').first().click();
+          cy.get('[data-testid="confirmation-modal"]').should('be.visible');
+          cy.get('[data-testid="confirmation-modal"] p').should('contain.text', text);
+
+          cy.get('[data-testid="confirm-dialog-button"]').click();
+          cy.get('[data-testid="confirmation-modal"]').should('not.exist');
+
+          cy.get('[data-testid="toggle-tag-btn"]').should('not.contain.text', text);
+
+          cy.get('[data-testid="close-dialog-button"]').click();
+          cy.get('[data-testid="task-card"]').should('not.contain.text', text);
+        });
+    });
+  });
 });
