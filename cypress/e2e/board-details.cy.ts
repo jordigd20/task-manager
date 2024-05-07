@@ -13,7 +13,9 @@ describe('Board Details', () => {
       cy.visit('/boards/1');
       cy.get('task-card').should('have.length.at.least', 1);
     });
+  });
 
+  describe('Drag & drop tasks', () => {
     it('should reorder the sections of the board using drag and drop', () => {
       cy.visit('/boards/1');
 
@@ -45,7 +47,7 @@ describe('Board Details', () => {
         .find('[data-testid=task-card]')
         .first()
         .trigger('mousedown', { button: 0, bubbles: true })
-        .trigger('mousemove', { pageX: 10, pageY: 0 });
+        .trigger('mousemove', { pageX: 10, pageY: 0, force: true });
 
       // Move the task card to the last position of the first section
       cy.get('[data-testid=task-section]')
@@ -98,6 +100,55 @@ describe('Board Details', () => {
             .first()
             .should('contain.text', text);
         });
+    });
+  });
+
+  describe('Create a new task', () => {
+    it('should open the new task dialog', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+      cy.get('[data-testid="task-form"] h2').should('contain.text', 'New task');
+    });
+
+    it('should close the new task dialog when clicking on the close button', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      cy.get('[data-testid="close-dialog-button"]').click();
+      cy.get('[data-testid="task-form"]').should('not.exist');
+    });
+
+    it('should add a new task', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      cy.get('[data-testid="task-form"] input[id="task-name"]').type('Test new task');
+
+      cy.get('[data-testid="task-form"] button[type="submit"]').click();
+
+      cy.get('[data-testid="task-form"]').should('not.exist');
+      cy.get('[data-testid="task-card"] .task-title')
+        .last()
+        .should('contain.text', 'Test new task');
+    });
+
+    it('should show an error message if the form is submitted with an empty task name', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      cy.get('[data-testid="task-form"] input[id="task-name"]').should('be.empty');
+      cy.get('[data-testid="task-form"] button[type="submit"]').click();
+      cy.get('[data-testid="invalid-task-name"]')
+        .should('be.visible')
+        .and('contain.text', 'A name is required and must be at least 3 characters long.');
     });
   });
 });

@@ -103,7 +103,7 @@
     <div class="py-4 space-y-2">
       <label
         class="font-medium"
-        for="create-tag"
+        for="create-tag-input"
         [ngClass]="{ 'text-red-500': createTag?.invalid && isSubmitted() }"
       >
         Create tag
@@ -115,7 +115,7 @@
           class="peer w-full p-2 bg-background dark:bg-background-elevated rounded-l-lg border border-muted border-r-0 placeholder:text-muted focus:outline-none focus:ring focus:ring-accent focus:ring-offset-0 focus:border-transparent transition-all"
           type="text"
           placeholder="e.g. Tag"
-          id="create-tag"
+          id="create-tag-input"
           formControlName="createTag"
         />
 
@@ -123,6 +123,7 @@
           class="bg-accent border border-accent text-accent-foreground rounded-r-lg py-2 px-3 transition-all peer-focus:ring peer-focus:ring-accent peer-focus:ring-offset-0 peer-focus:border-transparent"
           type="button"
           (click)="onCreateTag()"
+          data-testid="create-tag-btn"
         >
           <svg
             width="24"
@@ -137,8 +138,8 @@
         </button>
       </div>
 
-      @if (createTag?.invalid && isSubmitted()) {
-        <p class="transition-all text-red-500" data-testid="invalid-create-task">
+      @if (createTag?.invalid) {
+        <p class="transition-all text-red-500" data-testid="invalid-create-tag">
           The tag name must be less than 20 characters long.
         </p>
       }
@@ -159,6 +160,7 @@
             <button
               class="peer py-1 pl-2.5 pr-8 rounded-lg font-medium border-2 bg-tag text-tag-foreground transition-all border-tag hover:border-tag-foreground aria-pressed:bg-tag-foreground aria-pressed:text-white aria-pressed:border-tag-foreground aria-pressed:shadow-[inset_0px_0px_4px_0px_var(--tag)]"
               type="button"
+              data-testid="toggle-tag-btn"
               [attr.aria-pressed]="activeTags[tag.id]"
               [attr.aria-label]="activeTags[tag.id] ? 'Remove tag' : 'Add tag'"
               (click)="toggleTag(tag)"
@@ -168,6 +170,7 @@
             <button
               class="absolute p-0.5 right-1.5 top-1.5 rounded-md text-tag-foreground transition-all hover:bg-tag-foreground hover:text-white peer-aria-pressed:text-tag peer-aria-pressed:hover:bg-tag peer-aria-pressed:hover:text-tag-foreground"
               type="button"
+              data-testid="delete-tag-btn"
               aria-label="Delete tag"
               (click)="openDeleteTagDialog(tag)"
             >
