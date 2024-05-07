@@ -143,13 +143,11 @@ describe('TasksEffects', () => {
       // Arrange
       const tasks = mockTasks;
       const status = 'backlog';
-      const fromIndex = 0;
-      const toIndex = 1;
 
       tasksService.reorderTasks = jest.fn().mockReturnValue(of({ tasks, status }));
 
       // Act
-      actions$ = of(TasksActions.reorderTask({ tasks, status, fromIndex, toIndex }));
+      actions$ = of(TasksActions.reorderTask({ tasks, status }));
 
       // Assert
       const observerSpy = subscribeSpyTo(effects.reorderTask$);
@@ -159,15 +157,13 @@ describe('TasksEffects', () => {
           status
         })
       );
-      expect(tasksService.reorderTasks).toHaveBeenCalledWith({ tasks, status, fromIndex, toIndex });
+      expect(tasksService.reorderTasks).toHaveBeenCalledWith({ tasks, status });
     });
 
     it('reorderTask$ should return ReorderTaskFailure', () => {
       // Arrange
       const tasks = mockTasks;
       const status = 'backlog';
-      const fromIndex = 0;
-      const toIndex = 1;
 
       tasksService.reorderTasks = jest.fn().mockReturnValue(
         throwError(() => {
@@ -176,7 +172,7 @@ describe('TasksEffects', () => {
       );
 
       // Act
-      actions$ = of(TasksActions.reorderTask({ tasks, status, fromIndex, toIndex }));
+      actions$ = of(TasksActions.reorderTask({ tasks, status }));
 
       // Assert
       const observerSpy = subscribeSpyTo(effects.reorderTask$);
@@ -185,7 +181,7 @@ describe('TasksEffects', () => {
           error: 'Error reordering tasks'
         })
       );
-      expect(tasksService.reorderTasks).toHaveBeenCalledWith({ tasks, status, fromIndex, toIndex });
+      expect(tasksService.reorderTasks).toHaveBeenCalledWith({ tasks, status });
     });
   });
 

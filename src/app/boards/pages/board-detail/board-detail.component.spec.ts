@@ -124,9 +124,7 @@ describe('BoardDetailComponent', () => {
     expect(dispatchSpy).toHaveBeenCalledWith(
       TasksActions.reorderTask({
         tasks: [],
-        status: 'backlog',
-        fromIndex: 0,
-        toIndex: 1
+        status: 'backlog'
       })
     );
   });
