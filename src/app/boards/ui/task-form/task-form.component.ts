@@ -156,6 +156,10 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   }
 
   openDeleteTaskDialog() {
+    if (this.data.task == null) {
+      return;
+    }
+
     this.disableClosingDialog.set(true);
 
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {
@@ -165,11 +169,28 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       disableClose: true,
       data: {
         title: 'Delete task',
-        message: `Are you sure you want to delete "<b>${``}</b>" task?`,
+        message: `Are you sure you want to delete "<b>${this.data.task.title}</b>"?`,
         confirmText: 'Delete',
         isDestructive: true,
-        confirmHandler: () => console.log
-        // confirmHandler: () => this.store.dispatch(TasksActions.deleteTask({ id: task.id! }))
+        confirmHandler: () => {
+          this.store.dispatch(TasksActions.deleteTask({ task: this.data.task! }));
+
+          // If the image is the default image or there is no image, just delete the task
+          if (
+            this.data.task?.image.publicId === 'cld-sample-2' ||
+            this.data.task?.image.publicId === ''
+          ) {
+            return;
+          }
+
+          // If there is an image and it's not the default image, delete the image too
+          this.uploadService.deleteImage(this.data.task!.image.publicId).subscribe({
+            error: (error) => {
+              // TODO: Show error message
+              console.error(error);
+            }
+          });
+        }
       }
     });
 

@@ -33,8 +33,6 @@ export const reorderTask = createAction(
   props<{
     tasks: Task[];
     status: keyof TaskSections;
-    fromIndex: number;
-    toIndex: number;
   }>()
 );
 
@@ -129,5 +127,17 @@ export const updateTaskSuccess = createAction(
 
 export const updateTaskFailure = createAction(
   '[Board Details] Update Task Failure',
+  props<{ error: string }>()
+);
+
+export const deleteTask = createAction('[Board Details] Delete Task', props<{ task: Task }>());
+
+export const deleteTaskSuccess = createAction(
+  '[Board Details] Delete Task Success',
+  props<{ task: Task }>()
+);
+
+export const deleteTaskFailure = createAction(
+  '[Board Details] Delete Task Failure',
   props<{ error: string }>()
 );

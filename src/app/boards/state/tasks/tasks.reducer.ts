@@ -191,5 +191,20 @@ export const tasksReducer = createReducer(
     status: 'failure' as 'failure',
     error,
     isTaskFormOpen: false
+  })),
+  on(TasksActions.deleteTaskSuccess, (state, { task }) => ({
+    ...state,
+    tasks: {
+      ...state.tasks,
+      [task.status]: state.tasks[task.status].filter((t) => t.id !== task.id)
+    },
+    status: 'success' as 'success',
+    isTaskFormOpen: false
+  })),
+  on(TasksActions.deleteTaskFailure, (state, { error }) => ({
+    ...state,
+    status: 'failure' as 'failure',
+    error,
+    isTaskFormOpen: false
   }))
 );

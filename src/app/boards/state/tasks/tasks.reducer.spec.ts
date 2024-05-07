@@ -355,8 +355,9 @@ describe('TasksReducer', () => {
         tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
         createdAt: new Date()
       };
+      const idTag = `${Date.now()}`;
       const tag: Tag = {
-        id: `${Date.now()}`,
+        id: idTag,
         name: 'Tag 1',
         color: 'blue'
       };
@@ -601,6 +602,66 @@ describe('TasksReducer', () => {
         ...initialState,
         status: 'failure',
         error: 'Error updating task'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(initialState);
+    });
+  });
+
+  describe('Delete Task', () => {
+    it('[Delete Task Success] should delete the task from the specified section', () => {
+      const mockTask: Task = {
+        id: 1,
+        boardId: 1,
+        index: 0,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [],
+        image: { url: '', publicId: '' },
+        createdAt: new Date()
+      };
+
+      const mockState: TaskState = {
+        ...initialState,
+        tasks: {
+          backlog: [mockTask],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        }
+      };
+
+      const action = TasksActions.deleteTaskSuccess({
+        task: mockTask
+      });
+      const state = tasksReducer(mockState, action);
+
+      const newState: TaskState = {
+        ...mockState,
+        tasks: {
+          backlog: [],
+          'in-progress': [],
+          'in-review': [],
+          completed: []
+        },
+        status: 'success'
+      };
+
+      expect(state).toEqual(newState);
+      expect(state).not.toBe(mockState);
+    });
+
+    it('[Delete Task Failure] should set the status to failure', () => {
+      const action = TasksActions.deleteTaskFailure({
+        error: 'Error deleting task'
+      });
+      const state = tasksReducer(initialState, action);
+
+      const newState: TaskState = {
+        ...initialState,
+        status: 'failure',
+        error: 'Error deleting task'
       };
 
       expect(state).toEqual(newState);

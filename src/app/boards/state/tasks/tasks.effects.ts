@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, from, map, of, switchMap, tap } from 'rxjs';
+import { catchError, from, map, of, switchMap } from 'rxjs';
 import { TasksService } from '../../../core/services/tasks.service';
 import { TaskSections, TasksActions } from '.';
 import { BoardService } from '../../../core/services/boards.service';
@@ -41,13 +41,11 @@ export class TasksEffects {
   reorderTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TasksActions.reorderTask),
-      switchMap(({ tasks, status, fromIndex, toIndex }) =>
+      switchMap(({ tasks, status }) =>
         from(
           this.tasksService.reorderTasks({
             tasks,
-            status,
-            fromIndex,
-            toIndex
+            status
           })
         ).pipe(
           map(({ tasks, status }) => TasksActions.reorderTaskSuccess({ tasks, status })),
@@ -126,6 +124,18 @@ export class TasksEffects {
         from(this.tasksService.updateTask(task)).pipe(
           map(() => TasksActions.updateTaskSuccess({ task })),
           catchError((error) => of(TasksActions.updateTaskFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  deleteTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TasksActions.deleteTask),
+      switchMap(({ task }) =>
+        from(this.tasksService.deleteTask(task.id!)).pipe(
+          map(() => TasksActions.deleteTaskSuccess({ task })),
+          catchError((error) => of(TasksActions.deleteTaskFailure({ error: error.message })))
         )
       )
     )

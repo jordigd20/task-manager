@@ -103,9 +103,7 @@ export class BoardDetailComponent {
       this.store.dispatch(
         TasksActions.reorderTask({
           tasks: container.data,
-          status: previousSection,
-          fromIndex: previousIndex,
-          toIndex: currentIndex
+          status: previousSection
         })
       );
     } else {

@@ -30,17 +30,7 @@ export class TasksService {
     return task;
   }
 
-  async reorderTasks({
-    tasks,
-    status,
-    fromIndex,
-    toIndex
-  }: {
-    tasks: Task[];
-    status: keyof TaskSections;
-    fromIndex: number;
-    toIndex: number;
-  }) {
+  async reorderTasks({ tasks, status }: { tasks: Task[]; status: keyof TaskSections }) {
     const modifyTasks: PromiseExtended<number>[] = [];
 
     for (let i = 0; i < tasks.length; i++) {
@@ -106,5 +96,13 @@ export class TasksService {
       previousSection,
       targetSection
     };
+  }
+
+  async deleteTask(idTask: number) {
+    if (idTask == null) {
+      throw new Error('Task id is required');
+    }
+
+    return await this.db.tasks.where('id').equals(idTask).delete();
   }
 }

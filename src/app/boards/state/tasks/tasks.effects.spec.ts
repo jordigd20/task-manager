@@ -481,4 +481,62 @@ describe('TasksEffects', () => {
       expect(tasksService.updateTask).toHaveBeenCalledWith(task);
     });
   });
+
+  describe('Delete Task', () => {
+    it('deleteTask$ should return DeleteTaskSuccess', () => {
+      // Arrange
+      const task: Task = {
+        id: 1,
+        boardId: 1,
+        index: 0,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [],
+        image: { url: '', publicId: '' },
+        createdAt: new Date()
+      };
+
+      tasksService.deleteTask = jest.fn().mockReturnValue(of(task));
+
+      // Act
+      actions$ = of(TasksActions.deleteTask({ task }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.deleteTask$);
+      expect(observerSpy.getLastValue()).toEqual(TasksActions.deleteTaskSuccess({ task }));
+      expect(tasksService.deleteTask).toHaveBeenCalledWith(1);
+    });
+
+    it('deleteTask$ should return DeleteTaskFailure', () => {
+      // Arrange
+      const task: Task = {
+        id: 1,
+        boardId: 1,
+        index: 0,
+        title: 'Default Task',
+        status: 'backlog',
+        tags: [],
+        image: { url: '', publicId: '' },
+        createdAt: new Date()
+      };
+
+      tasksService.deleteTask = jest.fn().mockReturnValue(
+        throwError(() => {
+          throw new Error('Error deleting task');
+        })
+      );
+
+      // Act
+      actions$ = of(TasksActions.deleteTask({ task }));
+
+      // Assert
+      const observerSpy = subscribeSpyTo(effects.deleteTask$);
+      expect(observerSpy.getLastValue()).toEqual(
+        TasksActions.deleteTaskFailure({
+          error: 'Error deleting task'
+        })
+      );
+      expect(tasksService.deleteTask).toHaveBeenCalledWith(1);
+    });
+  });
 });

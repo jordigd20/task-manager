@@ -106,9 +106,7 @@ describe('TasksService', () => {
 
     const result = await service.reorderTasks({
       tasks: mockTasks,
-      status: 'backlog',
-      fromIndex: 0,
-      toIndex: 1
+      status: 'backlog'
     });
 
     expect(dbService.tasks.where).toHaveBeenCalled();
@@ -144,5 +142,19 @@ describe('TasksService', () => {
       previousSection: 'backlog',
       targetSection: 'in-progress'
     });
+  });
+
+  it('should delete a task', async () => {
+    dbService.tasks.where = jest.fn().mockReturnValue({
+      equals: jest.fn().mockReturnValue({
+        delete: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve()))
+      })
+    });
+
+    jest.spyOn(dbService.tasks, 'where');
+
+    await service.deleteTask(1);
+
+    expect(dbService.tasks.where).toHaveBeenCalled();
   });
 });
