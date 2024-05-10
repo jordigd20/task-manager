@@ -199,6 +199,7 @@
         <button
           class="py-2 pl-4 pr-3 inline-flex items-center justify-between gap-1 rounded-full transition-all bg-red-500 text-white hover:bg-red-700 disabled:bg-red-700"
           type="button"
+          data-testid="delete-task-btn"
           [disabled]="taskStatus() === 'loading'"
           (click)="openDeleteTaskDialog()"
         >

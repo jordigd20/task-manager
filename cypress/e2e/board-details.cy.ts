@@ -244,4 +244,64 @@ describe('Board Details', () => {
         });
     });
   });
+
+  describe('Edit task', () => {
+    it('should open the edit task dialog', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="task-card"] button').first().click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+      cy.get('[data-testid="task-form"] h2').should('contain.text', 'Task details');
+    });
+
+    it('should edit the task with a different name and tags', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="task-card"] button').first().click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      cy.get('[data-testid="task-form"] input[id="task-name"]').clear();
+      cy.get('[data-testid="task-form"] input[id="task-name"]').type('Edited task');
+
+      cy.get('[data-testid="toggle-tag-btn"]')
+        .last()
+        .then(($lastTag) => {
+          const text = $lastTag.text().trim();
+
+          cy.get('[data-testid="toggle-tag-btn"]').last().click();
+          cy.get('[data-testid="toggle-tag-btn"]')
+            .last()
+            .should('have.attr', 'aria-pressed', 'true');
+
+          cy.get('[data-testid="task-form"] button[type="submit"]').click();
+          cy.get('[data-testid="task-form"]').should('not.exist');
+
+          cy.get('[data-testid="task-card"]').first().should('contain.text', 'Edited task');
+          cy.get('[data-testid="task-card"]').first().should('contain.text', text);
+        });
+    });
+  });
+
+  describe('Delete task', () => {
+    it('should display a confirmation modal when clicking on the delete task button', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="task-card"] .task-title')
+        .first()
+        .then(($taskCard) => {
+          const text = $taskCard.text().trim();
+
+          cy.get('[data-testid="task-card"] button').first().click();
+          cy.get('[data-testid="delete-task-btn"]').click();
+          cy.get('[data-testid="confirmation-modal"]').should('be.visible');
+          cy.get('[data-testid="confirmation-modal"] p').should('contain.text', text);
+
+          cy.get('[data-testid="confirm-dialog-button"]').click();
+          cy.get('[data-testid="confirmation-modal"]').should('not.exist');
+          cy.get('[data-testid="task-form"]').should('not.exist');
+
+          cy.get('[data-testid="task-card"]').should('not.contain.text', text);
+        });
+    });
+  });
 });
