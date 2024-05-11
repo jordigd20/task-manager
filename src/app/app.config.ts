@@ -9,6 +9,9 @@ import { BoardsEffects } from './boards/state/boards/boards.effects';
 import { boardsReducer } from './boards/state/boards';
 import { TasksEffects, tasksReducer } from './boards/state/tasks';
 import { provideHttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,6 +22,10 @@ export const appConfig: ApplicationConfig = {
     }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideEffects(BoardsEffects, TasksEffects),
-    provideHttpClient()
+    provideHttpClient(),
+    provideAnimations(),
+    provideToastr({
+      toastComponent: ToastComponent
+    })
   ]
 };

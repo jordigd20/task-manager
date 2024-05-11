@@ -20,6 +20,7 @@ import { ConfirmationModalComponent } from '../../../shared/components/confirmat
 import { NgClass } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UploadService } from '../../../core/services/upload.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 const tagColors = ['purple', 'blue', 'green', 'yellow', 'red'];
 
@@ -44,6 +45,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   store = inject(Store);
   fb = inject(FormBuilder);
   uploadService = inject(UploadService);
+  toastService = inject(ToastService);
   data: {
     task?: Task;
     confirmHandler: (task: Task) => void;
@@ -186,7 +188,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           // If there is an image and it's not the default image, delete the image too
           this.uploadService.deleteImage(this.data.task!.image.publicId).subscribe({
             error: (error) => {
-              // TODO: Show error message
+              this.toastService.showErrorToast('An error occurred while deleting the task');
               console.error(error);
             }
           });
@@ -238,8 +240,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     }
 
     if (event.dataTransfer.files.length > 1) {
-      // TODO: Show error message
       console.warn('Only one file can be uploaded at a time');
+      this.toastService.showErrorToast('Only one file can be uploaded at a time');
       return;
     }
 
@@ -269,14 +271,14 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     ];
 
     if (!allowedMimeTypes.includes(file.type)) {
-      // TODO: Show error message
       console.warn('File extension not supported');
+      this.toastService.showErrorToast('File extension not supported');
       return;
     }
 
     if (file.size > 1024 * 1024 * 2) {
-      // TODO: Show error message
       console.warn('File size is too large');
+      this.toastService.showErrorToast('File size is too large');
       return;
     }
 
@@ -302,7 +304,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     }
 
     if (this.activeBoard()!.tags.length >= 5) {
-      // TODO: Show error message
+      this.toastService.showErrorToast('You can only have up to 5 tags per board');
       return;
     }
 
@@ -383,8 +385,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           });
         },
         error: (error) => {
-          // TODO: Show error message
           console.error(error);
+          this.toastService.showErrorToast('An error occurred while updating the task');
           this.store.dispatch(TasksActions.setStatus({ status: 'success' }));
         }
       });
@@ -411,8 +413,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           });
         },
         error: (error) => {
-          // TODO: Show error message
           console.error(error);
+          this.toastService.showErrorToast('An error occurred while updating the task');
           this.store.dispatch(TasksActions.setStatus({ status: 'success' }));
         }
       });
@@ -432,8 +434,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           });
         },
         error: (error) => {
-          // TODO: Show error message
           console.error(error);
+          this.toastService.showErrorToast('An error occurred while updating the task');
           this.store.dispatch(TasksActions.setStatus({ status: 'success' }));
         }
       });
@@ -471,8 +473,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           });
         },
         error: (error) => {
-          // TODO: Show error message
           console.error(error);
+          this.toastService.showErrorToast('An error occurred while creating the task');
           this.store.dispatch(TasksActions.setStatus({ status: 'success' }));
         }
       });

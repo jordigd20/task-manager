@@ -6,12 +6,14 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { from, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { TasksActions } from '../tasks';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Injectable()
 export class BoardsEffects {
   private actions$ = inject(Actions);
   private boardService = inject(BoardService);
   private store = inject(Store);
+  private toastService = inject(ToastService);
 
   loadBoards$ = createEffect(() =>
     this.actions$.pipe(
@@ -33,7 +35,7 @@ export class BoardsEffects {
           map((idBoard) => BoardsActions.addBoardSuccess({ id: idBoard })),
           catchError((error) =>
             of(BoardsActions.addBoardFailure({ error: error.message })).pipe(
-              // TODO: Show error message to the user
+              tap(() => this.toastService.showErrorToast('Failed to add board')),
               tap(() => this.store.dispatch(BoardsActions.loadBoards()))
             )
           )
@@ -50,7 +52,7 @@ export class BoardsEffects {
           map(() => BoardsActions.updateBoardSuccess()),
           catchError((error) =>
             of(BoardsActions.updateBoardFailure({ error: error.message })).pipe(
-              // TODO: Show error message to the user
+              tap(() => this.toastService.showErrorToast('Failed to update board')),
               tap(() => this.store.dispatch(BoardsActions.loadBoards()))
             )
           )
@@ -67,7 +69,7 @@ export class BoardsEffects {
           map((id) => BoardsActions.deleteBoardSuccess({ id })),
           catchError((error) =>
             of(BoardsActions.deleteBoardFailure({ error: error.message })).pipe(
-              // TODO: Show error message to the user
+              tap(() => this.toastService.showErrorToast('Failed to delete board')),
               tap(() => this.store.dispatch(BoardsActions.loadBoards()))
             )
           )

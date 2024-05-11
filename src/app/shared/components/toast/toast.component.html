@@ -1,0 +1,15 @@
+@if (title) {
+  <div [class]="options.titleClass" [attr.aria-label]="title">
+    {{ title }}
+  </div>
+}
+
+@if (message && options.enableHtml) {
+  <div role="alert" [class]="options.messageClass" [innerHTML]="message"></div>
+}
+
+@if (message && !options.enableHtml) {
+  <div role="alert" [class]="options.messageClass" [attr.aria-label]="message">
+    {{ message }}
+  </div>
+}

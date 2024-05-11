@@ -9,6 +9,7 @@ import { BoardService } from '../../../core/services/boards.service';
 import { BoardsActions, BoardsEffects } from '.';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
 import { TaskSections, TasksActions } from '../tasks';
+import { ToastService } from '../../../core/services/toast.service';
 
 describe('BoardsEffects', () => {
   let effects: BoardsEffects;
@@ -43,6 +44,12 @@ describe('BoardsEffects', () => {
         {
           provide: BoardService,
           useValue: mockBoardService
+        },
+        {
+          provide: ToastService,
+          useValue: {
+            showErrorToast: jest.fn()
+          }
         },
         provideMockStore({ initialState }),
         provideMockActions(() => actions$)

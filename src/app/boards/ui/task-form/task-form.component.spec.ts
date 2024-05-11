@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { signal } from '@angular/core';
 import { Board } from '../../../core/models/board.interface';
 import { UploadService } from '../../../core/services/upload.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 describe('TaskFormComponent', () => {
   let component: TaskFormComponent;
@@ -39,6 +40,14 @@ describe('TaskFormComponent', () => {
           provide: UploadService,
           useValue: {
             uploadImage: jest.fn()
+          }
+        },
+        {
+          provide: ToastService,
+          useValue: {
+            showSuccessToast: jest.fn(),
+            showErrorToast: jest.fn(),
+            showWarningToast: jest.fn()
           }
         },
         provideMockStore({

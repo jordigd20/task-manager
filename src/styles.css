@@ -1,5 +1,6 @@
 @import '@fontsource-variable/outfit';
 @import '@angular/cdk/overlay-prebuilt.css';
+@import './assets/toast-styles.css';
 
 @tailwind base;
 @tailwind components;
