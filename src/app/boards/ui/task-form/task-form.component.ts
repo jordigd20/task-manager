@@ -21,6 +21,7 @@ import { NgClass } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UploadService } from '../../../core/services/upload.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { sampleImageIds } from '../../../shared/utils/images';
 
 const tagColors = ['purple', 'blue', 'green', 'yellow', 'red'];
 
@@ -179,7 +180,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
           // If the image is the default image or there is no image, just delete the task
           if (
-            this.data.task?.image.publicId === 'cld-sample-2' ||
+            sampleImageIds.includes(this.data.task?.image.publicId ?? '') ||
             this.data.task?.image.publicId === ''
           ) {
             return;
@@ -365,12 +366,13 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   }
 
   updateTask() {
-    // If the image is updated and the previous image is the default image
+    // If the image is updated and the previous image is a sample image or there is no image
     if (
       this.imageUrl() &&
       this.taskForm.get('file')?.value &&
       this.imageUrl() !== this.data.task?.image.url &&
-      (this.data.task?.image.publicId === 'cld-sample-2' || this.data.task?.image.publicId === '')
+      (sampleImageIds.includes(this.data.task?.image.publicId ?? '') ||
+        this.data.task?.image.publicId === '')
     ) {
       this.uploadService.createImage(this.taskForm.get('file')?.value!).subscribe({
         next: (response) => {
@@ -423,7 +425,11 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     }
 
     // If there was an image and it's been removed
-    if (!this.imageUrl() && this.data.task?.image.publicId) {
+    if (
+      !this.imageUrl() &&
+      this.data.task?.image.publicId
+      && !sampleImageIds.includes(this.data.task?.image.publicId)
+    ) {
       this.uploadService.deleteImage(this.data.task?.image.publicId).subscribe({
         next: () => {
           this.data.confirmHandler({
