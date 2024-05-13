@@ -2,6 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { UploadService } from './upload.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { first } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+const API_URL = environment.API_URL;
 
 describe('UploadService', () => {
   let service: UploadService;
@@ -27,7 +30,7 @@ describe('UploadService', () => {
 
   it('should call http.post on createImage', async () => {
     const expectedResponse = {
-      url: 'http://localhost:8000/image.jpg',
+      url: `${API_URL}/image.jpg`,
       publicId: 'abc123',
       message: 'Image uploaded successfully'
     };
@@ -41,14 +44,14 @@ describe('UploadService', () => {
         expect(response).toMatchObject(expectedResponse);
       });
 
-    const req = httpMock.expectOne('http://localhost:8000/api/upload');
+    const req = httpMock.expectOne(`${API_URL}/api/upload`);
     expect(req.request.method).toBe('POST');
     req.flush(expectedResponse);
   });
 
   it('should call http.put on updateImage', async () => {
     const expectedResponse = {
-      url: 'http://localhost:8000/image.jpg',
+      url: `${API_URL}/image.jpg`,
       publicId: 'abc123',
       message: 'Image uploaded successfully'
     };
@@ -62,7 +65,7 @@ describe('UploadService', () => {
         expect(response).toMatchObject(expectedResponse);
       });
 
-    const req = httpMock.expectOne('http://localhost:8000/api/upload/abc123');
+    const req = httpMock.expectOne(`${API_URL}/api/upload/abc123`);
     expect(req.request.method).toBe('PUT');
     req.flush(expectedResponse);
   });
@@ -75,7 +78,7 @@ describe('UploadService', () => {
         expect(response).toMatchObject({ message: 'Image deleted successfully' });
       });
 
-    const req = httpMock.expectOne('http://localhost:8000/api/upload/abc123');
+    const req = httpMock.expectOne(`${API_URL}/api/upload/abc123`);
     expect(req.request.method).toBe('DELETE');
     expect(req.request.body).toMatchObject({ preset: 'task-manager' });
     req.flush({ message: 'Image deleted successfully' });

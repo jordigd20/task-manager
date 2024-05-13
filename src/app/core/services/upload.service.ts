@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { UploadImageRespone } from '../models/upload.interface';
+import { environment } from '../../../environments/environment';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = environment.API_URL;
 
 @Injectable({
   providedIn: 'root'
