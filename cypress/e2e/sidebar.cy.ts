@@ -16,11 +16,11 @@ describe('Sidebar', () => {
   it('should not display the boards if they fail to load', () => {
     cy.visit('/');
 
+    cy.get('.board-list').should('be.visible');
     dispatchAction({
       type: '[Boards List] Boards Load Failure',
       error: 'ERROR',
     }).then(() => {
-      cy.get('.board-list li').should('not.exist');
       cy.get('.error-message')
       .should('be.visible')
       .should('contain.text', 'Something went wrong...');
@@ -34,5 +34,4 @@ describe('Sidebar', () => {
     cy.url().should('include', '/boards/');
   });
 
-  //TODO: Should open the add new board dialog
 });

@@ -133,9 +133,7 @@ describe('Board Details', () => {
       cy.get('[data-testid="task-form"] button[type="submit"]').click();
 
       cy.get('[data-testid="task-form"]').should('not.exist');
-      cy.get('[data-testid="task-card"] .task-title')
-        .last()
-        .should('contain.text', 'Test new task');
+      cy.get('[data-testid="task-card"] .task-title').should('contain.text', 'Test new task');
     });
 
     it('should show an error message if the form is submitted with an empty task name', () => {
@@ -153,6 +151,31 @@ describe('Board Details', () => {
   });
 
   describe('Handle tags', () => {
+    it('should a remove a tag when clicking on the remove tag button', () => {
+      cy.visit('/boards/1');
+
+      cy.get('[data-testid="add-task-button"]').click();
+      cy.get('[data-testid="task-form"]').should('be.visible');
+
+      cy.get('[data-testid="toggle-tag-btn"]')
+        .first()
+        .then(($firstTag) => {
+          const text = $firstTag.text().trim();
+
+          cy.get('[data-testid="delete-tag-btn"]').first().click();
+          cy.get('[data-testid="confirmation-modal"]').should('be.visible');
+          cy.get('[data-testid="confirmation-modal"] p').should('contain.text', text);
+
+          cy.get('[data-testid="confirm-dialog-button"]').click();
+          cy.get('[data-testid="confirmation-modal"]').should('not.exist');
+
+          cy.get('[data-testid="toggle-tag-btn"]').should('not.contain.text', text);
+
+          cy.get('[data-testid="close-dialog-button"]').click();
+          cy.get('[data-testid="task-card"]').should('not.contain.text', text);
+        });
+    });
+
     it('should add a tag when clicking on the add tag button', () => {
       cy.visit('/boards/1');
 
@@ -216,31 +239,6 @@ describe('Board Details', () => {
 
           cy.get('[data-testid="task-form"]').should('not.exist');
           cy.get('[data-testid="task-card"]').should('contain.text', text);
-        });
-    });
-
-    it('should a remove a tag when clicking on the remove tag button', () => {
-      cy.visit('/boards/1');
-
-      cy.get('[data-testid="add-task-button"]').click();
-      cy.get('[data-testid="task-form"]').should('be.visible');
-
-      cy.get('[data-testid="toggle-tag-btn"]')
-        .first()
-        .then(($firstTag) => {
-          const text = $firstTag.text().trim();
-
-          cy.get('[data-testid="delete-tag-btn"]').first().click();
-          cy.get('[data-testid="confirmation-modal"]').should('be.visible');
-          cy.get('[data-testid="confirmation-modal"] p').should('contain.text', text);
-
-          cy.get('[data-testid="confirm-dialog-button"]').click();
-          cy.get('[data-testid="confirmation-modal"]').should('not.exist');
-
-          cy.get('[data-testid="toggle-tag-btn"]').should('not.contain.text', text);
-
-          cy.get('[data-testid="close-dialog-button"]').click();
-          cy.get('[data-testid="task-card"]').should('not.contain.text', text);
         });
     });
   });

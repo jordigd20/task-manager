@@ -17,6 +17,7 @@ describe('Boards list page', () => {
     it('should display an error message if the boards fail to load', () => {
       cy.visit('/');
 
+      cy.get('.boards-list').should('be.visible');
       dispatchAction({
         type: '[Boards List] Boards Load Failure',
         error: 'ERROR',
