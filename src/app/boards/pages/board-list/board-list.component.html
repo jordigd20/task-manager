@@ -1,65 +1,66 @@
 <div class="h-full flex flex-col container 2xl:max-w-6xl">
-  @if(boardStatus() !== 'failure') {
-  <section class="my-2 2xl:my-8">
-    <div class="flex items-center justify-between gap-1 flex-wrap">
-      <h2 class="text-2xl font-semibold">Your boards</h2>
-      <button
-        class="bg-accent text-accent-foreground py-2 pl-4 pr-2 inline-flex items-center justify-between gap-1 rounded-lg transition-all hover:ring-2 hover:ring-offset-2 hover:ring-offset-background hover:ring-accent hover:scale-[1.02]"
-        data-testid="add-board-button"
-        [disabled]="boardStatus() !== 'success'"
-        (click)="openAddBoardDialog()"
-      >
-        Add new board
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+  @if (boards()?.length === 0) {
+    <div class="flex items-center justify-center h-full">
+      <div class="text-center">
+        <h2 class="error-message text-2xl font-semibold">You don't have any boards...</h2>
+        <p class="mt-2">Create a new board to start organizing your tasks and projects!</p>
+        <button
+          class="mt-4 bg-accent text-accent-foreground py-2 px-4 rounded-lg transition-all hover:ring-2 hover:ring-offset-2 hover:ring-offset-background hover:ring-accent hover:scale-[1.02]"
+          (click)="openAddBoardDialog()"
         >
-          <path
-            d="M12 6L12 18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <path
-            d="M18 12L6 12"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
-      </button>
+          Create board
+        </button>
+      </div>
     </div>
-
-    <div
-      class="boards-list mt-4 grid xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
-    >
-      <ng-container *ngFor="let board of boards(); trackBy: trackByBoardId">
-        <board-card
-          [board]="board"
-          (edit)="openEditBoardDialog(board)"
-          (delete)="openDeleteBoardDialog(board)"
-        />
-      </ng-container>
-    </div>
-  </section>
   } @else {
-  <div class="flex items-center justify-center h-full">
-    <div class="text-center">
-      <h2 class="error-message text-2xl font-semibold">
-        Something went wrong...
-      </h2>
-      <p class="mt-2">We couldn't load your boards. Please try again later.</p>
-      <button
-        class="mt-4 bg-accent text-accent-foreground py-2 px-4 rounded-lg transition-all hover:ring-2 hover:ring-offset-2 hover:ring-offset-background hover:ring-accent hover:scale-[1.02]"
-        (click)="loadBoards()"
-      >
-        Try again
-      </button>
-    </div>
-  </div>
+    @if (boardStatus() !== 'failure') {
+      <section class="my-2 2xl:my-8">
+        <div class="flex items-center justify-between gap-1 flex-wrap">
+          <h2 class="text-2xl font-semibold">Your boards</h2>
+          <button
+            class="bg-accent text-accent-foreground py-2 pl-4 pr-2 inline-flex items-center justify-between gap-1 rounded-lg transition-all hover:ring-2 hover:ring-offset-2 hover:ring-offset-background hover:ring-accent hover:scale-[1.02]"
+            data-testid="add-board-button"
+            [disabled]="boardStatus() !== 'success'"
+            (click)="openAddBoardDialog()"
+          >
+            Add new board
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M12 6L12 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <path d="M18 12L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="boards-list mt-4 grid xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          <ng-container *ngFor="let board of boards(); trackBy: trackByBoardId">
+            <board-card
+              [board]="board"
+              (edit)="openEditBoardDialog(board)"
+              (delete)="openDeleteBoardDialog(board)"
+            />
+          </ng-container>
+        </div>
+      </section>
+    } @else {
+      <div class="flex items-center justify-center h-full">
+        <div class="text-center">
+          <h2 class="error-message text-2xl font-semibold">Something went wrong...</h2>
+          <p class="mt-2">We couldn't load your boards. Please try again later.</p>
+          <button
+            class="mt-4 bg-accent text-accent-foreground py-2 px-4 rounded-lg transition-all hover:ring-2 hover:ring-offset-2 hover:ring-offset-background hover:ring-accent hover:scale-[1.02]"
+            (click)="loadBoards()"
+          >
+            Try again
+          </button>
+        </div>
+      </div>
+    }
   }
 
   <app-footer />
