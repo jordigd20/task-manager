@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import Dexie from 'dexie';
 import { Board, Colors, IconType } from '../models/board.interface';
-import { Task } from '../models/task.interface';
+import { Tag, Task } from '../models/task.interface';
+import { sampleImageIds, sampleImageUrls } from '../../shared/utils/images';
 
 @Injectable({
   providedIn: 'root'
@@ -25,134 +26,135 @@ export class DbService extends Dexie {
   }
 
   async populate() {
-    // const defaultBoard = await this.boards.add({
-    //   name: 'Default Board',
-    //   icon: IconType.Tools,
-    //   color: Colors.Blue,
-    //   tags: [{ id: 'concept', name: 'Concept', color: 'red'}],
-    //  tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
-    //   createdAt: new Date(),
-    // });
-
-    // await this.tasks.add({
-    //   boardId: defaultBoard,
-    //   title: 'Default Task',
-    //   status: TaskStatus.Backlog,
-    //   tags: [{ id: 'concept', name: 'Concept', color: 'red'}],
-    //   image: '',
-    //   createdAt: new Date(),
-    // });
-
-    //FIXME: Just for testing, delete later
-    const boardProperties = [
-      { color: Colors.Pink, icon: IconType.Gear },
-      { color: Colors.Orange, icon: IconType.Rocket },
-      { color: Colors.Yellow, icon: IconType.Key },
-      { color: Colors.Green, icon: IconType.Clock },
-      { color: Colors.Blue, icon: IconType.Computer },
-      { color: Colors.Purple, icon: IconType.Eyes },
-      { color: Colors.Red, icon: IconType.Food },
-      { color: Colors.Pink, icon: IconType.Airplane },
-      { color: Colors.Orange, icon: IconType.Star },
-      { color: Colors.Yellow, icon: IconType.Books },
-      { color: Colors.Green, icon: IconType.Artist },
-      { color: Colors.Blue, icon: IconType.Helmet },
-      { color: Colors.Purple, icon: IconType.Tools },
-      { color: Colors.Red, icon: IconType.Gear },
-      { color: Colors.Pink, icon: IconType.Rocket },
-      { color: Colors.Orange, icon: IconType.Key },
-      { color: Colors.Yellow, icon: IconType.Clock },
-      { color: Colors.Green, icon: IconType.Computer },
-      { color: Colors.Blue, icon: IconType.Eyes },
-      { color: Colors.Purple, icon: IconType.Food },
-      { color: Colors.Red, icon: IconType.Airplane },
-      { color: Colors.Pink, icon: IconType.Star },
-      { color: Colors.Orange, icon: IconType.Books },
-      { color: Colors.Yellow, icon: IconType.Artist }
+    const tags: Tag[] = [
+      { id: 'concept', name: 'Concept', color: 'red' },
+      { id: 'technical', name: 'Techincal', color: 'purple' },
+      { id: 'frontend', name: 'Frontend', color: 'blue' },
+      { id: 'backend', name: 'Backend', color: 'yellow' },
+      { id: 'design', name: 'Design', color: 'green' }
     ];
 
-    const defaultProperties = {
+    const defaultBoard: Board = {
+      name: `Default Board`,
       color: Colors.Blue,
       icon: IconType.Tools,
-      tags: [{ id: 'concept', name: 'Concept', color: 'red' }]
+      tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
+      createdAt: new Date(),
+      tags
     };
 
-    const boards: Board[] = [
+    const boardId = await this.boards.add(defaultBoard);
+
+    const tasks: Task[] = [
       {
-        name: `Default Board`,
-        color: Colors.Blue,
-        icon: IconType.Tools,
-        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
-        tags: [{ id: 'concept', name: 'Concept', color: 'red' }],
+        boardId,
+        title: 'Implement Drag & Drop tasks',
+        index: 0,
+        status: 'backlog',
+        tags: [tags[1], tags[2]],
+        image: {
+          url: sampleImageUrls[0],
+          publicId: sampleImageIds[0]
+        },
+        createdAt: new Date()
+      },
+      {
+        boardId,
+        title: 'Deploy the REST API to the production server',
+        index: 1,
+        status: 'backlog',
+        tags: [tags[1], tags[3]],
+        image: {
+          url: '',
+          publicId: ''
+        },
+        createdAt: new Date()
+      },
+      {
+        boardId,
+        title: 'Implement the ability for users to edit tasks',
+        index: 0,
+        status: 'in-progress',
+        tags: [tags[1], tags[2]],
+        image: {
+          url: '',
+          publicId: ''
+        },
+        createdAt: new Date()
+      },
+      {
+        boardId,
+        title: 'Use NgRx for state management in the application',
+        index: 1,
+        status: 'in-progress',
+        tags: [tags[1], tags[2]],
+        image: {
+          url: '',
+          publicId: ''
+        },
+        createdAt: new Date()
+      },
+      {
+        boardId,
+        title: 'Implement the REST API for uploading images to the server',
+        index: 2,
+        status: 'in-progress',
+        tags: [tags[1], tags[3]],
+        image: {
+          url: '',
+          publicId: ''
+        },
+        createdAt: new Date()
+      },
+      {
+        boardId,
+        title: 'Implement the ability for users to switch between dark and light mode',
+        index: 0,
+        status: 'in-review',
+        tags: [tags[1], tags[2]],
+        image: {
+          url: '',
+          publicId: ''
+        },
+        createdAt: new Date()
+      },
+      {
+        boardId,
+        title: 'Implement the ability to create/delete tasks using the the keyboard',
+        index: 1,
+        status: 'in-review',
+        tags: [tags[1], tags[2]],
+        image: {
+          url: '',
+          publicId: ''
+        },
+        createdAt: new Date()
+      },
+      {
+        boardId,
+        title: 'Design the Task Manager App',
+        index: 0,
+        status: 'completed',
+        tags: [tags[4]],
+        image: {
+          url: sampleImageUrls[1],
+          publicId: sampleImageIds[1]
+        },
+        createdAt: new Date()
+      },
+      {
+        boardId,
+        title: 'Investigate about NgRx and how to use it',
+        index: 1,
+        status: 'completed',
+        tags: [tags[0]],
+        image: {
+          url: '',
+          publicId: ''
+        },
         createdAt: new Date()
       }
     ];
-
-    for (let i = 0; i < 4; i++) {
-      const properties = boardProperties[i] || defaultProperties;
-      boards.push({
-        name: `Board ${i + 1}`,
-        ...properties,
-        tasksOrder: ['backlog', 'in-progress', 'in-review', 'completed'],
-        tags: [{ id: 'concept', name: 'Concept', color: 'red' }],
-        createdAt: new Date()
-      });
-    }
-
-    await this.boards.bulkAdd(boards);
-
-    const tasks: Task[] = [];
-
-    for (let i = 0; i < boards.length; i++) {
-      tasks.push({
-        boardId: i + 1,
-        title: 'Default Task',
-        status: 'backlog',
-        index: 0,
-        tags: [{ id: 'concept', name: 'Concept', color: 'red' }],
-        image: {
-          url: 'https://res.cloudinary.com/demz9lbb3/image/upload/v1705671201/cld-sample-2.jpg',
-          publicId: 'cld-sample-2'
-        },
-        createdAt: new Date()
-      });
-
-      const min = 1;
-      const max = 6;
-      let randomCount = Math.random() * (max - min) + min;
-
-      for (let j = 0; j < randomCount; j++) {
-        tasks.push({
-          boardId: i + 1,
-          title: `Backlog ${j + 1}`,
-          index: j + 1,
-          status: 'backlog',
-          tags: [],
-          image: {
-            url: '',
-            publicId: ''
-          },
-          createdAt: new Date()
-        });
-      }
-
-      randomCount = Math.random() * (max - min) + min;
-
-      for (let j = 0; j < randomCount; j++) {
-        tasks.push({
-          boardId: i + 1,
-          title: `Progress ${j + 1}`,
-          index: j,
-          status: 'in-progress',
-          tags: [],
-          image: {
-            url: '',
-            publicId: ''
-          },
-          createdAt: new Date()
-        });
-      }
-    }
 
     await this.tasks.bulkAdd(tasks);
   }
