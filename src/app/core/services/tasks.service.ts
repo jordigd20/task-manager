@@ -105,4 +105,12 @@ export class TasksService {
 
     return await this.db.tasks.where('id').equals(idTask).delete();
   }
+
+  async deleteTasksByBoard(idBoard: number) {
+    if (idBoard == null) {
+      throw new Error('Board id is required');
+    }
+
+    return await this.db.tasks.where('boardId').equals(idBoard).delete();
+  }
 }

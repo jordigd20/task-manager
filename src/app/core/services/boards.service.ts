@@ -5,6 +5,9 @@ import { Board } from '../models/board.interface';
 import { TasksService } from './tasks.service';
 import { TaskSections } from '../../boards/state/tasks';
 import { Tag } from '../models/task.interface';
+import { sampleImageIds } from '../../shared/utils/images';
+import { UploadService } from './upload.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +15,7 @@ import { Tag } from '../models/task.interface';
 export class BoardService {
   private db = inject(DbService);
   private tasksService = inject(TasksService);
+  private uploadService = inject(UploadService);
 
   constructor() {}
 
@@ -60,6 +64,18 @@ export class BoardService {
   }
 
   async deleteBoard(id: number) {
+    const tasks = await this.tasksService.getTasksByBoard(id);
+
+    const tasksWithImage = tasks.filter(
+      (task) => task.image.publicId !== '' && !sampleImageIds.includes(task.image.publicId)
+    );
+
+    for (const task of tasksWithImage) {
+      await firstValueFrom(this.uploadService.deleteImage(task.image.publicId));
+    }
+
+    await this.tasksService.deleteTasksByBoard(id);
+
     return await this.db.boards.where('id').equals(id).delete();
   }
 

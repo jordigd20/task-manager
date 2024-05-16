@@ -4,10 +4,14 @@ import { Board, Colors, IconType } from '../models/board.interface';
 import { DbService } from './db.service';
 import Dexie from 'dexie';
 import { Tag } from '../models/task.interface';
+import { UploadService } from './upload.service';
+import { TasksService } from './tasks.service';
 
 describe('BoardService', () => {
   let service: BoardService;
   let dbService: DbService;
+  let uploadService: UploadService;
+  let tasksService: TasksService;
 
   const mockBoards: Board[] = [
     {
@@ -58,11 +62,28 @@ describe('BoardService', () => {
         {
           provide: DbService,
           useValue: mockDbService
+        },
+        {
+          provide: TasksService,
+          useValue: {
+            getTasksByBoard: jest
+              .fn()
+              .mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve([]))),
+            deleteTasksByBoard: jest
+              .fn()
+              .mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve()))
+          }
+        },
+        {
+          provide: UploadService,
+          useValue: {}
         }
       ]
     });
 
     dbService = TestBed.inject(DbService);
+    uploadService = TestBed.inject(UploadService);
+    tasksService = TestBed.inject(TasksService);
     service = TestBed.inject(BoardService);
   });
 
@@ -100,18 +121,12 @@ describe('BoardService', () => {
   it('should get board by an id', async () => {
     const id = 1;
 
-    mockDbService.tasks.where = jest.fn().mockReturnValue({
-      equals: jest.fn().mockReturnValue({
-        sortBy: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve([])))
-      })
-    });
-
     jest.spyOn(mockDbService.boards, 'get');
 
     await service.getBoardById(id);
 
     expect(dbService.boards.get).toHaveBeenCalledWith(id);
-    expect(dbService.tasks.where).toHaveBeenCalledWith('boardId');
+    expect(tasksService.getTasksByBoard).toHaveBeenCalledWith(id);
   });
 
   it('should update an existing board', async () => {
@@ -242,17 +257,11 @@ describe('BoardService', () => {
       color: Colors.Green
     };
 
-    mockDbService.tasks.where = jest.fn().mockReturnValue({
-      equals: jest.fn().mockReturnValue({
-        sortBy: jest.fn().mockResolvedValueOnce(new Dexie.Promise((resolve) => resolve([])))
-      })
-    });
-
     jest.spyOn(mockDbService.boards, 'where');
 
     await service.deleteTag(board, tag);
 
-    expect(dbService.tasks.where).toHaveBeenCalledWith('boardId');
+    expect(tasksService.getTasksByBoard).toHaveBeenCalledWith(board.id);
     expect(dbService.transaction).toHaveBeenCalled();
   });
 
